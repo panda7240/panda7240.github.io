@@ -1,0 +1,475 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>zookeeper 扩容实战 | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="场景描述:
+zookeeper 版本 3.4.6
+
+现有zk集群是五台, myid分别为 0, 1, 2, 3, 4
+
+三地机房
+
+机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. 
+机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.
+机房3(延时较大,在100ms).
+
+
+需要构建一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper 扩容实战">
+<meta property="og:url" content="http://siye1982.github.io/2015/06/16/zookeeper/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="场景描述:
+zookeeper 版本 3.4.6
+
+现有zk集群是五台, myid分别为 0, 1, 2, 3, 4
+
+三地机房
+
+机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. 
+机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.
+机房3(延时较大,在100ms).
+
+
+需要构建一个">
+<meta property="og:updated_time" content="2015-06-16T10:07:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zookeeper 扩容实战">
+<meta name="twitter:description" content="场景描述:
+zookeeper 版本 3.4.6
+
+现有zk集群是五台, myid分别为 0, 1, 2, 3, 4
+
+三地机房
+
+机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. 
+机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.
+机房3(延时较大,在100ms).
+
+
+需要构建一个">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= null ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/16/zookeeper/" title="zookeeper 扩容实战" itemprop="url">zookeeper 扩容实战</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-16T10:07:50.000Z" itemprop="datePublished"> 發表於 2015-06-16 18:07:50</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述:"><span class="toc-number">1.</span> <span class="toc-text">场景描述:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要注意的问题"><span class="toc-number">2.</span> <span class="toc-text">需要注意的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体步骤"><span class="toc-number">3.</span> <span class="toc-text">具体步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改myid"><span class="toc-number">3.1.</span> <span class="toc-text">修改myid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加新机器进入集群"><span class="toc-number">3.2.</span> <span class="toc-text">添加新机器进入集群</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="场景描述:">场景描述:</h2><ol>
+<li><p>zookeeper 版本 3.4.6</p>
+</li>
+<li><p>现有zk集群是五台, myid分别为 0, 1, 2, 3, 4</p>
+</li>
+<li><p>三地机房</p>
+<ul>
+<li>机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. </li>
+<li>机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.</li>
+<li>机房3(延时较大,在100ms).</li>
+</ul>
+</li>
+<li><p>需要构建一个高可用zk环境, 服务主要部署在机房1, 机房2有全量服务但是机器数量较机房1少. </p>
+</li>
+<li><p>现在需要将机房1,2做成一个大的zk集群, 但是由于zk对双机房, 不能做到高可用, 所有加了一个机房3. 现在这三个机房的zk实例数为 5 + 5 + 1 .</p>
+</li>
+<li><p>现有zk实例为5, 但是我们需要扩容到11台, 添加实例数比原有集群实例数大.</p>
+</li>
+<li><p>在扩容过程中需要不影响使用现有zk集群的服务. 不可以全部停止, 进行升级.</p>
+</li>
+</ol>
+<h2 id="需要注意的问题">需要注意的问题</h2><ol>
+<li><p>添加的机器数大于现有集群zk实例数.</p>
+</li>
+<li><p>三地机房, 其中机房1为主机房, 资源最多, 尽量让leader落在该机房. 机房1和机房2的延时在容忍范围内, leader也可以落在该机房, 但是需要优先考虑机房1. 因为机房3延时较大, 尽量不可以让机房3的实例担任leader角色.</p>
+</li>
+<li><p>历史遗留问题, 原有zk集群的myid是从0开始的, 这是个坑(稍后会说).</p>
+</li>
+</ol>
+<h2 id="具体步骤">具体步骤</h2><h3 id="修改myid">修改myid</h3><p>  为什么要先修改myid, 这是之前我们给自己挖的一个大坑, 这次一定要填上, 并且为以后的zk运维积累经验.因为, 我们需要leader尽量落在机房1的机器上, 鉴于zk集群进行leader中用到的快速选举算法, 集群中的机器会优先匹配zxid最大的实例(这样可以保证在数据同步时,这个实例上的数据是最新的), 如果所有实例中的zxid都一样, 那么所有实例会选举出myid最大的实例为leader. 基于这样的条件, 我们需要将机房1中的现有的5台的myid进行提升, 给机房3的zk实例腾出myid的位置(以确保在zxid一样时,它肯定不会是leader). 因为zk中myid的范围必须是大于等于0(没错,你没看错,我们使用了0, 即使官方sample配置中是从1开始, 但是我们还是使用了0), 所有我们需要先将myid=0的实例进行myid变更. </p>
+<p>1 . 修改myid=1的机器的myid为100, 依次对修改五个实例的zoo.cfg</p>
+<p>  修改完之后的配置类似如下:</p>
+<pre><code>server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55
+server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55
+server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55
+server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55
+server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55
+</code></pre><p>2 . 记录现在集群中哪台机器为leader, 该机器最后重启.</p>
+<p>3 . 依次重启myid为1,2,3,4,100的实例(注意最后重启leader)</p>
+<p><em>ok, 这里我说另外一个坑, 我们重启服务的时候最好是依从myid从小到大依次重启, 因为这个里面又涉及到zookeeper另外一个设计.<br> zookeeper是需要集群中所有集群两两建立连接, 其中配置中的3555端口是用来进行选举时机器直接建立通讯的端口, 为了避免重复创建tcp连接,<br> 如果对方myid比自己大，则关闭连接，这样导致的结果就是大id的server才会去连接小id的server，避免连接浪费.如果是最后重启myid最小的实例,该实例将不能加入到集群中,因为不能和其他集群建立连接, 这时你使用nc命令, 会有如下的提示: This ZooKeeper instance is not currently serving requests. 在zookeeper的启动日志里面你会发现这样的日志: Have smaller server identifier, so dropping the connection. 如果真的出现了这个问题, 也没关系, 但是需要先将报出该问题的实例起着,然后按照myid从小到大依次重启zk实例即可. 是的,我们确实碰到了这个问题, 因为我们稍后会将机房3的那个zk实例的myid变为0,并最后加入到11台实例的集群中,最后一直报这个问题.</em></p>
+<h3 id="添加新机器进入集群">添加新机器进入集群</h3><p>经过上面的步骤,现在来添加新机器进入集群. 因为新集群zk实例数量为11台, 那么如果能做到HA,需要保证集群中存活机器至少为6台. 鉴于这样的要求,我们并不能一次性将11台机器的配置修改为如下:</p>
+<pre><code>server.<span class="number">0=192.168.3</span>.<span class="number">1:2555:35</span>5555
+server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55
+server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55
+server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55
+server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55
+server.<span class="number">5=192.168.2</span>.<span class="number">1:2555:35</span>55
+server.<span class="number">6=192.168.2</span>.<span class="number">2:2555:35</span>55
+server.<span class="number">7=192.168.2</span>.<span class="number">3:2555:35</span>55
+server.<span class="number">8=192.168.2</span>.<span class="number">4:2555:35</span>55
+server.<span class="number">9=192.168.2</span>.<span class="number">5:2555:35</span>55
+server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55 
+</code></pre><p>我们只能先将原有的5台zk实例的集群先扩充到7台(为何不是8台?慢慢梳理一下就知道了), 然后再扩充到11台这样的步骤. 鉴于这样的思路,我们的步骤如下:</p>
+<p>1 . 选出两台新的实例, 加上之前的5台, 将他们的配置文件修改为7台,依次重启原集群zk实例,然后启动两台新加入的实例, 注意最后重启leader.</p>
+<pre><code>server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55
+server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55
+server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55
+server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55
+server.<span class="number">5=192.168.2</span>.<span class="number">1:2555:35</span>55
+server.<span class="number">6=192.168.2</span>.<span class="number">2:2555:35</span>55
+server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55 
+</code></pre><p>2 . 将zoo.cfg中的集群机器数量设为11台, 已经存在的7台zk实例集群进行重启,然后重启另外四台新zk实例. 这里你可能在启动myid=0的zk实例会出现上面描述的问题,没关系,按照上面说的步骤操作即可.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2015/06/16/zookeeper/" data-title="zookeeper 扩容实战 | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/14/hello-world/"  title="Hello World">
+ <strong>下一篇：</strong><br/> 
+ <span>Hello World
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述:"><span class="toc-number">1.</span> <span class="toc-text">场景描述:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要注意的问题"><span class="toc-number">2.</span> <span class="toc-text">需要注意的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体步骤"><span class="toc-number">3.</span> <span class="toc-text">具体步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改myid"><span class="toc-number">3.1.</span> <span class="toc-text">修改myid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加新机器进入集群"><span class="toc-number">3.2.</span> <span class="toc-text">添加新机器进入集群</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
