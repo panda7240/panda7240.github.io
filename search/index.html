@@ -1,10 +1,10 @@
 
-  <!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html >
 <head>
   <meta charset="UTF-8">
   
-    <title>分類 : 分布式 | Panda</title>
+    <title>search | Panda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Panda">
@@ -13,12 +13,13 @@
     
     <meta name="description">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Panda">
-<meta property="og:url" content="http://siye1982.github.io/categories/分布式/index.html">
+<meta property="og:title" content="search">
+<meta property="og:url" content="http://siye1982.github.io/search/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description">
+<meta property="og:updated_time" content="2015-06-17T04:07:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Panda">
+<meta name="twitter:title" content="search">
 <meta name="twitter:description">
 
     
@@ -69,43 +70,25 @@
       </header>
       <div id="container">
         
-
-<div class="archive-title" >
-  <h2 class="category-icon">分布式</h2>
-  
+<div  id="main" class="page">
+  <div id='cse' style='width:100%;text-align:center'>正在加载搜索结果，请稍等。</div>
 </div>
-<div id="main" class="archive-part clearfix">
-  <div id="archive-page">
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/06/17/Centralized-configuration-management/" title="IMAGO(集中配置管理)" itemprop="url">
-  
-
-    <time datetime="2015-06-17T02:11:19.000Z" itemprop="datePublished">2015-06-17</time>
-
-
-    <h1 itemprop="name">IMAGO(集中配置管理)</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/06/16/zookeeper/" title="zookeeper 扩容实战" itemprop="url">
-  
-
-    <time datetime="2015-06-16T07:52:25.000Z" itemprop="datePublished">2015-06-16</time>
-
-
-    <h1 itemprop="name">zookeeper 扩容实战</h1>
-
-  </a>
-</section>
-
-
-  </div>
-</div>
+<script src="http://www.google.com.hk/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+google.load('search', '1', {language : 'zh-CN',style: google.loader.themes.MINIMALIST});
+google.setOnLoadCallback(function(){
+  var customSearchControl = new google.search.CustomSearchControl('014646117278575712947%3Axe6pipn1zds');
+  customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+  var options = new google.search.DrawOptions();
+  options.setAutoComplete(true);
+  customSearchControl.draw('cse', options);
+  var match = location.search.match(/q=([^&]*)(&|$)/);
+  if(match && match[1]){
+    var search = decodeURIComponent(match[1]); 
+    customSearchControl.execute(search);
+  }
+},true);
+</script>
 
       </div>
       <footer><div id="footer" >
