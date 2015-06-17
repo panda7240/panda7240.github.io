@@ -18,7 +18,7 @@
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="概述常规项目会有很多配置文件,比如数据库链接信息, 缓存信息等. 我们通常的做法是通过配置文件进行管理可以达到只需要修改一个地方,整个项目都可以生效的目的.目前我们的开发项目繁多, 程序为了保持高可用,会进行集群部署. 这样我们要对某一个或者某几个项目进行配置文件变更时,需要逐个进行修改.这样大量的人为操作可能会增加程序升级或发布的风险.与此同时修改配置文件之后会涉及到应用的重启.为了减小发布风险">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/imago-architecture.png">
-<meta property="og:updated_time" content="2015-06-17T09:51:38.000Z">
+<meta property="og:updated_time" content="2015-06-17T09:53:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集中配置管理(IMAGO)">
 <meta name="twitter:description" content="概述常规项目会有很多配置文件,比如数据库链接信息, 缓存信息等. 我们通常的做法是通过配置文件进行管理可以达到只需要修改一个地方,整个项目都可以生效的目的.目前我们的开发项目繁多, 程序为了保持高可用,会进行集群部署. 这样我们要对某一个或者某几个项目进行配置文件变更时,需要逐个进行修改.这样大量的人为操作可能会增加程序升级或发布的风险.与此同时修改配置文件之后会涉及到应用的重启.为了减小发布风险">
@@ -132,8 +132,8 @@
 <li><p>app启动时client可以顺利从zookeeper加载相关配置到file snapshot 和 local cache. </p>
 </li>
 <li><p>验证是否可以生成文件快照</p>
-<pre><code>~<span class="regexp">/.imago/imago</span>_snapshot/app1.properties
-</code></pre></li>
+ <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/.imago/imago</span>_snapshot/app1.properties</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>验证本地缓存是否可以取到这些值.</p>
 </li>
 <li><p>当zookeeper其中某一个数据发生变动时, 相应的文件快照和本地缓存是否也相应变更.</p>

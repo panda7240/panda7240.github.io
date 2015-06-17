@@ -125,8 +125,8 @@
 <li><p>app启动时client可以顺利从zookeeper加载相关配置到file snapshot 和 local cache. </p>
 </li>
 <li><p>验证是否可以生成文件快照</p>
-<pre><code>~<span class="regexp">/.imago/imago</span>_snapshot/app1.properties
-</code></pre></li>
+ <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/.imago/imago</span>_snapshot/app1.properties</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>验证本地缓存是否可以取到这些值.</p>
 </li>
 <li><p>当zookeeper其中某一个数据发生变动时, 相应的文件快照和本地缓存是否也相应变更.</p>
