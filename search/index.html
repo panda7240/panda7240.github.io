@@ -3,6 +3,7 @@
 <html >
 <head>
   <meta charset="UTF-8">
+  <meta name="baidu-site-verification" content="fJXeodkVwL" />
   
     <title>search | Panda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
@@ -58,10 +59,10 @@
 					
 					<li>
  					
-					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
-						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
-					</form>
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= null ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
 					
 					</li>
 				</ul>
@@ -70,26 +71,6 @@
       </header>
       <div id="container">
         
-<div  id="main" class="page">
-  <div id='cse' style='width:100%;text-align:center'>正在加载搜索结果，请稍等。</div>
-</div>
-<script src="http://www.google.com.hk/jsapi" type="text/javascript"></script>
-<script type="text/javascript">
-google.load('search', '1', {language : 'zh-CN',style: google.loader.themes.MINIMALIST});
-google.setOnLoadCallback(function(){
-  var customSearchControl = new google.search.CustomSearchControl('014646117278575712947');
-  customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
-  var options = new google.search.DrawOptions();
-  options.setAutoComplete(true);
-  customSearchControl.draw('cse', options);
-  var match = location.search.match(/q=([^&]*)(&|$)/);
-  if(match && match[1]){
-    var search = decodeURIComponent(match[1]); 
-    customSearchControl.execute(search);
-  }
-},true);
-</script>
-
       </div>
       <footer><div id="footer" >
 	
