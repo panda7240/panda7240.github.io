@@ -141,8 +141,73 @@
 <h3 id="配置不可用的情况">配置不可用的情况</h3><ol>
 <li>client第一次启动时, zookeeper就不可用, 则无法从中获取数据, 并生成文件快照和本地缓存.</li>
 </ol>
-<h2 id="Imago-admin_功能说明">Imago-admin 功能说明</h2><h2 id="部署">部署</h2><h3 id="初始化imago-admin">初始化imago-admin</h3><p>当首次启动imago-admin时需要初始化zookeeper中的数据库配置,进入到zookeeper命令行执行以下命令:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">create</span> /imago <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql/<span class="number">1.1</span> &#123;<span class="string">"ip"</span>:<span class="string">"xxx.xxx.xxx.xxx"</span>,<span class="string">"port"</span>:<span class="string">"3231"</span>,<span class="string">"type"</span>:<span class="string">"master"</span>,<span class="string">"dbs"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"xxx"</span>,<span class="string">"user"</span>:<span class="string">"trade_user"</span>,<span class="string">"pwd"</span>:<span class="string">"xxx"</span>&#125;]&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="imago-java-client_配置说明">imago-java-client 配置说明</h2><p>具体使用步骤总结如下:</p>
+<h2 id="Imago-admin_功能说明">Imago-admin 功能说明</h2><h3 id="首页">首页</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-index.png" alt="首页"></p>
+<ol>
+<li><p>集中配置管理主要提供如下功能点:</p>
+<ul>
+<li>应用管理</li>
+<li>配置项管理(具体的配置项数据在该节点设置)</li>
+<li>用户管理</li>
+<li>资源管理(菜单和功能url的动态管理)</li>
+<li>用户组管理(进行用户的分组功能,可以给用户组分配具体的功能权限和数据权限)</li>
+<li>日志查看(终于数据的增删改的详细记录)</li>
+</ul>
+</li>
+<li><p>首页关系图可以查看某个ip上具体的pid引用了什么公共应用, 也可以查看哪些公共应用被什么程序引用了.</p>
+</li>
+</ol>
+<h3 id="应用管理">应用管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-app-manage.png" alt="App管理"></p>
+<ol>
+<li><p>可以通过应用类型, 应用key, 应用value进行简单检索</p>
+</li>
+<li><p>点击应用key上的超链接, 将会进入该应用下的配置项列表.</p>
+</li>
+<li><p>在进行数据迁移时, 只需要将mysql数据进行迁移, 然后点击”同步全量数据到Zookeeper”按钮,会将mysql中所有数据同步到zookeeper节点上,如果已经有数据在zookeeper上,并且已经有程序watch了这些节点, 那么该操作将<strong><em>会触发大量的watch操作</em></strong>. 所有,该按钮建议只在初始化时使用.</p>
+</li>
+<li><p>可以针对某个应用进行配置项的导入, 导入文件可是遵循 *.properties属性文件格式.</p>
+</li>
+<li><p>可以将某个应用下的配置项导出为 *.properties属性文件.</p>
+</li>
+<li><p>可以只针对某个应用从mysql中同步数据到Zookeeper.</p>
+</li>
+<li><p>删除某个应用, 该操作是逻辑删除, 同时会逻辑删除该应用下所有的配置项, 同时也会物理删除zookeepr上对应的数据.</p>
+</li>
+</ol>
+<p><img src="http://siye1982.github.io/img/blog/imago/imago-app-update.png" alt="App新增,修改"></p>
+<p>进行应用的新增和修改时,需要设置应用的类型:</p>
+<ul>
+<li><p>公共应用</p>
+<p>  该类型的应用,会是多个项目中使用, 比如mysql,redis,kafka等配置放在公共应用中. 同时首页上会显示公共应用被哪些程序使用的关系图.</p>
+</li>
+<li><p>普通应用</p>
+<p>  普通应用是区分公共应用而存在的, 一般应用下的独有的一下配置项放在普通应用下.</p>
+</li>
+</ul>
+<h3 id="配置项管理">配置项管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-config-manage.png" alt="配置项管理"> </p>
+<ol>
+<li><p>点击某个配置项Key上的链接,可以查看该配置项的所有历史版本.</p>
+</li>
+<li><p>可以针对配置项Key,Value进行简单检索.</p>
+</li>
+<li><p>配置项的添加功能, 只能通过具体的应用页面引导进来才能操作, 直接通过菜单上的配置项管理进入没有新增配置项功能按钮.</p>
+</li>
+</ol>
+<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-update.png" alt="配置项新增,修改"> </p>
+<p>在进行配置项的新增或修改时, 需要注意配置项的value值有模板设定, 默认下是走的文本, 但是为了便于对一些公共资源的管理,加入了类似mysql,redis,kafka等配置项的模板.</p>
+<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-code.png" alt="获取配置代码"> </p>
+<p>每一个配置项后面都可以通过配置代码按钮获取到某一个配置项在各个语言中的配置代码.</p>
+<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-getzk.png" alt="获取配置项在zk中的数据"> </p>
+<p>可以通过该方法获取该配置项在zk中具体的数据, 不用再去zookeepr上通过命令行查询.</p>
+<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-version.png" alt="获取配置项在zk中的数据"> </p>
+<p>可以获取到某一配置项的所有版本变更记录, 并可以通过某一个版本进行恢复.</p>
+<h3 id="资源管理(功能权限管理)">资源管理(功能权限管理)</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-resource-manage.png" alt="获取配置代码"> </p>
+<p>在用户组管理中我们可以进行资源管理,资源管理主要可以通过树形菜单配置来控制哪些用户组里面的用户可以操作哪些功能url.用户登录后看到的左侧菜单也是通过该功能进行动态配置.</p>
+<h3 id="数据权限管理">数据权限管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-data-manage.png" alt="获取配置代码"> </p>
+<p>该功能可以配置哪些用户可以对哪些数据进行哪些操作,这里主要集中控制对app数据的控制. 如果涉及到公共应用的如果用户只有查询权限,那么他们会针对该公共应用下的配置项中的密码选项是不可见的. 这个数据操作权限由App延伸到配置项.</p>
+<h3 id="日志管理">日志管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-log.png" alt="获取配置代码"> </p>
+<p>对系统中比较关键的数据操作都会进行详细的日志记录, 便于进行用户行为的跟踪.</p>
+<h2 id="部署">部署</h2><h3 id="初始化Imago-admin">初始化Imago-admin</h3><p>当首次启动imago-admin时需要初始化zookeeper中的数据库配置,进入到zookeeper命令行执行以下命令:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">create</span> /imago <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql/<span class="number">1.1</span> &#123;<span class="string">"ip"</span>:<span class="string">"xxx.xxx.xxx.xxx"</span>,<span class="string">"port"</span>:<span class="string">"3231"</span>,<span class="string">"type"</span>:<span class="string">"master"</span>,<span class="string">"dbs"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"xxx"</span>,<span class="string">"user"</span>:<span class="string">"trade_user"</span>,<span class="string">"pwd"</span>:<span class="string">"xxx"</span>&#125;]&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Imago-java-client_配置说明">Imago-java-client 配置说明</h3><p>具体使用步骤总结如下:</p>
 <ol>
 <li><p>在pom.xml中加入:</p>
    <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>imago-java-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>1.8.0-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">exclusions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.netty<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>netty<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
