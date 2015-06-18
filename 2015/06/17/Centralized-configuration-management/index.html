@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://siye1982.github.io/img/blog/imago/imago-resource-manage.png">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/imago/imago-data-manage.png">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/imago/imago-log.png">
-<meta property="og:updated_time" content="2015-06-18T06:22:57.000Z">
+<meta property="og:updated_time" content="2015-06-18T12:55:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集中配置管理(IMAGO)">
 <meta name="twitter:description" content="概述常规项目会有很多配置文件,比如数据库链接信息, 缓存信息等. 我们通常的做法是通过配置文件进行管理可以达到只需要修改一个地方,整个项目都可以生效的目的.目前我们的开发项目繁多, 程序为了保持高可用,会进行集群部署. 这样我们要对某一个或者某几个项目进行配置文件变更时,需要逐个进行修改.这样大量的人为操作可能会增加程序升级或发布的风险.与此同时修改配置文件之后会涉及到应用的重启.为了减小发布风险">
@@ -264,7 +264,7 @@
 1、首页换成公共资源引用的关系图
 2、修复导出属性文件被截断的<span class="tag">bug</span>
 3、限制只能管理员权限的用户才能添加公共的<span class="tag">app</span>
-4、再添加公共资源的配置时提示配置<span class="tag">key</span>只能以"<span class="tag">trade-</span>"开头的提示
+4、再添加公共资源的配置时提示配置<span class="tag">key</span>的规则验证
 5、去掉修改配置时<span class="tag">value</span>必填的验证
 6、修复在浏览器直接输入无权限页面时无法跳转的<span class="tag">bug</span>
 1<span class="class">.6</span><span class="class">.1</span>
@@ -278,7 +278,7 @@
 1<span class="class">.4</span><span class="class">.0</span>
 增加批量上传<span class="tag">propertes</span>文件的方法,减少初始化时的工作量
 1<span class="class">.3</span><span class="class">.1</span>
-亦庄机房和燕郊机房数据库名不一致, 启用<span class="tag">spring3</span><span class="class">.2</span>之后的<span class="tag">beans</span>特性,使运维操作与配置无关
+启用<span class="tag">spring3</span><span class="class">.2</span>之后的<span class="tag">beans</span>特性,使运维操作与配置无关
 1<span class="class">.3</span><span class="class">.0</span>
 增加<span class="tag">mongo</span>模板
 1<span class="class">.2</span><span class="class">.1</span>
@@ -349,6 +349,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/06/18/loom-soa/" title="loom-soa">
+  <strong>上一篇：</strong><br/>
+  <span>
+  loom-soa</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/06/17/init_github_pages/"  title="用Hexo 快速创建Github Pages">
