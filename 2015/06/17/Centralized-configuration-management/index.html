@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://siye1982.github.io/img/blog/imago/imago-resource-manage.png">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/imago/imago-data-manage.png">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/imago/imago-log.png">
-<meta property="og:updated_time" content="2015-06-18T04:32:53.000Z">
+<meta property="og:updated_time" content="2015-06-18T06:22:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集中配置管理(IMAGO)">
 <meta name="twitter:description" content="概述常规项目会有很多配置文件,比如数据库链接信息, 缓存信息等. 我们通常的做法是通过配置文件进行管理可以达到只需要修改一个地方,整个项目都可以生效的目的.目前我们的开发项目繁多, 程序为了保持高可用,会进行集群部署. 这样我们要对某一个或者某几个项目进行配置文件变更时,需要逐个进行修改.这样大量的人为操作可能会增加程序升级或发布的风险.与此同时修改配置文件之后会涉及到应用的重启.为了减小发布风险">
@@ -103,7 +103,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#架构"><span class="toc-number">2.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储在Zookeeper中的数据结构"><span class="toc-number">3.</span> <span class="toc-text">存储在Zookeeper中的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容灾设计"><span class="toc-number">4.</span> <span class="toc-text">容灾设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试用例"><span class="toc-number">5.</span> <span class="toc-text">测试用例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试(在没有任何异常的情况下进行)"><span class="toc-number">5.1.</span> <span class="toc-text">功能测试(在没有任何异常的情况下进行)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容灾测试"><span class="toc-number">5.2.</span> <span class="toc-text">容灾测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置不可用的情况"><span class="toc-number">5.3.</span> <span class="toc-text">配置不可用的情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Imago-admin_功能说明"><span class="toc-number">6.</span> <span class="toc-text">Imago-admin 功能说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#首页"><span class="toc-number">6.1.</span> <span class="toc-text">首页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用管理"><span class="toc-number">6.2.</span> <span class="toc-text">应用管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置项管理"><span class="toc-number">6.3.</span> <span class="toc-text">配置项管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源管理(功能权限管理)"><span class="toc-number">6.4.</span> <span class="toc-text">资源管理(功能权限管理)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据权限管理"><span class="toc-number">6.5.</span> <span class="toc-text">数据权限管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志管理"><span class="toc-number">6.6.</span> <span class="toc-text">日志管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">7.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化Imago-admin"><span class="toc-number">7.1.</span> <span class="toc-text">初始化Imago-admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Imago-java-client_配置说明"><span class="toc-number">7.2.</span> <span class="toc-text">Imago-java-client 配置说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于通过DNS获取zookeeper集群地址"><span class="toc-number">8.</span> <span class="toc-text">关于通过DNS获取zookeeper集群地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么样的配置适合放在imago中进行管理"><span class="toc-number">9.</span> <span class="toc-text">什么样的配置适合放在imago中进行管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#备注(重要):"><span class="toc-number">10.</span> <span class="toc-text">备注(重要):</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#架构"><span class="toc-number">2.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储在Zookeeper中的数据结构"><span class="toc-number">3.</span> <span class="toc-text">存储在Zookeeper中的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容灾设计"><span class="toc-number">4.</span> <span class="toc-text">容灾设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试用例"><span class="toc-number">5.</span> <span class="toc-text">测试用例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试(在没有任何异常的情况下进行)"><span class="toc-number">5.1.</span> <span class="toc-text">功能测试(在没有任何异常的情况下进行)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容灾测试"><span class="toc-number">5.2.</span> <span class="toc-text">容灾测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置不可用的情况"><span class="toc-number">5.3.</span> <span class="toc-text">配置不可用的情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Imago-admin_功能说明"><span class="toc-number">6.</span> <span class="toc-text">Imago-admin 功能说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#首页"><span class="toc-number">6.1.</span> <span class="toc-text">首页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用管理"><span class="toc-number">6.2.</span> <span class="toc-text">应用管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置项管理"><span class="toc-number">6.3.</span> <span class="toc-text">配置项管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源管理(功能权限管理)"><span class="toc-number">6.4.</span> <span class="toc-text">资源管理(功能权限管理)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据权限管理"><span class="toc-number">6.5.</span> <span class="toc-text">数据权限管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志管理"><span class="toc-number">6.6.</span> <span class="toc-text">日志管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">7.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化Imago-admin"><span class="toc-number">7.1.</span> <span class="toc-text">初始化Imago-admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Imago-java-client_配置说明"><span class="toc-number">7.2.</span> <span class="toc-text">Imago-java-client 配置说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于通过DNS获取zookeeper集群地址"><span class="toc-number">8.</span> <span class="toc-text">关于通过DNS获取zookeeper集群地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么样的配置适合放在imago中进行管理"><span class="toc-number">9.</span> <span class="toc-text">什么样的配置适合放在imago中进行管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#备注(重要):"><span class="toc-number">10.</span> <span class="toc-text">备注(重要):</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#版本变更记录"><span class="toc-number">11.</span> <span class="toc-text">版本变更记录</span></a></li></ol>
 		
 		</div>
 		
@@ -256,7 +256,65 @@
 <li>在imago-admin首页, 可以看到哪些应用的实例引用了以trade_public为前缀的公共资源.</li>
 <li>从数据库同步数据到zookeeper的功能, 仅限于初次搭建imago进行数据迁移,初始化imago时使用.该功能会触发所有数据库中存储的配置项的使用, 如果在执行时,已经有大量的imago-java-client监听了zk的数据节点, 会触发所有watch事件.</li>
 </ol>
-  
+<h2 id="版本变更记录">版本变更记录</h2><p>imago-admin 版本变更列表</p>
+<pre><code>2<span class="class">.0</span><span class="class">.0</span>
+1. 增加功能权限,<span class="tag">app</span>数据权限控制
+2. 增加配置项的版本管理
+1<span class="class">.7</span><span class="class">.0</span>
+1、首页换成公共资源引用的关系图
+2、修复导出属性文件被截断的<span class="tag">bug</span>
+3、限制只能管理员权限的用户才能添加公共的<span class="tag">app</span>
+4、再添加公共资源的配置时提示配置<span class="tag">key</span>只能以"<span class="tag">trade-</span>"开头的提示
+5、去掉修改配置时<span class="tag">value</span>必填的验证
+6、修复在浏览器直接输入无权限页面时无法跳转的<span class="tag">bug</span>
+1<span class="class">.6</span><span class="class">.1</span>
+1、添加验证，登陆页面用户名或者密码为空，回车失效。
+1<span class="class">.6</span><span class="class">.0</span>
+1、添加<span class="tag">kafka</span>模板
+2、修复搜素框回车查询失效的问题
+3、配置代码加入<span class="tag">java</span>写法样例
+1<span class="class">.5</span><span class="class">.0</span>
+增加应用对应的配置项导出功能
+1<span class="class">.4</span><span class="class">.0</span>
+增加批量上传<span class="tag">propertes</span>文件的方法,减少初始化时的工作量
+1<span class="class">.3</span><span class="class">.1</span>
+亦庄机房和燕郊机房数据库名不一致, 启用<span class="tag">spring3</span><span class="class">.2</span>之后的<span class="tag">beans</span>特性,使运维操作与配置无关
+1<span class="class">.3</span><span class="class">.0</span>
+增加<span class="tag">mongo</span>模板
+1<span class="class">.2</span><span class="class">.1</span>
+1、修复<span class="tag">bug</span>，配置项管理页面（从应用管理点击配置项跳转而来），点击添加，自动选中所属应用
+2、应用列表页，显示备注列
+1<span class="class">.2</span><span class="class">.0</span>
+支持<span class="tag">mysql</span>,<span class="tag">redis</span>的<span class="tag">json</span>模板设置,服务嵌入代码样例
+1<span class="class">.1</span><span class="class">.0</span>
+添加用户权限管理, 配置项修改日志跟踪
+1<span class="class">.0</span><span class="class">.0</span>
+简单的<span class="tag">app</span>, <span class="tag">config</span>管理
+</code></pre><p>imago-java-client 版本变更列表</p>
+<pre><code>1<span class="class">.8</span><span class="class">.0-SNAPSHOT</span>
+增加获取公共资源(<span class="tag">mysql</span>,<span class="tag">redis</span>,<span class="tag">kafka</span>等)引用关系图
+1<span class="class">.7</span><span class="class">.0</span>
+添加<span class="tag">PropertiesUtil</span>访问类,可以用来静态访问配置
+修正启动时知道<span class="tag">appList</span>时会注册监听, 在取配置时会再次注册监听的问题
+1<span class="class">.6</span><span class="class">.0</span>
+添加<span class="tag">kafka</span>模板
+1<span class="class">.5</span><span class="class">.0</span>
+使配置不需要关心<span class="tag">appList</span>,会根据用户的使用情况,动态添加对<span class="tag">appKey</span>的监听和快照文件
+1<span class="class">.4</span><span class="class">.2</span>
+修正了如果通过添加<span class="class">.closezk</span>文件来屏蔽<span class="tag">zk</span>后,还需要通过<span class="tag">dns</span>获取<span class="tag">zk</span>地址的问题
+1<span class="class">.4</span><span class="class">.1</span>
+修正文件快照不支持<span class="tag">windows</span>的情况
+1<span class="class">.4</span><span class="class">.0</span>
+增加<span class="tag">mongo</span>模板
+1<span class="class">.3</span><span class="class">.0</span>
+可以通过数据库名获取数据库配置
+1<span class="class">.2</span><span class="class">.0</span>
+增加支持<span class="tag">redis</span>, <span class="tag">mysql</span>的<span class="tag">json</span>解析支持
+1<span class="class">.1</span><span class="class">.0</span>
+添加本地文件快照, 增加客户端高可用
+1<span class="class">.0</span><span class="class">.0</span>
+配置项获取, 监听变更
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -314,7 +372,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#架构"><span class="toc-number">2.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储在Zookeeper中的数据结构"><span class="toc-number">3.</span> <span class="toc-text">存储在Zookeeper中的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容灾设计"><span class="toc-number">4.</span> <span class="toc-text">容灾设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试用例"><span class="toc-number">5.</span> <span class="toc-text">测试用例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试(在没有任何异常的情况下进行)"><span class="toc-number">5.1.</span> <span class="toc-text">功能测试(在没有任何异常的情况下进行)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容灾测试"><span class="toc-number">5.2.</span> <span class="toc-text">容灾测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置不可用的情况"><span class="toc-number">5.3.</span> <span class="toc-text">配置不可用的情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Imago-admin_功能说明"><span class="toc-number">6.</span> <span class="toc-text">Imago-admin 功能说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#首页"><span class="toc-number">6.1.</span> <span class="toc-text">首页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用管理"><span class="toc-number">6.2.</span> <span class="toc-text">应用管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置项管理"><span class="toc-number">6.3.</span> <span class="toc-text">配置项管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源管理(功能权限管理)"><span class="toc-number">6.4.</span> <span class="toc-text">资源管理(功能权限管理)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据权限管理"><span class="toc-number">6.5.</span> <span class="toc-text">数据权限管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志管理"><span class="toc-number">6.6.</span> <span class="toc-text">日志管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">7.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化Imago-admin"><span class="toc-number">7.1.</span> <span class="toc-text">初始化Imago-admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Imago-java-client_配置说明"><span class="toc-number">7.2.</span> <span class="toc-text">Imago-java-client 配置说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于通过DNS获取zookeeper集群地址"><span class="toc-number">8.</span> <span class="toc-text">关于通过DNS获取zookeeper集群地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么样的配置适合放在imago中进行管理"><span class="toc-number">9.</span> <span class="toc-text">什么样的配置适合放在imago中进行管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#备注(重要):"><span class="toc-number">10.</span> <span class="toc-text">备注(重要):</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#架构"><span class="toc-number">2.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储在Zookeeper中的数据结构"><span class="toc-number">3.</span> <span class="toc-text">存储在Zookeeper中的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容灾设计"><span class="toc-number">4.</span> <span class="toc-text">容灾设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试用例"><span class="toc-number">5.</span> <span class="toc-text">测试用例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试(在没有任何异常的情况下进行)"><span class="toc-number">5.1.</span> <span class="toc-text">功能测试(在没有任何异常的情况下进行)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容灾测试"><span class="toc-number">5.2.</span> <span class="toc-text">容灾测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置不可用的情况"><span class="toc-number">5.3.</span> <span class="toc-text">配置不可用的情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Imago-admin_功能说明"><span class="toc-number">6.</span> <span class="toc-text">Imago-admin 功能说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#首页"><span class="toc-number">6.1.</span> <span class="toc-text">首页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用管理"><span class="toc-number">6.2.</span> <span class="toc-text">应用管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置项管理"><span class="toc-number">6.3.</span> <span class="toc-text">配置项管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源管理(功能权限管理)"><span class="toc-number">6.4.</span> <span class="toc-text">资源管理(功能权限管理)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据权限管理"><span class="toc-number">6.5.</span> <span class="toc-text">数据权限管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志管理"><span class="toc-number">6.6.</span> <span class="toc-text">日志管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">7.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化Imago-admin"><span class="toc-number">7.1.</span> <span class="toc-text">初始化Imago-admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Imago-java-client_配置说明"><span class="toc-number">7.2.</span> <span class="toc-text">Imago-java-client 配置说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于通过DNS获取zookeeper集群地址"><span class="toc-number">8.</span> <span class="toc-text">关于通过DNS获取zookeeper集群地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么样的配置适合放在imago中进行管理"><span class="toc-number">9.</span> <span class="toc-text">什么样的配置适合放在imago中进行管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#备注(重要):"><span class="toc-number">10.</span> <span class="toc-text">备注(重要):</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#版本变更记录"><span class="toc-number">11.</span> <span class="toc-text">版本变更记录</span></a></li></ol>
  
   </div>
 
