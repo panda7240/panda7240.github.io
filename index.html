@@ -90,7 +90,7 @@
     <div class="article-content">
         
         <h2 id="概述">概述</h2><p>常规项目会有很多配置文件,比如数据库链接信息, 缓存信息等. 我们通常的做法是通过配置文件进行管理可以达到只需要修改一个地方,整个项目都可以生效的目的.目前我们的开发项目繁多, 程序为了保持高可用,会进行集群部署. 这样我们要对某一个或者某几个项目进行配置文件变更时,需要逐个进行修改.这样大量的人为操作可能会增加程序升级或发布的风险.与此同时修改配置文件之后会涉及到应用的重启.为了减小发布风险,我们需要一个地方对各个系统配置进行统一的管理,这时统一配置管理系统诞生的背景,我们暂且取名为 “IMAGO”没有特殊的含义,只是一个代号.</p>
-<h2 id="架构">架构</h2><p><img src="http://siye1982.github.io/img/blog/imago-architecture.png" alt="imago架构图"></p>
+<h2 id="架构">架构</h2><p><img src="http://siye1982.github.io/img/blog/imago/imago-architecture.png" alt="imago架构图"></p>
 <p>Imago分为两部分：</p>
 <ol>
 <li><p>配置管理控制台(imago-admin)</p>
@@ -141,7 +141,7 @@
 <h3 id="配置不可用的情况">配置不可用的情况</h3><ol>
 <li>client第一次启动时, zookeeper就不可用, 则无法从中获取数据, 并生成文件快照和本地缓存.</li>
 </ol>
-<h2 id="imago-admin_功能说明">imago-admin 功能说明</h2><h2 id="部署">部署</h2><h3 id="初始化imago-admin">初始化imago-admin</h3><p>当首次启动imago-admin时需要初始化zookeeper中的数据库配置,进入到zookeeper命令行执行以下命令:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">create</span> /imago <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql/<span class="number">1.1</span> &#123;<span class="string">"ip"</span>:<span class="string">"xxx.xxx.xxx.xxx"</span>,<span class="string">"port"</span>:<span class="string">"3231"</span>,<span class="string">"type"</span>:<span class="string">"master"</span>,<span class="string">"dbs"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"xxx"</span>,<span class="string">"user"</span>:<span class="string">"trade_user"</span>,<span class="string">"pwd"</span>:<span class="string">"xxx"</span>&#125;]&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Imago-admin_功能说明">Imago-admin 功能说明</h2><h2 id="部署">部署</h2><h3 id="初始化imago-admin">初始化imago-admin</h3><p>当首次启动imago-admin时需要初始化zookeeper中的数据库配置,进入到zookeeper命令行执行以下命令:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">create</span> /imago <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql/<span class="number">1.1</span> &#123;<span class="string">"ip"</span>:<span class="string">"xxx.xxx.xxx.xxx"</span>,<span class="string">"port"</span>:<span class="string">"3231"</span>,<span class="string">"type"</span>:<span class="string">"master"</span>,<span class="string">"dbs"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"xxx"</span>,<span class="string">"user"</span>:<span class="string">"trade_user"</span>,<span class="string">"pwd"</span>:<span class="string">"xxx"</span>&#125;]&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="imago-java-client_配置说明">imago-java-client 配置说明</h2><p>具体使用步骤总结如下:</p>
 <ol>
 <li><p>在pom.xml中加入:</p>
