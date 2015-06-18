@@ -1,0 +1,1121 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>EAGLEYE监控预警平台 | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="概述监控预警平台, eagle + eye (鹰眼)的合体词, 寓意可以快速发现问题, 并及时作出响应
+
+    Eagleye整个分为:
+
+    1. eagleye-java-client: 针对java程序进行日志收集
+
+    2. eagleye-alerter 根据控制台设置的预警规则, 对匹配日志进行实时预警.
+
+    3. eagleye-admin
+      * 应用管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EAGLEYE监控预警平台">
+<meta property="og:url" content="http://siye1982.github.io/2015/06/18/eagleye/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="概述监控预警平台, eagle + eye (鹰眼)的合体词, 寓意可以快速发现问题, 并及时作出响应
+
+    Eagleye整个分为:
+
+    1. eagleye-java-client: 针对java程序进行日志收集
+
+    2. eagleye-alerter 根据控制台设置的预警规则, 对匹配日志进行实时预警.
+
+    3. eagleye-admin
+      * 应用管理">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/architecture.jpg">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/collect_storage.jpg">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/logstash-gc0.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/logstash-gc1.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/logstash-gc2.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/eagleye-java-client-gc.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/单机器cpu.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/单机器内存.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/单机器1.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/双机177cpu.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/双机244cpu.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/双机177内存.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/双机244内存.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/kibana_index.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/kib_dis_tool.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/kibana_discover.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/kib_vis_tool.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/kibana_vis.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/kib_dash_tool.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/eagleye/kib_dash.png">
+<meta property="og:updated_time" content="2015-06-18T14:45:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EAGLEYE监控预警平台">
+<meta name="twitter:description" content="概述监控预警平台, eagle + eye (鹰眼)的合体词, 寓意可以快速发现问题, 并及时作出响应
+
+    Eagleye整个分为:
+
+    1. eagleye-java-client: 针对java程序进行日志收集
+
+    2. eagleye-alerter 根据控制台设置的预警规则, 对匹配日志进行实时预警.
+
+    3. eagleye-admin
+      * 应用管理">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/18/eagleye/" title="EAGLEYE监控预警平台" itemprop="url">EAGLEYE监控预警平台</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-18T14:20:11.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求"><span class="toc-number">2.</span> <span class="toc-text">需求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#应用App"><span class="toc-number">2.1.</span> <span class="toc-text">应用App</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户"><span class="toc-number">2.2.</span> <span class="toc-text">用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户组（不做）"><span class="toc-number">2.3.</span> <span class="toc-text">用户组（不做）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预警规则"><span class="toc-number">2.4.</span> <span class="toc-text">预警规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预警设置"><span class="toc-number">2.5.</span> <span class="toc-text">预警设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预警"><span class="toc-number">2.6.</span> <span class="toc-text">预警</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发送日志记录"><span class="toc-number">2.7.</span> <span class="toc-text">发送日志记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#感知有多少app在使用该系统"><span class="toc-number">2.8.</span> <span class="toc-text">感知有多少app在使用该系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志检索"><span class="toc-number">2.9.</span> <span class="toc-text">日志检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志统计"><span class="toc-number">2.10.</span> <span class="toc-text">日志统计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细设计"><span class="toc-number">3.</span> <span class="toc-text">详细设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Eagleye_整体架构图"><span class="toc-number">3.1.</span> <span class="toc-text">Eagleye 整体架构图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志收集,存储架构图"><span class="toc-number">3.2.</span> <span class="toc-text">日志收集,存储架构图</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#日志可靠性说明"><span class="toc-number">3.2.1.</span> <span class="toc-text">日志可靠性说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日志中继说明"><span class="toc-number">3.2.2.</span> <span class="toc-text">日志中继说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日志存储"><span class="toc-number">3.2.3.</span> <span class="toc-text">日志存储</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日志检索,_统计"><span class="toc-number">3.2.4.</span> <span class="toc-text">日志检索, 统计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#备注"><span class="toc-number">3.2.5.</span> <span class="toc-text">备注</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">4.</span> <span class="toc-text">测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">4.1.</span> <span class="toc-text">功能测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#性能测试"><span class="toc-number">4.2.</span> <span class="toc-text">性能测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#logstash_性能测试:"><span class="toc-number">4.2.1.</span> <span class="toc-text">logstash 性能测试:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#eagleye-java-client_性能测试"><span class="toc-number">4.2.2.</span> <span class="toc-text">eagleye-java-client 性能测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#eagleye-alert_性能测试"><span class="toc-number">4.2.3.</span> <span class="toc-text">eagleye-alert 性能测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">5.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#kafka_topic创建"><span class="toc-number">5.1.</span> <span class="toc-text">kafka topic创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#logstash_部署步骤"><span class="toc-number">5.2.</span> <span class="toc-text">logstash 部署步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#elasticsearch_部署"><span class="toc-number">5.3.</span> <span class="toc-text">elasticsearch 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eagleye-java-client_部署"><span class="toc-number">5.4.</span> <span class="toc-text">eagleye-java-client 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kibana部署和配置"><span class="toc-number">5.5.</span> <span class="toc-text">kibana部署和配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#部署:"><span class="toc-number">5.5.1.</span> <span class="toc-text">部署:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置"><span class="toc-number">5.5.2.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#alerter_部署和配置"><span class="toc-number">5.6.</span> <span class="toc-text">alerter 部署和配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eagleye-admin部署"><span class="toc-number">5.7.</span> <span class="toc-text">eagleye-admin部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非java项目对接"><span class="toc-number">6.</span> <span class="toc-text">非java项目对接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">7.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#es自定义检索功能说明"><span class="toc-number">7.1.</span> <span class="toc-text">es自定义检索功能说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xxx_es_index_template功能简介"><span class="toc-number">7.2.</span> <span class="toc-text">xxx es index template功能简介</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="概述">概述</h2><pre><code>监控预警平台, eagle + eye (鹰眼)的合体词, 寓意可以快速发现问题, 并及时作出响应
+
+    Eagleye整个分为:
+
+    1. eagleye-java-client: 针对java程序进行日志收集
+
+    2. eagleye-alerter 根据控制台设置的预警规则, 对匹配日志进行实时预警.
+
+    3. eagleye-admin
+      <span class="keyword">*</span> 应用管理
+      <span class="keyword">*</span> 用户管理
+      <span class="keyword">*</span> 规则管理
+      <span class="keyword">*</span> 预警设置
+      <span class="keyword">*</span> 日志检索
+      <span class="keyword">*</span> 日志统计
+</code></pre><h2 id="需求">需求</h2><h3 id="应用App">应用App</h3><pre><code>描述：应用<span class="keyword">app</span>是每个系统的唯一标识
+
+一、应用<span class="keyword">app</span>列表（有分页信息）
+    1、应用名称
+    2、负责人
+    3、相关人员：本组的开发人员
+    4、最后更新时间
+    5、备注
+
+二、添加：弹出添加窗口
+  输入框：
+    1、应用名称：此处是英文名称，和loom里面的appId保持一致。必须填写，不能为空。
+    2、备注：描述该系统（400字以内）。
+  按钮：
+    1、保存：保存数据到数据库，并关闭弹窗
+    2、取消：关闭弹窗
+
+三、编辑：弹出编辑窗口，自动填充相关信息。
+    所有内容都可以修改
+    功能同添加功能。
+
+四、删除：删除所选应用，在数据库中逻辑删除，如果已经绑定了预警设置，直接删除与其绑定的预警设置。
+
+五、搜索：根据应用名称和负责人搜索。
+
+
+问题: 1. 负责人, 相关人员是否有必要去维护, 如果某个人离职, 个关系怎么维护.
+     2. 是否应该有通过<span class="keyword">app</span>,跳转到<span class="keyword">app</span>绑定了哪些用户组, 有哪些规则.
+     3. log4j中appender的代码提示.
+</code></pre><h3 id="用户">用户</h3><pre><code>描述：此用户信息有两个功能，一是用户登录用，二是发送报警信息的对象。
+
+一、信息列表（有分页信息）
+    <span class="number">1</span>、登录名
+    <span class="number">2</span>、用户名
+    <span class="number">3</span>、手机
+    <span class="number">4</span>、邮箱
+    <span class="number">5</span>、用户类型：管理员、读写、只读
+    <span class="number">6</span>、最后更新时间
+    <span class="number">7</span>、状态：正常、禁用。
+    <span class="number">8</span>、操作：修改密码、禁用、启用
+
+二、添加：弹出添加用户的窗口
+    账号、用户名、密码，邮箱、手机是必填项，备注是选填项。
+    <span class="number">1</span>、保存：保存数据到数据库，并关闭弹窗
+    <span class="number">2</span>、取消：关闭弹窗
+
+三、编辑：弹出编辑页面
+    只能修改用户名，手机、邮箱、用户类型、备注。
+    <span class="number">1</span>、保存：保存数据到数据库，并关闭弹窗
+    <span class="number">2</span>、取消：关闭弹窗
+
+四、删除：删除所选用户，逻辑删除，如果已经绑定了预警功能，则直接删除和改用有关的所有关系，<span class="literal">admin</span>账户不能删除。
+
+五、禁用、启用：用户的状态分为正常和和禁用两种状态。禁用时不能登录，不能接受预警信息。<span class="literal">admin</span>账户不能禁用。
+
+六、修改密码：点击打开修改密码页面，在修改页面不用输入老的密码，直接输入两次密码，如果一致并提交，就修改成功。
+
+七、搜索：在列表页有一个搜索框，输入可以根据登录名，用户名，邮箱，手机，备注进行模糊搜索用户。
+</code></pre><h3 id="用户组（不做）">用户组（不做）</h3><pre><code>描述：每个用户组包含多个用户，方便在绑定预警规则的时候绑定多人。
+
+一、信息列表
+    1、组名：用户组的名字（简单明了，不能为空，不能超过30个字）
+    2、用户数量：统计此用户组的用户数量
+    3、最后更新时间。
+    4、备注
+    5、包含用户：点击加号展开，所有用户名，用逗号隔开。
+
+二、搜索：根据用户组名搜索。
+
+三、添加：添加用户组。
+  输入框：
+   1、组名：
+   2、备注（400字以内）
+  按钮：
+   1、保存：保存数据到数据库，并关闭弹窗
+   2、取消：关闭弹窗
+
+四、编辑：和添加功能相同
+
+五、删除：逻辑删除。如果绑定了预警规则，自动解除和预警规则的绑定。
+
+六、编辑用户：弹窗打开所有用户信息，用复选框显示
+   按钮：
+     1、保存：保存数据到数据库，并关闭弹窗
+     2、取消：关闭弹窗
+</code></pre><h3 id="预警规则">预警规则</h3><pre><code>描述：定义触发什么条件的时候开始报警。
+
+一、列表：点击规则时下方根据选中的规则显示绑定的用户组和用户信息。
+    1、规则名称
+    2、关键字：包含此关键字时开始报警，可以是多个，多个之间用英文的逗号隔开
+    3、最后更新时间
+    4、操作：（编辑，删除，禁用、启用）
+    5、备注：点击加号显示
+
+二、搜索：根据搜索字段：规则名称，关键字。
+
+三、添加：弹窗添加预警规则
+    1、预警规则名称：文本框输入，长度不超过50字
+    2、关键字：文本框输入，长度不超过400字。
+    3、备注：长度400限制。
+  按钮：
+    1、保存：保存数据到数据库，并关闭弹窗
+    2、取消：关闭弹窗
+
+四、编辑：弹窗打开编辑窗口，自动填充相关信息，功能同添加界面。
+
+五、删除：逻辑删除此规则，如果已经绑定了预警设置，直接删除与其绑定的预警设置。
+
+六、禁用、启用：禁用后预警时忽略此预警信息。
+</code></pre><h3 id="预警设置">预警设置</h3><pre><code>描述：此功能绑定<span class="keyword">app</span>和规则的关系，并设置违反此规则的时候给那些用户发送短信或者邮件提醒。
+
+一、列表：
+    1、<span class="keyword">app</span>名称
+    2、规则名称
+    3、最后更新时间
+    4、绑定短信用户：点击弹窗选择接受短信的用户
+    5、绑定邮件用户：点击弹窗选择邮件接受预警的用户。
+    5、操作：删除
+二、 添加：弹窗打开添加窗口（规则和<span class="keyword">app</span>关系不能重复）
+    1、规则：下拉框，必选，
+    2、应用<span class="keyword">app</span>：下拉框，必选，同一个规则下唯一，支持搜索
+    按钮
+     1、保存：保存数据到数据库，并关闭弹窗
+     2、取消：关闭弹窗
+三、编辑：修改其绑定关系
+
+三、删除：直接删除绑定关系。删除何其关联的发送信息设置。
+</code></pre><h3 id="预警">预警</h3><pre><code>一、根据预警规则收到日志后分析
+
+二、发送短信和邮件日志
+
+   1、接受者
+   2、发送时间
+   3、发送类型：（短信，邮件）
+   4、发送内容：（长度10000）
+</code></pre><h3 id="发送日志记录">发送日志记录</h3><h3 id="感知有多少app在使用该系统">感知有多少app在使用该系统</h3><h3 id="日志检索">日志检索</h3><pre><code>多维度检索: 
+   1. 按照时间区间
+   2. 日志内容
+   3. 应用
+</code></pre><h3 id="日志统计">日志统计</h3><pre><code><span class="bullet">1. </span>按照app的异常数据进行统计排名
+<span class="bullet">2. </span>按照具体的异常信息进行统计排名
+</code></pre><h2 id="详细设计">详细设计</h2><h3 id="Eagleye_整体架构图">Eagleye 整体架构图</h3><p>  <img src="http://siye1982.github.io/img/blog/eagleye/architecture.jpg" alt="eagleye,整体架构图"></p>
+<pre><code>eagleye作为所有服务的日志监控预警平台, 需要收集所有后台服务的全量日志.
+
+主要分成如下几个部分:
+<span class="number">1</span>. 各个java服务需要接入的基于log4j appender的日志收集客户端(eagleye-java-client)
+
+<span class="number">2</span>. 我们统一通过<span class="variable">Kafka</span>作为日志传输通道, 因为要收集的是所有服务的全量日志,日志量庞大,<span class="variable">Kafka</span>非常适合这种分布式收集的场景, 并且可以很容易的进行水平拓展.
+
+<span class="number">3</span>. 我们通过eagleye-alert 从kafka中获取日志, 并根据eagleye-admin中设置的预警规则进行实时预警, eagleye-alert支持水平拓展,并可以做到高可用.
+
+<span class="number">4</span>. 通过logstash进行全量日志的收集并存储到elasticsearch中进行存储, 最终用kibana进行快速的检索和统计.
+
+<span class="number">5</span>. eagleye-admin是eagleye架构的管理控制台, 从这可以进行各种预警规则的配置, 监控各个client, alerter的心跳, es的存储状态, 提供日志检索,统计界面.
+   eagleye-admin作为一个管理控制台,并不需要高可以,所以只需要部署一个实例, 即使admin不可用也不会影响所有日志的收集预警功能.
+
+<span class="number">6</span>. 所有服务器的心跳, 预警规则, 都是通过redis进行通信.
+</code></pre><h3 id="日志收集,存储架构图">日志收集,存储架构图</h3><p>  <img src="http://siye1982.github.io/img/blog/eagleye/collect_storage.jpg" alt="日志收集,存储架构图"></p>
+<h4 id="日志可靠性说明">日志可靠性说明</h4><pre><code>因为将来会涉及到交易流程的日志跟踪, 所以日志的可靠性需要保证.
+
+鉴于之前推动zookeeper的dns设置过程(运维人员需要每台服务器去修改,推动时,不是这台服务器没有设置,就是那台服务器没有设置), 日志收集任务前期在服务端进行日志采集的过程, 并没有引入第三方的收集工具.
+
+在服务端进行日志采集方式, 采用自定义log4j的appdender方式接入采集点.通过kafka作为日志传输通道.
+
+当然, 采用这种方式有一个风险点是,加入redis不可用时,日志将采集不到. 但是会记录到本地log日志中,并不会丢失. 
+
+服务端进行日志采集,也有高可用方案,可以每台部署服务的机器都部署logstash进行收集,即使logstash不可用,日志也不会丢失,并且,logstash启动时会将丢失收集的日志重新采集.
+
+但是logstash部署在服务端所在的机器,对前期日志采集工作量比较大,并不适合我们前期小步迭代推动eagleye项目.所以我们前期约定,在极端情况下,我们允许小概率收集日志失败的可能.
+
+因为采用的是redis的队列方式进行传输,所以并不影响我们将来更替高可用的日志采集方案.
+</code></pre><h4 id="日志中继说明">日志中继说明</h4><pre><code>日志中继器的存在,有利于我们水平拓展日志收集,并灵活指定存储媒介.
+
+logstash可以灵活的往es, hdfs, mysql, cvs, local file 等存储媒介, 并可以灵活的对日志内容进行过滤.
+
+logstash相比flume会更轻量一些,并且是elasticsearch的同源产品.
+</code></pre><h4 id="日志存储">日志存储</h4><pre><code>我们选择elasticsearch进行存储, 当然也可以随时切换成hdfs进行存储, elasticsearch提供了丰富的<span class="variable">RESTFul</span>风格的api,和语言无关.
+
+es的集群搭建成本非常低,每一个es服务会自动发现集群并加入进去.
+</code></pre><h4 id="日志检索,_统计">日志检索, 统计</h4><pre><code>因为有<span class="variable">Kibana</span>的存在, 我们可以很轻易并且快速的从es中检索出我们想要的日志. 可以从多维度进行日志的统计.
+
+关键是这些功能的提供, 我们不需要写任何一行代码.
+</code></pre><h4 id="备注">备注</h4><pre><code>上图中的channel, relayer, <span class="literal">es</span> 可以部署在相同的机器中,也可以进行拆分. 每一层都可以选用其他方案进行替代,并不影响整个系统的运转. 
+</code></pre><h2 id="测试">测试</h2><h3 id="功能测试">功能测试</h3><h3 id="性能测试">性能测试</h3><h4 id="logstash_性能测试:">logstash 性能测试:</h4><pre><code>单台服务器的单个logstash实例
+内存:<span class="number">500</span>m
+input consumers : <span class="number">1</span>
+output workers : <span class="number">2</span>
+机器内存: <span class="number">4</span>G, 其中<span class="number">2</span>个G被es消耗, <span class="number">1</span>个多G被日志mock程序占用
+机器<span class="number">8</span>核,普通pc机
+
+在output配置中
+<span class="variable">workers =</span>&gt; <span class="number">2</span> <span class="comment"># 如果这个配置开太大容易内存溢出, 需要根据机器配置进行调整, 在测试环境logstash 内存500m时,2个线程效率最高</span>
+<span class="variable">flush_size =</span>&gt; <span class="number">1000</span> <span class="comment">#该配置配合workers进行调整, 如果太大, 也容易内存溢出, 或者增加gc次数.目前这个配置可以达到单台logstash可以20000/s的日志写入</span>
+
+gc观察
+在bin/logstash.lib.sh 文件中 logstash 采用了 如下gc方式
+<span class="variable">JAVA_OPTS=</span><span class="string">"$JAVA_OPTS -XX:+UseParNewGC"</span>
+<span class="variable">JAVA_OPTS=</span><span class="string">"$JAVA_OPTS -XX:+UseConcMarkSweepGC"</span>
+观察曲线如下图:
+</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/logstash-gc0.png" alt="logstash采用自己默认gc"></p>
+<pre><code>老年代gc会比较频繁,增加了<span class="built_in">stop</span> <span class="operator">the</span> world的时间,会影响性能.
+
+注释掉之后的曲线老年代很少出现回收现象, 不会造成<span class="built_in">stop</span> <span class="operator">the</span> world 现象     
+</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/logstash-gc1.png" alt="logstash采用jvm默认gc"></p>
+<pre><code>但是采用<span class="keyword">jvm</span>默认gc方式后运行了<span class="number">1</span>个小时之后出现了频繁的老年代gc, 如下图:
+</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/logstash-gc2.png" alt="logstash采用jvm默认gc"> </p>
+<pre><code>简单的测试观察之后, 还是建议使用logstash默认的gc
+JAV<span class="built_in">A_OPTS</span>=<span class="string">"$JAVA_OPTS -XX:+UseParNewGC"</span>
+JAV<span class="built_in">A_OPTS</span>=<span class="string">"$JAVA_OPTS -XX:+UseConcMarkSweepGC"</span>
+</code></pre><h4 id="eagleye-java-client_性能测试">eagleye-java-client 性能测试</h4><pre><code><span class="keyword">client</span>往kafka中发送日志可以<span class="number">80000</span>/s, 这取决与网络速度和硬盘速度
+
+运行时通过jmx观察内存,如下图: 没有一次老年代回收
+</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/eagleye-java-client-gc.png" alt="eagleye-java-client gc图"></p>
+<h4 id="eagleye-alert_性能测试">eagleye-alert 性能测试</h4><pre><code><span class="bullet">1. </span>单服务, 单机器(244)压力测试:
+
+<span class="code">    cpu使用如下图:</span>
+</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/单机器cpu.png" alt="cpu"></p>
+<pre><code>内存使用如下图:
+</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/单机器内存.png" alt="内存"></p>
+<pre><code>吞吐量:<span class="number">3.15</span>w条<span class="keyword">message</span>/s
+</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/单机器1.png" alt="吞吐量"> </p>
+<pre><code><span class="bullet">2. </span>双服务, 双机器(244, 177)压力测试:
+
+177cpu使用如下图:
+</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机177cpu.png" alt="cpu"></p>
+<pre><code><span class="number">244</span>cpu使用如下图<span class="symbol">:http</span><span class="symbol">://siye1982</span>.github.io/img/blog/eagleye
+</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机244cpu.png" alt="cpu"></p>
+<pre><code>177内存使用如下图:
+</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机177内存.png" alt="内存"></p>
+<pre><code>244内存使用如下图:
+</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机244内存.png" alt="内存"></p>
+<pre><code><span class="number">177</span>吞吐量:<span class="number">2.32</span>w条message/s
+
+<span class="number">244</span>吞吐量:<span class="number">3.22</span>w条message/s
+
+发现单机处理时最大吞吐量 与双机处理时最大吞吐量相同 , 但是通过下面单机双实例测试可以确认服务器网络io不是瓶颈 , 
+初步认为是单个kafka topic 分区的生产力是有限的 ,    双机处理时吞吐量的差距是由于kafka topic 分区分配不均衡导致<span class="params">(<span class="number">244</span>得到<span class="number">3</span>个分区 , <span class="number">177</span>得到两个)</span>
+修改kafka分区数到<span class="number">10</span>个后, 发现单个程序实例即使分配到更多<span class="params">(<span class="number">5</span>个或<span class="number">10</span>个)</span>分区, 吞吐量上限仍然是<span class="number">3</span>w/s , 
+进一步测试得到的结果是程序的性能瓶颈在kafka消费者迭代获取数据部分, 且一个程序中运行多个针对单个topic的ConsumerConnector并不会提高程序吞吐量
+
+
+<span class="number">3</span>. 单机<span class="params">(<span class="number">244</span>)</span>双实例
+程序<span class="number">1</span><span class="params">(吞吐量 <span class="number">1.68</span>w条message/s , 分配到<span class="number">2</span>个分区)</span>
+程序<span class="number">2</span><span class="params">(吞吐量 <span class="number">2.9</span>w条message/s , 分配到<span class="number">3</span>个分区)</span>
+
+总结:
+alerter程序启动时可以通过配置文件loomContext.xml配置alerterConsumerThreadNum<span class="params">(alerter程序kafka消费者线程数)</span>
+一个kafka消费者线程可以消费多个到<span class="number">0</span>个分区, 但一个分区最多只能被一个消费者线程消费
+新的消费程序加入或旧的消费程序失去连接会引发所有分片和所有消费者线程间的再平衡, 但是如果已经是每个分片都被不同的线程消费, 即分片和消费线程为<span class="number">1</span>对<span class="number">1</span>的关系时, 再加入消费程序, 该消费程序将会分配不到分区 导致该消费程序吞吐量为<span class="number">0</span>
+单个程序实例的吞吐量在<span class="number">3</span>w/s, 可以通过部署多个实例的方式实现水平扩容, 但需要确保新部署的实例会得到topic分区
+    如线上服务topic有<span class="number">24</span>个分区, 最多可部署alerter程序实例数为 <span class="number">24</span>/alerterConsumerThreadNum, 即如alerterConsumerThreadNum配置为<span class="number">3</span>, 最多可以部署<span class="number">24</span>/<span class="number">3</span>=<span class="number">8</span>个alerter程序实例
+</code></pre><h2 id="部署">部署</h2><h3 id="kafka_topic创建">kafka topic创建</h3><pre><code><span class="string">.</span><span class="comment">/kafka</span><span class="literal">-</span><span class="comment">topics</span><span class="string">.</span><span class="comment">sh</span> <span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">topic</span> <span class="comment">'EAGLEYE_LOG_CHANNEL'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zookeeper</span> <span class="comment">'spark:2181</span><span class="string">,</span><span class="comment">witgo:2181'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">partitions</span> <span class="comment">10</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">replication</span><span class="literal">-</span><span class="comment">factor</span> <span class="comment">1</span>
+<span class="string">.</span><span class="comment">/kafka</span><span class="literal">-</span><span class="comment">topics</span><span class="string">.</span><span class="comment">sh</span> <span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">topic</span> <span class="comment">'EAGLEYE_ALERT_MAIL'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zookeeper</span> <span class="comment">'spark:2181</span><span class="string">,</span><span class="comment">witgo:2181'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">partitions</span> <span class="comment">10</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">replication</span><span class="literal">-</span><span class="comment">factor</span> <span class="comment">1</span>
+<span class="string">.</span><span class="comment">/kafka</span><span class="literal">-</span><span class="comment">topics</span><span class="string">.</span><span class="comment">sh</span> <span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">topic</span> <span class="comment">'EAGLEYE_ALERT_SMS'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zookeeper</span> <span class="comment">'spark:2181</span><span class="string">,</span><span class="comment">witgo:2181'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">partitions</span> <span class="comment">10</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">replication</span><span class="literal">-</span><span class="comment">factor</span> <span class="comment">1</span>
+</code></pre><h3 id="logstash_部署步骤">logstash 部署步骤</h3><pre><code>logstash 需要有jruby1.7.11 版本支持
+
+<span class="number">1.</span> 通过rbenv 对ruby环境安装:
+git clone <span class="string">git:</span><span class="comment">//github.com/sstephenson/rbenv.git ~/.rbenv</span>
+# 用来编译安装 ruby
+git clone <span class="string">git:</span><span class="comment">//github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build</span>
+# 用来管理 gemset, 可选, 因为有 bundler 也没什么必要
+git clone <span class="string">git:</span><span class="comment">//github.com/jamis/rbenv-gemset.git  ~/.rbenv/plugins/rbenv-gemset</span>
+# 通过 gem 命令安装完 gem 后无需手动输入 rbenv rehash 命令, 推荐
+git clone <span class="string">git:</span><span class="comment">//github.com/sstephenson/rbenv-gem-rehash.git ~/.rbenv/plugins/rbenv-gem-rehash</span>
+# 通过 rbenv update 命令来更新 rbenv 以及所有插件, 推荐
+git clone <span class="string">https:</span><span class="comment">//github.com/rkh/rbenv-update.git ~/.rbenv/plugins/rbenv-update</span>
+然后把下面的代码放到 ~/.bash_profile 里
+export PATH=<span class="string">"$HOME/.rbenv/bin:$PATH"</span>
+然后重开一个终端就可以执行 rbenv 了.
+
+rbenv install <span class="number">1.9</span>.3-p551 # 安装 <span class="number">1.9</span>.3-p551
+rbenv install jruby-<span class="number">1.7</span>.11 # 安装 jruby-<span class="number">1.7</span>.11
+
+rbenv global jruby-<span class="number">1.7</span>.3 # 默认使用 jruby-<span class="number">1.7</span>.3
+
+
+<span class="number">2.</span> 下面从咱们的gitlab上获取已经安装好插件的logstash-<span class="number">1.4</span>.2
+git clone git<span class="annotation">@git</span>.tuan800-inc.<span class="string">com:</span>trade_architect/logstash.git
+
+<span class="number">3.</span>  因为logstash需要使用kafka, 所以需要在本机配置, 生产环境的kafka的hosts表
+
+<span class="number">172.16</span>.11.43 YJ-<span class="number">18</span>-<span class="number">1</span>
+<span class="number">172.16</span>.11.46 YJ-<span class="number">18</span>-<span class="number">4</span>
+<span class="number">172.16</span>.11.60 YJ-<span class="number">17</span>-<span class="number">4</span>
+<span class="number">172.16</span>.11.67 YJ-<span class="number">17</span>-<span class="number">11</span>
+<span class="number">172.16</span>.11.73 YJ-<span class="number">16</span>-<span class="number">3</span>
+
+<span class="number">4.</span> 按照logstash进行负载均衡存储的es实例
+
+(<span class="number">1</span>). git clone git<span class="annotation">@git</span>.tuan800-inc.<span class="string">com:</span>trade_architect/elasticsearch.git
+
+(<span class="number">2</span>). 在  elasticsearch-<span class="number">1.4</span>.4<span class="regexp">/config/</span>elasticsearch.yml 中设置将需要输出的数据, 日志路径.
+
+   node.<span class="string">name:</span> <span class="string">"eagleye_es_logstash_XXX"</span>   其中XXX可以标识出该机器
+
+   path.<span class="string">data:</span> <span class="regexp">/home/</span>zhejava<span class="regexp">/esdata/</span>data   因为该实例不存储数据使用, 只是用来进行检索和存储时当做集群负载均衡器使用,
+   path.<span class="string">work:</span> <span class="regexp">/home/</span>zhejava<span class="regexp">/esdata/</span>work  存放临时文件的位置
+   path.<span class="string">logs:</span> <span class="regexp">/home/</span>zhejava<span class="regexp">/esdata/</span>logs  存放日志的位置
+
+   transport.tcp.<span class="string">port:</span> <span class="number">9300</span> 配置开启, 并修改为<span class="number">9301</span>
+
+  http.<span class="string">port:</span> <span class="number">9200</span> 配置开启 , 并修改为<span class="number">9201</span>
+
+  node.<span class="string">master:</span> <span class="literal">false</span>  开启配置
+  node.<span class="string">data:</span> <span class="literal">false</span>     开启配置
+
+(<span class="number">3</span>). 在 elasticsearch-<span class="number">1.4</span>.4<span class="regexp">/bin/</span>elasticsearch 文件中的 ES_HEAP_SIZE=<span class="number">32768</span>m 修改为 <span class="number">8192</span>m 即可
+
+(<span class="number">4</span>). 执行  elasticsearch-<span class="number">1.4</span>.4<span class="regexp">/bin/</span>elasticsearch -d
+
+<span class="number">5.</span> 进入到 logstash-<span class="number">1.4</span>.2 中执行  sh start.sh 即可, 在该文件中可以配置logstash具体的日志输出路径
+
+如果不想使用已经安装好插件的logstash请参照下面的方式安装.
+
+----------------------------------------------------------------------------------------------------------------------------
+
+如果按照官方文档的部署可以git clone 最新版的logstash-kafka, 并且在该目录下执行 make tarball, 然后生成 logstash-<span class="number">1.4</span>.2.tar.gz
+
+但是这需要有一个畅通的网络, 因为有一个无形的墙,阻挡我们完成这件事, 我个人尝试vpn出去, 也出现了失败, 网络并不稳定.
+
+所以我还是阐述一下通过手动搭建一个logstash 服务, 并可以从kafka中消费队列, 并存储消息到elasticsearch中.
+
+
+<span class="number">1.</span> 下载官方logstash-<span class="number">1.4</span>.2 版本, 这是最新的release版本.
+   wget <span class="string">https:</span><span class="comment">//download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz</span>
+
+<span class="number">2.</span> 下载 logstash 针对kafka的插件 logstash-kafka v0.6.2 (或者可以通过git clone获取最新的版本)
+   wget <span class="string">https:</span><span class="comment">//github.com/joekiller/logstash-kafka/archive/v0.6.2.tar.gz  </span>
+
+<span class="number">3.</span> 因为logstash-kafka是ruby项目, 所以需要依赖ruby环境
+
+<span class="number">4.</span> 解压logstash包,得到 $logstash_home, 并创建 $logstash_home<span class="regexp">/vendor/</span>jar<span class="regexp">/kafka_2.9.2-0.8.1.1/</span>libs/
+
+<span class="number">5.</span> 下载kafka程序包(如果没有, 请去官网下最新<span class="number">0.8</span>.1.1版本, wget <span class="string">https:</span><span class="comment">//www.apache.org/dyn/closer.cgi?path=/kafka/0.8.1.1/kafka_2.9.2-0.8.1.1.tgz)</span>
+
+<span class="number">6.</span> 从$kafka_home<span class="regexp">/lib 目录复制所有jar文件到$logstash_home/</span>vendor<span class="regexp">/jar/</span>kafka_2.9.2-<span class="number">0.8</span>.1.1<span class="regexp">/libs/</span>下
+
+<span class="number">7.</span> 复制logstash-kafka<span class="regexp">/lib/</span>logstash里的 inputs 和 outputs 下的 kafka.rb，拷贝到对应的 $logstash_home<span class="regexp">/lib/</span>logstash 里的 inputs 和 outputs 对应目录下
+
+<span class="number">8.</span> git clone <span class="string">https:</span><span class="comment">//github.com/logstash-plugins/logstash-input-kafka.git</span>
+   然后进入该目录下运行bundle install, 这时会下载logstash运行时依赖的各种gem (这又是一个大坑, 之前忽略了这一步)
+
+<span class="number">9.</span> 在$logstash_home目录下运行：
+   GEM_HOME=vendor<span class="regexp">/bundle/</span>jruby<span class="regexp">/1.9 GEM_PATH= java -jar vendor/</span>jar<span class="regexp">/jruby-complete-1.7.11.jar --1.9 ../</span>logstash-kafka<span class="regexp">/gembag.rb ../</span>logstash-kafka/logstash-kafka.gemspec
+
+    logstash到此已经部署完毕, 这里碰到一个坑: 是logstash从kafka中消费消息是始终不能转换DefaultDecoder对象为json, 最后发现 v0.6.2版本的logstash-kafka中的inputs插件有问题,
+    这时, 你需要去github中获取logstash-kafka 项目下的logstash-kafka<span class="regexp">/lib/</span>logstash<span class="regexp">/inputs/</span>kafka.rb 作为最新的input插件覆盖之前的.
+
+<span class="number">10</span>, 在$logstash_home目录下创建 logstash.yml 配置文件
+   文件内容为如下:
+   input {
+       kafka {
+           zk_connect =&gt; <span class="string">"witgo:2181,spark:2181"</span>
+           group_id =&gt; <span class="string">"eagleye_logstash"</span>
+           topic_id =&gt; <span class="string">"EAGLEYE_LOG_CHANNEL"</span>
+           consumer_threads =&gt; <span class="number">5</span>  
+       }
+   }
+
+   output {
+     elasticsearch {
+       cluster =&gt; <span class="string">"eagleye_es"</span>
+       # 我们可以版本搭建一个es服务, 该服务不存储数据和检索, 只是发现es集群,并转发操作请求
+       host =&gt; <span class="string">"localhost"</span>
+       port =&gt; <span class="string">"9301"</span>
+       protocol =&gt; <span class="string">"transport"</span>
+       index =&gt; <span class="string">"eagleye-log-%{+YYYY.MM.dd}"</span>
+       index_type =&gt; <span class="string">"log"</span>
+       workers =&gt; <span class="number">2</span> # 如果这个配置开太大容易内存溢出, 需要根据机器配置进行调整, 在测试环境logstash 内存<span class="number">500</span>m时,<span class="number">2</span>个线程效率最高
+       flush_size =&gt; <span class="number">1000</span> #该配置配合workers进行调整, 如果太大, 也容易内存溢出, 或者增加gc次数.目前这个配置可以达到单台logstash可以<span class="number">20000</span>/s的日志写入
+       template_overwrite =&gt; <span class="literal">true</span>
+     }
+   }
+
+ <span class="number">10</span>, 启动logstash 
+     bin<span class="regexp">/logstash agent -f logstash.yml &gt; /</span>home<span class="regexp">/zhejava/</span>logstash_log/logstash.log &amp;
+
+ <span class="number">11</span>, logstash-<span class="number">1.4</span>.2 默认的elasticsearch-logstash.json 模板并没有生效, 里面只是一个通用的样板, 
+      我将 logstash-<span class="number">1.4</span>.2<span class="regexp">/lib/</span>logstash<span class="regexp">/outputs/</span>elasticsearch/elasticsearch-template.json 修改为如下内容:
+      {
+        <span class="string">"template"</span> : <span class="string">"eagleye-*"</span>, <span class="comment">//这个需要和要操作的index名称匹配,很重要,默认是logstash*,而我们的是eagleye*,所以该模板一直不好使,没注意,大坑啊.</span>
+        <span class="string">"settings"</span> : {
+          <span class="string">"index.refresh_interval"</span> : <span class="string">"5s"</span>
+        },
+        <span class="string">"mappings"</span> : {
+           <span class="string">"log"</span> : {
+                  <span class="string">"properties"</span> : {
+                      <span class="string">"@timestamp"</span> : {
+                          <span class="string">"type"</span> : <span class="string">"date"</span>,
+                          <span class="string">"format"</span> : <span class="string">"dateOptionalTime"</span>
+                      },
+                      <span class="string">"timestamp"</span> : {
+                          <span class="string">"type"</span> : <span class="string">"date"</span>, <span class="comment">//日期类型, 在生成json的对象中需要是date类型</span>
+                          <span class="string">"format"</span> : <span class="string">"dateOptionalTime"</span> 
+                      },
+                      <span class="string">"head"</span> : {<span class="comment">//涉及到map嵌套,可以这样写</span>
+                          <span class="string">"properties"</span> : {
+                              <span class="string">"app"</span> : {
+                                  <span class="string">"type"</span> : <span class="string">"string"</span>,
+                                  <span class="string">"index"</span> : <span class="string">"not_analyzed"</span> <span class="comment">//该字段不需要分词索引,统计时不会因为"-"而将一个分开统计</span>
+                              }
+                          }
+                      }
+                  }
+              }
+        }
+      }
+
+    <span class="number">12.</span> logstash时差<span class="number">8</span>小时问题
+
+        logstash在按每天输出到elasticsearch时，因为时区使用utc，造成每天<span class="number">8</span>:<span class="number">00</span>才创建当天索引，而<span class="number">8</span>:<span class="number">00</span>以前数据则输出到昨天的索引
+        修改logstash<span class="regexp">/lib/</span>logstash/event.rb 可以解决这个问题
+        第<span class="number">226</span>行
+        .withZone(org.joda.time.<span class="string">DateTimeZone:</span>:UTC)
+        修改为
+        .withZone(org.joda.time.DateTimeZone.getDefault())
+</code></pre><h3 id="elasticsearch_部署">elasticsearch 部署</h3><pre><code>依赖 jdk <span class="number">1.7</span>
+
+<span class="number">1</span>. git clone git@git<span class="class">.tuan800-inc</span><span class="class">.com</span>:trade_architect/elasticsearch<span class="class">.git</span>
+
+<span class="number">2</span>. 在  elasticsearch-<span class="number">1.4</span>.<span class="number">4</span>/config/elasticsearch<span class="class">.yml</span> 中设置将需要输出的数据, 日志路径.
+
+   node<span class="class">.name</span>: <span class="string">"eagleye_es_XXX"</span>   其中XXX可以标识出该机器
+
+path<span class="class">.data</span>: /home/zhejava/esdata/data   es数据存储位置, 需要是独立的磁盘, 空间越大越好, 到时,公司的全量日志可能会存储在这, 会是高IO操作
+path<span class="class">.work</span>: /home/zhejava/esdata/work  存放临时文件的位置, 建议有独立的磁盘
+path<span class="class">.logs</span>: /home/zhejava/esdata/logs  存放日志的位置, 建议独立的磁盘
+
+<span class="number">3</span>. 执行  elasticsearch-<span class="number">1.4</span>.<span class="number">4</span>/bin/elasticsearch -d
+</code></pre><h3 id="eagleye-java-client_部署">eagleye-java-client 部署</h3><pre><code>因为我们的日志收集是对kafka强依赖, 所以需要有一些配置来进行相关的配置才能接入, 具体的配置主要集中在log4j.xml 和spring配置文件中.
+1. pom.xml中添加如下内容:
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>eagleye-java-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.1.0-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+    如果是基于scala-2.10
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>eagleye-java-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.1.0-2.10-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+2. log4j.xml中需要添加一个自定义的appender节点, 具体如下:
+
+    <span class="tag">&lt;<span class="title">appender</span> <span class="attribute">name</span>=<span class="value">"eagleye"</span> <span class="attribute">class</span>=<span class="value">"com.xxx.eagleye.client.log4jappender.EagleyeAppender"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"app"</span> <span class="attribute">value</span>=<span class="value">"eagleye-test"</span> /&gt;</span> <span class="comment">&lt;!-- 这里的名称就是eagleye-admin中提到的app , eagleye会按照这个进行约定预警规则的绑定,可以和application name(loom中的)一致 --&gt;</span>
+        <span class="tag">&lt;<span class="title">layout</span> <span class="attribute">class</span>=<span class="value">"org.apache.log4j.PatternLayout"</span> /&gt;</span>
+    <span class="tag">&lt;/<span class="title">appender</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">root</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">level</span> <span class="attribute">value</span>=<span class="value">"INFO"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">appender-ref</span> <span class="attribute">ref</span>=<span class="value">"console"</span>/&gt;</span>
+        <span class="comment">&lt;!-- 不要忘记在这里将自定义的eagleye appender 添加到root节点下 --&gt;</span>
+        <span class="tag">&lt;<span class="title">appender-ref</span> <span class="attribute">ref</span>=<span class="value">"eagleye"</span>/&gt;</span> 
+    <span class="tag">&lt;/<span class="title">root</span>&gt;</span>
+
+
+    如果你用的是log4j.properties文件, 如下配置:
+    log4j.appender.eagleye=com.xxx.eagleye.client.log4jappender.EagleyeAppender
+    # 这里的名称就是eagleye-admin中提到的app , eagleye会按照这个进行约定预警规则的绑定,可以和application name(loom中的)一致
+    log4j.appender.eagleye.app=eagleye-test 
+    log4j.appender.eagleye.layout=org.apache.log4j.PatternLayout
+
+    不用忘记在rootLogger中添加eagleye的appender
+    log4j.rootLogger=INFO,console,file,eagleye
+
+3. 在spring配置文件中进行如下配置:
+    <span class="comment">&lt;!-- 以下配置可以引入imago进行集中配置管理 需要显式设置lazy-init="false" 因为整个程序没有通过spring去获取eagleyeChannel对象 --&gt;</span>
+    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"eagleyeChannel"</span> <span class="attribute">class</span>=<span class="value">"com.xxx.eagleye.client.Configuration"</span> <span class="attribute">lazy-init</span>=<span class="value">"false"</span>&gt;</span>
+        <span class="comment">&lt;!-- 该redis地址主要是记录client的心跳, 日志生产力,日志总量 --&gt;</span>
+        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"redisIp"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').ip}"</span>/&gt;</span> 
+        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"redisPort"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').port}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"redisPwd"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').pwd}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"kafkaBroker"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getKafkaConfig('trade_public_kafka','1.1').broker}"</span>/&gt;</span> <span class="comment">&lt;!-- 需要用到进行日志收集的kafka配置 --&gt;</span>
+        <span class="comment">&lt;!--&lt;constructor-arg name="kafkaTopic" value="EAGLEYE_LOG_CHANNEL" /&gt;--&gt;</span> <span class="comment">&lt;!-- 收集日志的topic名称, 该配置默认不需要配置 --&gt;</span>
+        <span class="comment">&lt;!--&lt;constructor-arg name="sendFreq" value="3000" /&gt;--&gt;</span> <span class="comment">&lt;!-- 批量操作时间间隔, 单位 ms, 这些时间间隔往kafka批量推送一次 --&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+
+4. 因为使用的kafka需要用到域名, 需要配置以下kafka的host表
+   下面是测试环境的配置.
+   192.168.5.158 witgo
+   192.168.5.159 spark
+
+5. 如果要发送监控数据, 在代码中可以这样写:
+    logger.info(MonitorLog.build().type(LogType.EAGLEYE_MONITOR_LOG_REFUND_SHMJCSWGBSL).value(105D));
+
+注: 如果你想看到client发送的具体日志内容, 请在log4j.xml配置做如下配置:
+    <span class="tag">&lt;<span class="title">logger</span> <span class="attribute">name</span>=<span class="value">"com.xxx.eagleye.client.log4jappender.EagleyeAppender"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">level</span> <span class="attribute">value</span>=<span class="value">"debug"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+</code></pre><h3 id="kibana部署和配置">kibana部署和配置</h3><pre><code>概述<span class="pseudo">:Kibana</span> 是为 <span class="tag">Elasticsearch</span> 设计的开源分析和可视化平台。你可以使用 <span class="tag">Kibana</span> 来搜索，查看存储在 <span class="tag">Elasticsearch</span> 索引中的数据并与之交互。你可以很容易实现高级的数据分析和可视化，以图标的形式展现出来。
+</code></pre><h4 id="部署:">部署:</h4><pre><code><span class="number">1</span>.部署一个用于做负载的Elasticsearch,Elasticsearch的部署详见(elasticsearch 部署),部署完成后修改
+<span class="number">2</span>.下载Kibana <span class="number">4</span>
+<span class="number">3</span>.解压 <span class="class">.zip</span> 或 tar<span class="class">.gz</span> 压缩文件
+<span class="number">4</span>.配置Elasticsearch地址,在config/kibana.yml文件,配置第一步安装的elasticsearch地址.
+   elasticsearch_url: <span class="string">"http://localhost:9200"</span>
+<span class="number">5</span>.bin/kibana,启动kibana
+<span class="number">6</span>.访问<span class="number">5601</span>端口.
+</code></pre><h4 id="配置">配置</h4><pre><code><span class="number">1</span>.配置索引(相当于数据库名),es存入数据是每天创建一个索引,所以kibana要读取数据必须先配置索引,索引可以按天模糊匹配.配置方法如下图.
+配置完索引后,选择时间戳,要选择带<span class="string">"@"</span>符号的timestamp用日志进入es的时间字段.
+</code></pre><p>  <img src="http://siye1982.github.io/img/blog/eagleye/kibana_index.png" alt="kibana"></p>
+<pre><code>2.配置<span class="rule"><span class="attribute">discover</span>:<span class="value">配置各种查询数据,进行条件筛选</span></span>
+</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_dis_tool.png" alt="kibana"><br>   <img src="http://siye1982.github.io/img/blog/eagleye/kibana_discover.png" alt="kibana">      </p>
+<pre><code>   <span class="comment">(a)</span>.点击discover菜单,点击搜索口后面的添加按钮<span class="comment">(加号)</span>,在左侧Field项下会列出所有的字段信息,鼠标移到字段上面,会出现add按钮,点击添加,该字段会出现在上方的select field项下.
+   <span class="comment">(b)</span>.配置完成后,右边会出现选择的列和数据.
+   <span class="comment">(c)</span>.点击apply应用所选的配值
+   <span class="comment">(d)</span>.点击保存,在页面的右上方,有个保存的图标.填写保存的名字
+
+<span class="number">3.</span>配置visualize:visualize是对discover数据表的各种汇总信息,并以各种个图表显示.
+</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_vis_tool.png" alt="kibana"><br>   <img src="http://siye1982.github.io/img/blog/eagleye/kibana_vis.png" alt="kibana">   </p>
+<pre><code>   <span class="comment">(a)</span>.点击visualize菜单,点击搜索口后面的添加按钮<span class="comment">(加号)</span>.
+   <span class="comment">(b)</span>.选择样式
+   <span class="comment">(c)</span>.选择基础数据<span class="comment">(discover保存的基础数据)</span>
+   <span class="comment">(d)</span>.在左侧选择自己需要的统计数据,Metric选项卡中选择统计结果如<span class="comment">(count,avg,sum等)</span>.buckets下面的选项可以选择如何分组,相当于group by 后面的字段
+   <span class="comment">(e)</span>.点击apply应用所选的配值,点击右上角保存按钮,然后输入名字保存.
+
+<span class="number">4.</span>配置dashboard:将discover和visualize保存的各种表格和报表集中在一起显示
+</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_dash_tool.png" alt="kibana"><br>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_dash.png" alt="kibana">   </p>
+<pre><code>   (a).点击上图添加按钮,跳转到选择discover和visualize页面.
+   (b).选择需要的discover和visualize页面.此时会在下放显示.
+   (c).拖动改变位置和大小.
+   (d).保存设置好的面板.
+
+<span class="number">5</span>.搜索框简易使用说明
+  <span class="number">1</span>.在特定的字段里搜索,例如：line_id:<span class="number">86169</span>
+  <span class="number">2</span>.可以用 <span class="keyword">AND</span>/<span class="keyword">OR</span> 来组合复杂的搜索，<span class="keyword">AND</span>/<span class="keyword">OR</span>必须大写,例如:food <span class="keyword">AND</span> love
+  <span class="number">3</span>.括号的使用：(<span class="variable">"played upon"</span> <span class="keyword">OR</span> <span class="variable">"every man"</span>) <span class="keyword">AND</span> stage
+  <span class="number">4</span>.数值类型的数据可以直接搜索范围：line_id:[<span class="number">30000</span> <span class="keyword">TO</span> <span class="number">80000</span>] <span class="keyword">AND</span> havoc
+  <span class="number">5</span>.搜索所有：*
+  <span class="number">6</span>.如果输入 where1 where2 两个单词,实际搜索的是where1 <span class="keyword">OR</span> where2 如果要搜索where1 where2,请用双引号引起来<span class="variable">"where1 where2"</span>
+</code></pre><h3 id="alerter_部署和配置">alerter 部署和配置</h3><pre><code>部署:
+<span class="number">1</span>. git clone git<span class="variable">@git</span>.tuan80<span class="number">0</span>-inc.com:trade_architect/eagleye.git
+<span class="number">2</span>. cd eagleye/eagleye-alerter 进入在eagleye-alerter程序根目录
+<span class="number">3</span>. 在eagleye-alerter程序根目录执行 git -pull &amp;&amp; mvn clean <span class="keyword">package</span> -Dmaven.test.skip=true -U , 完成后进入文件夹得到 项目压缩包 eagleye-alerter-<span class="number">1.0</span>.<span class="number">0</span>-all.tar.gz
+<span class="number">4</span>. 解压项目包
+<span class="number">5</span>. 执行 nohup ./start.sh  &gt; <span class="regexp">/data/applogs</span><span class="regexp">/eagleye/service</span>.<span class="keyword">log</span>  <span class="number">2</span>&gt;&amp;<span class="number">1</span>  &amp;
+
+需要注意: 
+
+<span class="number">1</span> 需要替换conf/log4j.xml 中的日志文件目录 , 和命令输出日志目录
+
+<span class="number">2</span> 需要修改run.sh 中的变量IP 为服务器IP , HEAP_DUMP_PATH 为日志目录的文件
+
+关闭:
+需要手动<span class="keyword">kill</span>掉程序进程,可以执行以下命令:
+ps -ef | <span class="keyword">grep</span> <span class="string">'com.xxx.eagleye.alerter.App'</span> | <span class="keyword">grep</span> -v <span class="string">'grep'</span> |  awk <span class="string">'{print $2}'</span> | xargs  <span class="keyword">kill</span>
+
+配置说明:
+由于alerter程序会和kafka,zookeeper集群进行通信, 所以程序运行前需要配置相关host, 配置如下:
+
+<span class="comment">#kakfa cluster</span>
+<span class="number">172.16</span>.<span class="number">11.43</span> YJ-<span class="number">18</span>-<span class="number">1</span>
+<span class="number">172.16</span>.<span class="number">11.46</span> YJ-<span class="number">18</span>-<span class="number">4</span>
+<span class="number">172.16</span>.<span class="number">11.60</span> YJ-<span class="number">17</span>-<span class="number">4</span>
+<span class="number">172.16</span>.<span class="number">11.67</span> YJ-<span class="number">17</span>-<span class="number">11</span>
+<span class="number">172.16</span>.<span class="number">11.73</span> YJ-<span class="number">16</span>-<span class="number">3</span>
+
+loomContext.xml 中可以配置日志toipc kafka消费者的消费线程数(alerterConsumerThreadNum),
+ alerter程序可以部署的最大实例数为 kafka日志topic分区数/alerterConsumerThreadNum 
+ 如果部署的程序实例数超过了最大实例数, 新的程序实例将会得消费不到得到topic分区, 不产生吞吐量
+
+由于alerter即是kafka消费者, 又是kafka生产者, 为了避免死循环, 程序在打印描述性日志前都都加了<span class="string">'~'</span>, 创建alerter程序的预警规则时, 应当在规则中过滤日志内容第一个字符为<span class="string">'~'</span>的情况
+</code></pre><h3 id="eagleye-admin部署">eagleye-admin部署</h3><p>   <a href="../init.sql">sql脚本</a></p>
+<pre><code><span class="number">1</span>.在trde库执行附件脚本，初始化表.   
+<span class="number">2</span>.git clone git<span class="variable">@git</span>.tuan80<span class="number">0</span>-inc.<span class="symbol">com:</span>trade_architect/eagleye.git
+<span class="number">3</span>.cd eagleye/
+<span class="number">4</span>.mvn clean; mvn -<span class="constant">DskipTests </span>package
+<span class="number">5</span>.在tomcat中部署eagleye-admin/target/eagleye-admin.war包。
+<span class="number">6</span>.初始用户名密码<span class="symbol">:admin/test</span>
+</code></pre><h2 id="非java项目对接">非java项目对接</h2><pre><code> 如果非java服务想对接到该预警平台, 请按照如下json格式:
+<span class="comment"><figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">       <span class="string">"body"</span>: <span class="string">"日志内容"</span>,</span><br><span class="line">       <span class="string">"head"</span>: &#123;</span><br><span class="line">           <span class="string">"app"</span>: <span class="string">"eagleye-test"</span>,</span><br><span class="line">           <span class="string">"ip"</span>: <span class="string">"192.168.1.100"</span>,</span><br><span class="line">           <span class="string">"level"</span>: <span class="string">"WARN"</span>,</span><br><span class="line">           <span class="string">"pid"</span>: <span class="string">"3817"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="string">"timestamp"</span>: <span class="number">1426216784971</span></span><br><span class="line">   &#125;</span><br><span class="line">   发送到kafka的 名为:<span class="type">EAGLEYE_LOG_CHANNEL</span> 的topic中</span><br><span class="line">   </span><br><span class="line">   如果是直接接入其他非java的日志, 并且还不想格式化上述json,可以直接开启一个logstash实例, 配置文件如下:</span><br><span class="line">   input &#123;</span><br><span class="line">     file &#123;</span><br><span class="line">        path =&gt; [<span class="string">"/home/zhejava/logstash/logstash-1.4.2/temp/*.log"</span>]</span><br><span class="line">       # <span class="keyword">type</span> =&gt; <span class="string">"system"</span></span><br><span class="line">       # start_position =&gt; <span class="string">"beginning"</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   filter &#123;</span><br><span class="line">     grok &#123;</span><br><span class="line">       <span class="keyword">match</span> =&gt; &#123; <span class="string">"message"</span> =&gt; <span class="string">""</span> &#125;</span><br><span class="line">       add_field =&gt; &#123;</span><br><span class="line">           <span class="string">"head.app"</span> =&gt; <span class="string">"logstash-test"</span></span><br><span class="line">           <span class="string">"head.ip"</span> =&gt; <span class="string">"192.168.5.177"</span></span><br><span class="line">           <span class="string">"head.level"</span> =&gt; <span class="string">"WARN"</span></span><br><span class="line">           #<span class="string">"timestamp"</span> =&gt; <span class="number">1426237376377</span></span><br><span class="line">           #<span class="string">"head"</span> =&gt; <span class="string">"&#123;'app' : 'eagleye-test-b','ip' : '192.168.5.244','level' : 'ERROR','pid' : '9744'&#125;"</span></span><br><span class="line">       &#125;</span><br><span class="line">   </span><br><span class="line">       remove_field =&gt; [ <span class="string">"message"</span> ]</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   # 如果是入kafka请这么写</span><br><span class="line">   output &#123;</span><br><span class="line">     #stdout &#123;</span><br><span class="line">     #   codec =&gt; rubydebug</span><br><span class="line">     #   #codec =&gt; plain</span><br><span class="line">     #&#125;</span><br><span class="line">   </span><br><span class="line">     kafka &#123;</span><br><span class="line">        #codec =&gt; plain &#123;</span><br><span class="line">        #   format =&gt; <span class="string">"%&#123;body&#125;"</span></span><br><span class="line">        #&#125;</span><br><span class="line">        broker_list =&gt; <span class="string">"witgo:9092,spark:9092"</span></span><br><span class="line">        topic_id =&gt; <span class="string">"EAGLEYE_LOG_CHANNEL"</span></span><br><span class="line">   </span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   # 如果是入es 请这么写,不推荐直接入es, 这样就不能设置实时预警了</span><br><span class="line">   output &#123;</span><br><span class="line">         elasticsearch &#123;</span><br><span class="line">         cluster =&gt; <span class="string">"eagleye_es"</span></span><br><span class="line">         host =&gt; <span class="string">"localhost"</span></span><br><span class="line">         port =&gt; <span class="string">"9301"</span></span><br><span class="line">         protocol =&gt; <span class="string">"transport"</span></span><br><span class="line">         index =&gt; <span class="string">"eagleye-log-%&#123;+YYYY.MM.dd&#125;"</span></span><br><span class="line">         index_type =&gt; <span class="string">"log"</span></span><br><span class="line">         workers =&gt; <span class="number">2</span></span><br><span class="line">         flush_size =&gt; <span class="number">1000</span></span><br><span class="line">         template_overwrite =&gt; <span class="literal">true</span></span><br><span class="line">         &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></span>
+</code></pre><h2 id="其他">其他</h2><h3 id="es自定义检索功能说明">es自定义检索功能说明</h3><pre><code><span class="bullet">1. </span>elastic search建立索引时, 会使用现有词典进行分词, 如果用户输入的关键词不在当前词库中, 将不会搜索到结果, 遇到这种情况, 建议用户缩小关键词粒度, 并使用多个关键词进行查询
+
+<span class="bullet">2. </span>多个关键词可以用空格分开
+</code></pre><h3 id="xxx_es_index_template功能简介">xxx es index template功能简介</h3><p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.3/indices-templates.html" target="_blank" rel="external">elasticsearch template 官方文档</a></p>
+<pre><code><span class="number">1</span>. es 可用通过预先设置的<span class="keyword">template</span>来指定即将创建索引的setting 和 mapping 设置
+
+<span class="number">2</span>. 使用方式:
+
+    <span class="number">1</span>. 使用命令添加
+
+    <span class="number">2</span>. 将 <span class="keyword">template</span>模板 添加到 config/templates/ 目录
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/监控预警/">监控预警</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/Java/">Java</a><a href="/tags/logstash/">logstash</a><a href="/tags/监控/">监控</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2015/06/18/eagleye/" data-title="EAGLEYE监控预警平台 | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/18/loom-soa/"  title="LOOM服务治理">
+ <strong>下一篇：</strong><br/> 
+ <span>LOOM服务治理
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/18/eagleye/" data-title="EAGLEYE监控预警平台" data-url="http://siye1982.github.io/2015/06/18/eagleye/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求"><span class="toc-number">2.</span> <span class="toc-text">需求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#应用App"><span class="toc-number">2.1.</span> <span class="toc-text">应用App</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户"><span class="toc-number">2.2.</span> <span class="toc-text">用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户组（不做）"><span class="toc-number">2.3.</span> <span class="toc-text">用户组（不做）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预警规则"><span class="toc-number">2.4.</span> <span class="toc-text">预警规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预警设置"><span class="toc-number">2.5.</span> <span class="toc-text">预警设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预警"><span class="toc-number">2.6.</span> <span class="toc-text">预警</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发送日志记录"><span class="toc-number">2.7.</span> <span class="toc-text">发送日志记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#感知有多少app在使用该系统"><span class="toc-number">2.8.</span> <span class="toc-text">感知有多少app在使用该系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志检索"><span class="toc-number">2.9.</span> <span class="toc-text">日志检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志统计"><span class="toc-number">2.10.</span> <span class="toc-text">日志统计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细设计"><span class="toc-number">3.</span> <span class="toc-text">详细设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Eagleye_整体架构图"><span class="toc-number">3.1.</span> <span class="toc-text">Eagleye 整体架构图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志收集,存储架构图"><span class="toc-number">3.2.</span> <span class="toc-text">日志收集,存储架构图</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#日志可靠性说明"><span class="toc-number">3.2.1.</span> <span class="toc-text">日志可靠性说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日志中继说明"><span class="toc-number">3.2.2.</span> <span class="toc-text">日志中继说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日志存储"><span class="toc-number">3.2.3.</span> <span class="toc-text">日志存储</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日志检索,_统计"><span class="toc-number">3.2.4.</span> <span class="toc-text">日志检索, 统计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#备注"><span class="toc-number">3.2.5.</span> <span class="toc-text">备注</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">4.</span> <span class="toc-text">测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#功能测试"><span class="toc-number">4.1.</span> <span class="toc-text">功能测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#性能测试"><span class="toc-number">4.2.</span> <span class="toc-text">性能测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#logstash_性能测试:"><span class="toc-number">4.2.1.</span> <span class="toc-text">logstash 性能测试:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#eagleye-java-client_性能测试"><span class="toc-number">4.2.2.</span> <span class="toc-text">eagleye-java-client 性能测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#eagleye-alert_性能测试"><span class="toc-number">4.2.3.</span> <span class="toc-text">eagleye-alert 性能测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">5.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#kafka_topic创建"><span class="toc-number">5.1.</span> <span class="toc-text">kafka topic创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#logstash_部署步骤"><span class="toc-number">5.2.</span> <span class="toc-text">logstash 部署步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#elasticsearch_部署"><span class="toc-number">5.3.</span> <span class="toc-text">elasticsearch 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eagleye-java-client_部署"><span class="toc-number">5.4.</span> <span class="toc-text">eagleye-java-client 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kibana部署和配置"><span class="toc-number">5.5.</span> <span class="toc-text">kibana部署和配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#部署:"><span class="toc-number">5.5.1.</span> <span class="toc-text">部署:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置"><span class="toc-number">5.5.2.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#alerter_部署和配置"><span class="toc-number">5.6.</span> <span class="toc-text">alerter 部署和配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eagleye-admin部署"><span class="toc-number">5.7.</span> <span class="toc-text">eagleye-admin部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非java项目对接"><span class="toc-number">6.</span> <span class="toc-text">非java项目对接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">7.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#es自定义检索功能说明"><span class="toc-number">7.1.</span> <span class="toc-text">es自定义检索功能说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xxx_es_index_template功能简介"><span class="toc-number">7.2.</span> <span class="toc-text">xxx es index template功能简介</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/服务治理/" title="服务治理">服务治理<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SOA/" title="SOA">SOA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/finagle/" title="finagle">finagle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zipkin/" title="zipkin">zipkin<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/logstash/" title="logstash">logstash<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"siye1982"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255443286'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255443286' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
