@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://siye1982.github.io/img/blog/loom/detailEntry.png">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/loom/invokeDetail.png">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/loom/invokeTimeout.jpg">
-<meta property="og:updated_time" content="2015-06-18T14:16:01.000Z">
+<meta property="og:updated_time" content="2015-06-19T02:57:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LOOM服务治理">
 <meta name="twitter:description" content="概述在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之">
@@ -114,6 +114,7 @@
 		<h2 id="概述">概述</h2><p>在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之间的沟通成本, 招聘新人的培训成本, 由人员更替产生的交接成本等. 这个时候多语言开发环境带来的弊端逐渐显现出来, 我们需要在这中间找到一个平衡点. </p>
 <p>在公司发展到一定规模, 肯定会产生很多业务系统, 这些业务系统需要互相之间进行调用来完成协作. Thrift帮助我们在异构语言直接的沟通建立了桥梁. 只是简单的RPC调用在服务比较少的阶段还能够接受,但是随着服务逐渐的增多,调用关系越来越复杂, 我们迫切的需要一个框架可以对所有服务进行统一的管理,监控,预警. 这是LOOM诞生的直接需求. “LOOM,织布机”,寓意可以将各个网状服务进行很好的治理.</p>
 <p>LOOM的大部分需求直接采用的阿里巴巴的服务治理框架—DUBBO, 这里向DUBBO的所有开发人员致敬, DUBBO的出现带动了SOA概念真正的落地, 相信国内很多互联网公司都在用DUBBO进行服务治理. LOOM里面关于RPC相关的工作,我们直接使用了Twitter的finagle-thrift, 它可以帮助我们非常简单的写出高性能的异步的thrift调用. 另外我们可以直接通过zipkin来进行异构语言之间的调用链信息的收集.</p>
+<a id="more"></a>
 <h2 id="loom服务治理需求">loom服务治理需求</h2><h3 id="一期需求">一期需求</h3><p>在大规模服务化之前，应用可能只是通过Thrift，简单的暴露和引用远程服务，通过配置服务的URL地址进行调用，通过HAProxy等软件进行负载均衡。服务治理平台主要的需求可以通过下面几点来体现:</p>
 <pre><code><span class="bullet">1.  </span>当服务越来越多时，服务URL配置管理变得非常困难，负载均衡器的单点压力也越来越大。
 此时需要一个服务注册中心，动态的注册和发现服务，使服务的位置透明。
@@ -691,7 +692,7 @@ Caused by: org.xml.sax.SAXParseException<span class="comment">; lineNumber: 39; 
 
 解决办法:将commons-httpclient里面的包排除掉commons-codec解决问题.
 xxx
-</code></pre>  
+</code></pre><div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -704,7 +705,7 @@ xxx
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/SOA/">SOA</a><a href="/tags/finagle/">finagle</a><a href="/tags/zipkin/">zipkin</a><a href="/tags/zookeeper/">zookeeper</a>
+  <span></span> <a href="/tags/Finagle/">Finagle</a><a href="/tags/Java/">Java</a><a href="/tags/SOA/">SOA</a><a href="/tags/Zipkin/">Zipkin</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/原创/">原创</a>
   </div>
 
 </div>
@@ -796,15 +797,19 @@ xxx
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/原创/" title="原创">原创<sup>5</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>3</sup></a></li>
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
 			
 		
 			
@@ -812,11 +817,11 @@ xxx
 			
 		
 			
-				<li><a href="/tags/finagle/" title="finagle">finagle<sup>1</sup></a></li>
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/zipkin/" title="zipkin">zipkin<sup>1</sup></a></li>
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>1</sup></a></li>
 			
 		
 			
@@ -832,7 +837,7 @@ xxx
 			
 		
 			
-				<li><a href="/tags/logstash/" title="logstash">logstash<sup>1</sup></a></li>
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -845,7 +850,49 @@ xxx
         
           <li>
             
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
             	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
             
           </li>
         

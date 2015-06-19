@@ -104,594 +104,12 @@
       <span class="keyword">*</span> 预警设置
       <span class="keyword">*</span> 日志检索
       <span class="keyword">*</span> 日志统计
-</code></pre><h2 id="需求">需求</h2><h3 id="应用App">应用App</h3><pre><code>描述：应用<span class="keyword">app</span>是每个系统的唯一标识
-
-一、应用<span class="keyword">app</span>列表（有分页信息）
-    1、应用名称
-    2、负责人
-    3、相关人员：本组的开发人员
-    4、最后更新时间
-    5、备注
-
-二、添加：弹出添加窗口
-  输入框：
-    1、应用名称：此处是英文名称，和loom里面的appId保持一致。必须填写，不能为空。
-    2、备注：描述该系统（400字以内）。
-  按钮：
-    1、保存：保存数据到数据库，并关闭弹窗
-    2、取消：关闭弹窗
-
-三、编辑：弹出编辑窗口，自动填充相关信息。
-    所有内容都可以修改
-    功能同添加功能。
-
-四、删除：删除所选应用，在数据库中逻辑删除，如果已经绑定了预警设置，直接删除与其绑定的预警设置。
-
-五、搜索：根据应用名称和负责人搜索。
-
-
-问题: 1. 负责人, 相关人员是否有必要去维护, 如果某个人离职, 个关系怎么维护.
-     2. 是否应该有通过<span class="keyword">app</span>,跳转到<span class="keyword">app</span>绑定了哪些用户组, 有哪些规则.
-     3. log4j中appender的代码提示.
-</code></pre><h3 id="用户">用户</h3><pre><code>描述：此用户信息有两个功能，一是用户登录用，二是发送报警信息的对象。
-
-一、信息列表（有分页信息）
-    <span class="number">1</span>、登录名
-    <span class="number">2</span>、用户名
-    <span class="number">3</span>、手机
-    <span class="number">4</span>、邮箱
-    <span class="number">5</span>、用户类型：管理员、读写、只读
-    <span class="number">6</span>、最后更新时间
-    <span class="number">7</span>、状态：正常、禁用。
-    <span class="number">8</span>、操作：修改密码、禁用、启用
-
-二、添加：弹出添加用户的窗口
-    账号、用户名、密码，邮箱、手机是必填项，备注是选填项。
-    <span class="number">1</span>、保存：保存数据到数据库，并关闭弹窗
-    <span class="number">2</span>、取消：关闭弹窗
-
-三、编辑：弹出编辑页面
-    只能修改用户名，手机、邮箱、用户类型、备注。
-    <span class="number">1</span>、保存：保存数据到数据库，并关闭弹窗
-    <span class="number">2</span>、取消：关闭弹窗
-
-四、删除：删除所选用户，逻辑删除，如果已经绑定了预警功能，则直接删除和改用有关的所有关系，<span class="literal">admin</span>账户不能删除。
-
-五、禁用、启用：用户的状态分为正常和和禁用两种状态。禁用时不能登录，不能接受预警信息。<span class="literal">admin</span>账户不能禁用。
-
-六、修改密码：点击打开修改密码页面，在修改页面不用输入老的密码，直接输入两次密码，如果一致并提交，就修改成功。
-
-七、搜索：在列表页有一个搜索框，输入可以根据登录名，用户名，邮箱，手机，备注进行模糊搜索用户。
-</code></pre><h3 id="用户组（不做）">用户组（不做）</h3><pre><code>描述：每个用户组包含多个用户，方便在绑定预警规则的时候绑定多人。
-
-一、信息列表
-    1、组名：用户组的名字（简单明了，不能为空，不能超过30个字）
-    2、用户数量：统计此用户组的用户数量
-    3、最后更新时间。
-    4、备注
-    5、包含用户：点击加号展开，所有用户名，用逗号隔开。
-
-二、搜索：根据用户组名搜索。
-
-三、添加：添加用户组。
-  输入框：
-   1、组名：
-   2、备注（400字以内）
-  按钮：
-   1、保存：保存数据到数据库，并关闭弹窗
-   2、取消：关闭弹窗
-
-四、编辑：和添加功能相同
-
-五、删除：逻辑删除。如果绑定了预警规则，自动解除和预警规则的绑定。
-
-六、编辑用户：弹窗打开所有用户信息，用复选框显示
-   按钮：
-     1、保存：保存数据到数据库，并关闭弹窗
-     2、取消：关闭弹窗
-</code></pre><h3 id="预警规则">预警规则</h3><pre><code>描述：定义触发什么条件的时候开始报警。
-
-一、列表：点击规则时下方根据选中的规则显示绑定的用户组和用户信息。
-    1、规则名称
-    2、关键字：包含此关键字时开始报警，可以是多个，多个之间用英文的逗号隔开
-    3、最后更新时间
-    4、操作：（编辑，删除，禁用、启用）
-    5、备注：点击加号显示
-
-二、搜索：根据搜索字段：规则名称，关键字。
-
-三、添加：弹窗添加预警规则
-    1、预警规则名称：文本框输入，长度不超过50字
-    2、关键字：文本框输入，长度不超过400字。
-    3、备注：长度400限制。
-  按钮：
-    1、保存：保存数据到数据库，并关闭弹窗
-    2、取消：关闭弹窗
-
-四、编辑：弹窗打开编辑窗口，自动填充相关信息，功能同添加界面。
-
-五、删除：逻辑删除此规则，如果已经绑定了预警设置，直接删除与其绑定的预警设置。
-
-六、禁用、启用：禁用后预警时忽略此预警信息。
-</code></pre><h3 id="预警设置">预警设置</h3><pre><code>描述：此功能绑定<span class="keyword">app</span>和规则的关系，并设置违反此规则的时候给那些用户发送短信或者邮件提醒。
-
-一、列表：
-    1、<span class="keyword">app</span>名称
-    2、规则名称
-    3、最后更新时间
-    4、绑定短信用户：点击弹窗选择接受短信的用户
-    5、绑定邮件用户：点击弹窗选择邮件接受预警的用户。
-    5、操作：删除
-二、 添加：弹窗打开添加窗口（规则和<span class="keyword">app</span>关系不能重复）
-    1、规则：下拉框，必选，
-    2、应用<span class="keyword">app</span>：下拉框，必选，同一个规则下唯一，支持搜索
-    按钮
-     1、保存：保存数据到数据库，并关闭弹窗
-     2、取消：关闭弹窗
-三、编辑：修改其绑定关系
-
-三、删除：直接删除绑定关系。删除何其关联的发送信息设置。
-</code></pre><h3 id="预警">预警</h3><pre><code>一、根据预警规则收到日志后分析
-
-二、发送短信和邮件日志
-
-   1、接受者
-   2、发送时间
-   3、发送类型：（短信，邮件）
-   4、发送内容：（长度10000）
-</code></pre><h3 id="发送日志记录">发送日志记录</h3><h3 id="感知有多少app在使用该系统">感知有多少app在使用该系统</h3><h3 id="日志检索">日志检索</h3><pre><code>多维度检索: 
-   1. 按照时间区间
-   2. 日志内容
-   3. 应用
-</code></pre><h3 id="日志统计">日志统计</h3><pre><code><span class="bullet">1. </span>按照app的异常数据进行统计排名
-<span class="bullet">2. </span>按照具体的异常信息进行统计排名
-</code></pre><h2 id="详细设计">详细设计</h2><h3 id="Eagleye_整体架构图">Eagleye 整体架构图</h3><p>  <img src="http://siye1982.github.io/img/blog/eagleye/architecture.jpg" alt="eagleye,整体架构图"></p>
-<pre><code>eagleye作为所有服务的日志监控预警平台, 需要收集所有后台服务的全量日志.
-
-主要分成如下几个部分:
-<span class="number">1</span>. 各个java服务需要接入的基于log4j appender的日志收集客户端(eagleye-java-client)
-
-<span class="number">2</span>. 我们统一通过<span class="variable">Kafka</span>作为日志传输通道, 因为要收集的是所有服务的全量日志,日志量庞大,<span class="variable">Kafka</span>非常适合这种分布式收集的场景, 并且可以很容易的进行水平拓展.
-
-<span class="number">3</span>. 我们通过eagleye-alert 从kafka中获取日志, 并根据eagleye-admin中设置的预警规则进行实时预警, eagleye-alert支持水平拓展,并可以做到高可用.
-
-<span class="number">4</span>. 通过logstash进行全量日志的收集并存储到elasticsearch中进行存储, 最终用kibana进行快速的检索和统计.
-
-<span class="number">5</span>. eagleye-admin是eagleye架构的管理控制台, 从这可以进行各种预警规则的配置, 监控各个client, alerter的心跳, es的存储状态, 提供日志检索,统计界面.
-   eagleye-admin作为一个管理控制台,并不需要高可以,所以只需要部署一个实例, 即使admin不可用也不会影响所有日志的收集预警功能.
-
-<span class="number">6</span>. 所有服务器的心跳, 预警规则, 都是通过redis进行通信.
-</code></pre><h3 id="日志收集,存储架构图">日志收集,存储架构图</h3><p>  <img src="http://siye1982.github.io/img/blog/eagleye/collect_storage.jpg" alt="日志收集,存储架构图"></p>
-<h4 id="日志可靠性说明">日志可靠性说明</h4><pre><code>因为将来会涉及到交易流程的日志跟踪, 所以日志的可靠性需要保证.
-
-鉴于之前推动zookeeper的dns设置过程(运维人员需要每台服务器去修改,推动时,不是这台服务器没有设置,就是那台服务器没有设置), 日志收集任务前期在服务端进行日志采集的过程, 并没有引入第三方的收集工具.
-
-在服务端进行日志采集方式, 采用自定义log4j的appdender方式接入采集点.通过kafka作为日志传输通道.
-
-当然, 采用这种方式有一个风险点是,加入redis不可用时,日志将采集不到. 但是会记录到本地log日志中,并不会丢失. 
-
-服务端进行日志采集,也有高可用方案,可以每台部署服务的机器都部署logstash进行收集,即使logstash不可用,日志也不会丢失,并且,logstash启动时会将丢失收集的日志重新采集.
-
-但是logstash部署在服务端所在的机器,对前期日志采集工作量比较大,并不适合我们前期小步迭代推动eagleye项目.所以我们前期约定,在极端情况下,我们允许小概率收集日志失败的可能.
-
-因为采用的是redis的队列方式进行传输,所以并不影响我们将来更替高可用的日志采集方案.
-</code></pre><h4 id="日志中继说明">日志中继说明</h4><pre><code>日志中继器的存在,有利于我们水平拓展日志收集,并灵活指定存储媒介.
-
-logstash可以灵活的往es, hdfs, mysql, cvs, local file 等存储媒介, 并可以灵活的对日志内容进行过滤.
-
-logstash相比flume会更轻量一些,并且是elasticsearch的同源产品.
-</code></pre><h4 id="日志存储">日志存储</h4><pre><code>我们选择elasticsearch进行存储, 当然也可以随时切换成hdfs进行存储, elasticsearch提供了丰富的<span class="variable">RESTFul</span>风格的api,和语言无关.
-
-es的集群搭建成本非常低,每一个es服务会自动发现集群并加入进去.
-</code></pre><h4 id="日志检索,_统计">日志检索, 统计</h4><pre><code>因为有<span class="variable">Kibana</span>的存在, 我们可以很轻易并且快速的从es中检索出我们想要的日志. 可以从多维度进行日志的统计.
-
-关键是这些功能的提供, 我们不需要写任何一行代码.
-</code></pre><h4 id="备注">备注</h4><pre><code>上图中的channel, relayer, <span class="literal">es</span> 可以部署在相同的机器中,也可以进行拆分. 每一层都可以选用其他方案进行替代,并不影响整个系统的运转. 
-</code></pre><h2 id="测试">测试</h2><h3 id="功能测试">功能测试</h3><h3 id="性能测试">性能测试</h3><h4 id="logstash_性能测试:">logstash 性能测试:</h4><pre><code>单台服务器的单个logstash实例
-内存:<span class="number">500</span>m
-input consumers : <span class="number">1</span>
-output workers : <span class="number">2</span>
-机器内存: <span class="number">4</span>G, 其中<span class="number">2</span>个G被es消耗, <span class="number">1</span>个多G被日志mock程序占用
-机器<span class="number">8</span>核,普通pc机
-
-在output配置中
-<span class="variable">workers =</span>&gt; <span class="number">2</span> <span class="comment"># 如果这个配置开太大容易内存溢出, 需要根据机器配置进行调整, 在测试环境logstash 内存500m时,2个线程效率最高</span>
-<span class="variable">flush_size =</span>&gt; <span class="number">1000</span> <span class="comment">#该配置配合workers进行调整, 如果太大, 也容易内存溢出, 或者增加gc次数.目前这个配置可以达到单台logstash可以20000/s的日志写入</span>
-
-gc观察
-在bin/logstash.lib.sh 文件中 logstash 采用了 如下gc方式
-<span class="variable">JAVA_OPTS=</span><span class="string">"$JAVA_OPTS -XX:+UseParNewGC"</span>
-<span class="variable">JAVA_OPTS=</span><span class="string">"$JAVA_OPTS -XX:+UseConcMarkSweepGC"</span>
-观察曲线如下图:
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/logstash-gc0.png" alt="logstash采用自己默认gc"></p>
-<pre><code>老年代gc会比较频繁,增加了<span class="built_in">stop</span> <span class="operator">the</span> world的时间,会影响性能.
-
-注释掉之后的曲线老年代很少出现回收现象, 不会造成<span class="built_in">stop</span> <span class="operator">the</span> world 现象     
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/logstash-gc1.png" alt="logstash采用jvm默认gc"></p>
-<pre><code>但是采用<span class="keyword">jvm</span>默认gc方式后运行了<span class="number">1</span>个小时之后出现了频繁的老年代gc, 如下图:
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/logstash-gc2.png" alt="logstash采用jvm默认gc"> </p>
-<pre><code>简单的测试观察之后, 还是建议使用logstash默认的gc
-JAV<span class="built_in">A_OPTS</span>=<span class="string">"$JAVA_OPTS -XX:+UseParNewGC"</span>
-JAV<span class="built_in">A_OPTS</span>=<span class="string">"$JAVA_OPTS -XX:+UseConcMarkSweepGC"</span>
-</code></pre><h4 id="eagleye-java-client_性能测试">eagleye-java-client 性能测试</h4><pre><code><span class="keyword">client</span>往kafka中发送日志可以<span class="number">80000</span>/s, 这取决与网络速度和硬盘速度
-
-运行时通过jmx观察内存,如下图: 没有一次老年代回收
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/eagleye-java-client-gc.png" alt="eagleye-java-client gc图"></p>
-<h4 id="eagleye-alert_性能测试">eagleye-alert 性能测试</h4><pre><code><span class="bullet">1. </span>单服务, 单机器(244)压力测试:
-
-<span class="code">    cpu使用如下图:</span>
-</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/单机器cpu.png" alt="cpu"></p>
-<pre><code>内存使用如下图:
-</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/单机器内存.png" alt="内存"></p>
-<pre><code>吞吐量:<span class="number">3.15</span>w条<span class="keyword">message</span>/s
-</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/单机器1.png" alt="吞吐量"> </p>
-<pre><code><span class="bullet">2. </span>双服务, 双机器(244, 177)压力测试:
-
-177cpu使用如下图:
-</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机177cpu.png" alt="cpu"></p>
-<pre><code><span class="number">244</span>cpu使用如下图<span class="symbol">:http</span><span class="symbol">://siye1982</span>.github.io/img/blog/eagleye
-</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机244cpu.png" alt="cpu"></p>
-<pre><code>177内存使用如下图:
-</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机177内存.png" alt="内存"></p>
-<pre><code>244内存使用如下图:
-</code></pre><p><img src="http://siye1982.github.io/img/blog/eagleye/双机244内存.png" alt="内存"></p>
-<pre><code><span class="number">177</span>吞吐量:<span class="number">2.32</span>w条message/s
-
-<span class="number">244</span>吞吐量:<span class="number">3.22</span>w条message/s
-
-发现单机处理时最大吞吐量 与双机处理时最大吞吐量相同 , 但是通过下面单机双实例测试可以确认服务器网络io不是瓶颈 , 
-初步认为是单个kafka topic 分区的生产力是有限的 ,    双机处理时吞吐量的差距是由于kafka topic 分区分配不均衡导致<span class="params">(<span class="number">244</span>得到<span class="number">3</span>个分区 , <span class="number">177</span>得到两个)</span>
-修改kafka分区数到<span class="number">10</span>个后, 发现单个程序实例即使分配到更多<span class="params">(<span class="number">5</span>个或<span class="number">10</span>个)</span>分区, 吞吐量上限仍然是<span class="number">3</span>w/s , 
-进一步测试得到的结果是程序的性能瓶颈在kafka消费者迭代获取数据部分, 且一个程序中运行多个针对单个topic的ConsumerConnector并不会提高程序吞吐量
-
-
-<span class="number">3</span>. 单机<span class="params">(<span class="number">244</span>)</span>双实例
-程序<span class="number">1</span><span class="params">(吞吐量 <span class="number">1.68</span>w条message/s , 分配到<span class="number">2</span>个分区)</span>
-程序<span class="number">2</span><span class="params">(吞吐量 <span class="number">2.9</span>w条message/s , 分配到<span class="number">3</span>个分区)</span>
-
-总结:
-alerter程序启动时可以通过配置文件loomContext.xml配置alerterConsumerThreadNum<span class="params">(alerter程序kafka消费者线程数)</span>
-一个kafka消费者线程可以消费多个到<span class="number">0</span>个分区, 但一个分区最多只能被一个消费者线程消费
-新的消费程序加入或旧的消费程序失去连接会引发所有分片和所有消费者线程间的再平衡, 但是如果已经是每个分片都被不同的线程消费, 即分片和消费线程为<span class="number">1</span>对<span class="number">1</span>的关系时, 再加入消费程序, 该消费程序将会分配不到分区 导致该消费程序吞吐量为<span class="number">0</span>
-单个程序实例的吞吐量在<span class="number">3</span>w/s, 可以通过部署多个实例的方式实现水平扩容, 但需要确保新部署的实例会得到topic分区
-    如线上服务topic有<span class="number">24</span>个分区, 最多可部署alerter程序实例数为 <span class="number">24</span>/alerterConsumerThreadNum, 即如alerterConsumerThreadNum配置为<span class="number">3</span>, 最多可以部署<span class="number">24</span>/<span class="number">3</span>=<span class="number">8</span>个alerter程序实例
-</code></pre><h2 id="部署">部署</h2><h3 id="kafka_topic创建">kafka topic创建</h3><pre><code><span class="string">.</span><span class="comment">/kafka</span><span class="literal">-</span><span class="comment">topics</span><span class="string">.</span><span class="comment">sh</span> <span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">topic</span> <span class="comment">'EAGLEYE_LOG_CHANNEL'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zookeeper</span> <span class="comment">'spark:2181</span><span class="string">,</span><span class="comment">witgo:2181'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">partitions</span> <span class="comment">10</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">replication</span><span class="literal">-</span><span class="comment">factor</span> <span class="comment">1</span>
-<span class="string">.</span><span class="comment">/kafka</span><span class="literal">-</span><span class="comment">topics</span><span class="string">.</span><span class="comment">sh</span> <span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">topic</span> <span class="comment">'EAGLEYE_ALERT_MAIL'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zookeeper</span> <span class="comment">'spark:2181</span><span class="string">,</span><span class="comment">witgo:2181'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">partitions</span> <span class="comment">10</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">replication</span><span class="literal">-</span><span class="comment">factor</span> <span class="comment">1</span>
-<span class="string">.</span><span class="comment">/kafka</span><span class="literal">-</span><span class="comment">topics</span><span class="string">.</span><span class="comment">sh</span> <span class="literal">-</span><span class="comment">create</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">topic</span> <span class="comment">'EAGLEYE_ALERT_SMS'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">zookeeper</span> <span class="comment">'spark:2181</span><span class="string">,</span><span class="comment">witgo:2181'</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">partitions</span> <span class="comment">10</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">replication</span><span class="literal">-</span><span class="comment">factor</span> <span class="comment">1</span>
-</code></pre><h3 id="logstash_部署步骤">logstash 部署步骤</h3><pre><code>logstash 需要有jruby1.7.11 版本支持
-
-<span class="number">1.</span> 通过rbenv 对ruby环境安装:
-git clone <span class="string">git:</span><span class="comment">//github.com/sstephenson/rbenv.git ~/.rbenv</span>
-# 用来编译安装 ruby
-git clone <span class="string">git:</span><span class="comment">//github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build</span>
-# 用来管理 gemset, 可选, 因为有 bundler 也没什么必要
-git clone <span class="string">git:</span><span class="comment">//github.com/jamis/rbenv-gemset.git  ~/.rbenv/plugins/rbenv-gemset</span>
-# 通过 gem 命令安装完 gem 后无需手动输入 rbenv rehash 命令, 推荐
-git clone <span class="string">git:</span><span class="comment">//github.com/sstephenson/rbenv-gem-rehash.git ~/.rbenv/plugins/rbenv-gem-rehash</span>
-# 通过 rbenv update 命令来更新 rbenv 以及所有插件, 推荐
-git clone <span class="string">https:</span><span class="comment">//github.com/rkh/rbenv-update.git ~/.rbenv/plugins/rbenv-update</span>
-然后把下面的代码放到 ~/.bash_profile 里
-export PATH=<span class="string">"$HOME/.rbenv/bin:$PATH"</span>
-然后重开一个终端就可以执行 rbenv 了.
-
-rbenv install <span class="number">1.9</span>.3-p551 # 安装 <span class="number">1.9</span>.3-p551
-rbenv install jruby-<span class="number">1.7</span>.11 # 安装 jruby-<span class="number">1.7</span>.11
-
-rbenv global jruby-<span class="number">1.7</span>.3 # 默认使用 jruby-<span class="number">1.7</span>.3
-
-
-<span class="number">2.</span> 下面从咱们的gitlab上获取已经安装好插件的logstash-<span class="number">1.4</span>.2
-git clone git<span class="annotation">@git</span>.tuan800-inc.<span class="string">com:</span>trade_architect/logstash.git
-
-<span class="number">3.</span>  因为logstash需要使用kafka, 所以需要在本机配置, 生产环境的kafka的hosts表
-
-<span class="number">172.16</span>.11.43 YJ-<span class="number">18</span>-<span class="number">1</span>
-<span class="number">172.16</span>.11.46 YJ-<span class="number">18</span>-<span class="number">4</span>
-<span class="number">172.16</span>.11.60 YJ-<span class="number">17</span>-<span class="number">4</span>
-<span class="number">172.16</span>.11.67 YJ-<span class="number">17</span>-<span class="number">11</span>
-<span class="number">172.16</span>.11.73 YJ-<span class="number">16</span>-<span class="number">3</span>
-
-<span class="number">4.</span> 按照logstash进行负载均衡存储的es实例
-
-(<span class="number">1</span>). git clone git<span class="annotation">@git</span>.tuan800-inc.<span class="string">com:</span>trade_architect/elasticsearch.git
-
-(<span class="number">2</span>). 在  elasticsearch-<span class="number">1.4</span>.4<span class="regexp">/config/</span>elasticsearch.yml 中设置将需要输出的数据, 日志路径.
-
-   node.<span class="string">name:</span> <span class="string">"eagleye_es_logstash_XXX"</span>   其中XXX可以标识出该机器
-
-   path.<span class="string">data:</span> <span class="regexp">/home/</span>zhejava<span class="regexp">/esdata/</span>data   因为该实例不存储数据使用, 只是用来进行检索和存储时当做集群负载均衡器使用,
-   path.<span class="string">work:</span> <span class="regexp">/home/</span>zhejava<span class="regexp">/esdata/</span>work  存放临时文件的位置
-   path.<span class="string">logs:</span> <span class="regexp">/home/</span>zhejava<span class="regexp">/esdata/</span>logs  存放日志的位置
-
-   transport.tcp.<span class="string">port:</span> <span class="number">9300</span> 配置开启, 并修改为<span class="number">9301</span>
-
-  http.<span class="string">port:</span> <span class="number">9200</span> 配置开启 , 并修改为<span class="number">9201</span>
-
-  node.<span class="string">master:</span> <span class="literal">false</span>  开启配置
-  node.<span class="string">data:</span> <span class="literal">false</span>     开启配置
-
-(<span class="number">3</span>). 在 elasticsearch-<span class="number">1.4</span>.4<span class="regexp">/bin/</span>elasticsearch 文件中的 ES_HEAP_SIZE=<span class="number">32768</span>m 修改为 <span class="number">8192</span>m 即可
-
-(<span class="number">4</span>). 执行  elasticsearch-<span class="number">1.4</span>.4<span class="regexp">/bin/</span>elasticsearch -d
-
-<span class="number">5.</span> 进入到 logstash-<span class="number">1.4</span>.2 中执行  sh start.sh 即可, 在该文件中可以配置logstash具体的日志输出路径
-
-如果不想使用已经安装好插件的logstash请参照下面的方式安装.
-
-----------------------------------------------------------------------------------------------------------------------------
-
-如果按照官方文档的部署可以git clone 最新版的logstash-kafka, 并且在该目录下执行 make tarball, 然后生成 logstash-<span class="number">1.4</span>.2.tar.gz
-
-但是这需要有一个畅通的网络, 因为有一个无形的墙,阻挡我们完成这件事, 我个人尝试vpn出去, 也出现了失败, 网络并不稳定.
-
-所以我还是阐述一下通过手动搭建一个logstash 服务, 并可以从kafka中消费队列, 并存储消息到elasticsearch中.
-
-
-<span class="number">1.</span> 下载官方logstash-<span class="number">1.4</span>.2 版本, 这是最新的release版本.
-   wget <span class="string">https:</span><span class="comment">//download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz</span>
-
-<span class="number">2.</span> 下载 logstash 针对kafka的插件 logstash-kafka v0.6.2 (或者可以通过git clone获取最新的版本)
-   wget <span class="string">https:</span><span class="comment">//github.com/joekiller/logstash-kafka/archive/v0.6.2.tar.gz  </span>
-
-<span class="number">3.</span> 因为logstash-kafka是ruby项目, 所以需要依赖ruby环境
-
-<span class="number">4.</span> 解压logstash包,得到 $logstash_home, 并创建 $logstash_home<span class="regexp">/vendor/</span>jar<span class="regexp">/kafka_2.9.2-0.8.1.1/</span>libs/
-
-<span class="number">5.</span> 下载kafka程序包(如果没有, 请去官网下最新<span class="number">0.8</span>.1.1版本, wget <span class="string">https:</span><span class="comment">//www.apache.org/dyn/closer.cgi?path=/kafka/0.8.1.1/kafka_2.9.2-0.8.1.1.tgz)</span>
-
-<span class="number">6.</span> 从$kafka_home<span class="regexp">/lib 目录复制所有jar文件到$logstash_home/</span>vendor<span class="regexp">/jar/</span>kafka_2.9.2-<span class="number">0.8</span>.1.1<span class="regexp">/libs/</span>下
-
-<span class="number">7.</span> 复制logstash-kafka<span class="regexp">/lib/</span>logstash里的 inputs 和 outputs 下的 kafka.rb，拷贝到对应的 $logstash_home<span class="regexp">/lib/</span>logstash 里的 inputs 和 outputs 对应目录下
-
-<span class="number">8.</span> git clone <span class="string">https:</span><span class="comment">//github.com/logstash-plugins/logstash-input-kafka.git</span>
-   然后进入该目录下运行bundle install, 这时会下载logstash运行时依赖的各种gem (这又是一个大坑, 之前忽略了这一步)
-
-<span class="number">9.</span> 在$logstash_home目录下运行：
-   GEM_HOME=vendor<span class="regexp">/bundle/</span>jruby<span class="regexp">/1.9 GEM_PATH= java -jar vendor/</span>jar<span class="regexp">/jruby-complete-1.7.11.jar --1.9 ../</span>logstash-kafka<span class="regexp">/gembag.rb ../</span>logstash-kafka/logstash-kafka.gemspec
-
-    logstash到此已经部署完毕, 这里碰到一个坑: 是logstash从kafka中消费消息是始终不能转换DefaultDecoder对象为json, 最后发现 v0.6.2版本的logstash-kafka中的inputs插件有问题,
-    这时, 你需要去github中获取logstash-kafka 项目下的logstash-kafka<span class="regexp">/lib/</span>logstash<span class="regexp">/inputs/</span>kafka.rb 作为最新的input插件覆盖之前的.
-
-<span class="number">10</span>, 在$logstash_home目录下创建 logstash.yml 配置文件
-   文件内容为如下:
-   input {
-       kafka {
-           zk_connect =&gt; <span class="string">"witgo:2181,spark:2181"</span>
-           group_id =&gt; <span class="string">"eagleye_logstash"</span>
-           topic_id =&gt; <span class="string">"EAGLEYE_LOG_CHANNEL"</span>
-           consumer_threads =&gt; <span class="number">5</span>  
-       }
-   }
-
-   output {
-     elasticsearch {
-       cluster =&gt; <span class="string">"eagleye_es"</span>
-       # 我们可以版本搭建一个es服务, 该服务不存储数据和检索, 只是发现es集群,并转发操作请求
-       host =&gt; <span class="string">"localhost"</span>
-       port =&gt; <span class="string">"9301"</span>
-       protocol =&gt; <span class="string">"transport"</span>
-       index =&gt; <span class="string">"eagleye-log-%{+YYYY.MM.dd}"</span>
-       index_type =&gt; <span class="string">"log"</span>
-       workers =&gt; <span class="number">2</span> # 如果这个配置开太大容易内存溢出, 需要根据机器配置进行调整, 在测试环境logstash 内存<span class="number">500</span>m时,<span class="number">2</span>个线程效率最高
-       flush_size =&gt; <span class="number">1000</span> #该配置配合workers进行调整, 如果太大, 也容易内存溢出, 或者增加gc次数.目前这个配置可以达到单台logstash可以<span class="number">20000</span>/s的日志写入
-       template_overwrite =&gt; <span class="literal">true</span>
-     }
-   }
-
- <span class="number">10</span>, 启动logstash 
-     bin<span class="regexp">/logstash agent -f logstash.yml &gt; /</span>home<span class="regexp">/zhejava/</span>logstash_log/logstash.log &amp;
-
- <span class="number">11</span>, logstash-<span class="number">1.4</span>.2 默认的elasticsearch-logstash.json 模板并没有生效, 里面只是一个通用的样板, 
-      我将 logstash-<span class="number">1.4</span>.2<span class="regexp">/lib/</span>logstash<span class="regexp">/outputs/</span>elasticsearch/elasticsearch-template.json 修改为如下内容:
-      {
-        <span class="string">"template"</span> : <span class="string">"eagleye-*"</span>, <span class="comment">//这个需要和要操作的index名称匹配,很重要,默认是logstash*,而我们的是eagleye*,所以该模板一直不好使,没注意,大坑啊.</span>
-        <span class="string">"settings"</span> : {
-          <span class="string">"index.refresh_interval"</span> : <span class="string">"5s"</span>
-        },
-        <span class="string">"mappings"</span> : {
-           <span class="string">"log"</span> : {
-                  <span class="string">"properties"</span> : {
-                      <span class="string">"@timestamp"</span> : {
-                          <span class="string">"type"</span> : <span class="string">"date"</span>,
-                          <span class="string">"format"</span> : <span class="string">"dateOptionalTime"</span>
-                      },
-                      <span class="string">"timestamp"</span> : {
-                          <span class="string">"type"</span> : <span class="string">"date"</span>, <span class="comment">//日期类型, 在生成json的对象中需要是date类型</span>
-                          <span class="string">"format"</span> : <span class="string">"dateOptionalTime"</span> 
-                      },
-                      <span class="string">"head"</span> : {<span class="comment">//涉及到map嵌套,可以这样写</span>
-                          <span class="string">"properties"</span> : {
-                              <span class="string">"app"</span> : {
-                                  <span class="string">"type"</span> : <span class="string">"string"</span>,
-                                  <span class="string">"index"</span> : <span class="string">"not_analyzed"</span> <span class="comment">//该字段不需要分词索引,统计时不会因为"-"而将一个分开统计</span>
-                              }
-                          }
-                      }
-                  }
-              }
-        }
-      }
-
-    <span class="number">12.</span> logstash时差<span class="number">8</span>小时问题
-
-        logstash在按每天输出到elasticsearch时，因为时区使用utc，造成每天<span class="number">8</span>:<span class="number">00</span>才创建当天索引，而<span class="number">8</span>:<span class="number">00</span>以前数据则输出到昨天的索引
-        修改logstash<span class="regexp">/lib/</span>logstash/event.rb 可以解决这个问题
-        第<span class="number">226</span>行
-        .withZone(org.joda.time.<span class="string">DateTimeZone:</span>:UTC)
-        修改为
-        .withZone(org.joda.time.DateTimeZone.getDefault())
-</code></pre><h3 id="elasticsearch_部署">elasticsearch 部署</h3><pre><code>依赖 jdk <span class="number">1.7</span>
-
-<span class="number">1</span>. git clone git@git<span class="class">.tuan800-inc</span><span class="class">.com</span>:trade_architect/elasticsearch<span class="class">.git</span>
-
-<span class="number">2</span>. 在  elasticsearch-<span class="number">1.4</span>.<span class="number">4</span>/config/elasticsearch<span class="class">.yml</span> 中设置将需要输出的数据, 日志路径.
-
-   node<span class="class">.name</span>: <span class="string">"eagleye_es_XXX"</span>   其中XXX可以标识出该机器
-
-path<span class="class">.data</span>: /home/zhejava/esdata/data   es数据存储位置, 需要是独立的磁盘, 空间越大越好, 到时,公司的全量日志可能会存储在这, 会是高IO操作
-path<span class="class">.work</span>: /home/zhejava/esdata/work  存放临时文件的位置, 建议有独立的磁盘
-path<span class="class">.logs</span>: /home/zhejava/esdata/logs  存放日志的位置, 建议独立的磁盘
-
-<span class="number">3</span>. 执行  elasticsearch-<span class="number">1.4</span>.<span class="number">4</span>/bin/elasticsearch -d
-</code></pre><h3 id="eagleye-java-client_部署">eagleye-java-client 部署</h3><pre><code>因为我们的日志收集是对kafka强依赖, 所以需要有一些配置来进行相关的配置才能接入, 具体的配置主要集中在log4j.xml 和spring配置文件中.
-1. pom.xml中添加如下内容:
-    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>eagleye-java-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.1.0-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
-
-    如果是基于scala-2.10
-    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>eagleye-java-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.1.0-2.10-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
-
-2. log4j.xml中需要添加一个自定义的appender节点, 具体如下:
-
-    <span class="tag">&lt;<span class="title">appender</span> <span class="attribute">name</span>=<span class="value">"eagleye"</span> <span class="attribute">class</span>=<span class="value">"com.xxx.eagleye.client.log4jappender.EagleyeAppender"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">param</span> <span class="attribute">name</span>=<span class="value">"app"</span> <span class="attribute">value</span>=<span class="value">"eagleye-test"</span> /&gt;</span> <span class="comment">&lt;!-- 这里的名称就是eagleye-admin中提到的app , eagleye会按照这个进行约定预警规则的绑定,可以和application name(loom中的)一致 --&gt;</span>
-        <span class="tag">&lt;<span class="title">layout</span> <span class="attribute">class</span>=<span class="value">"org.apache.log4j.PatternLayout"</span> /&gt;</span>
-    <span class="tag">&lt;/<span class="title">appender</span>&gt;</span>
-
-    <span class="tag">&lt;<span class="title">root</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">level</span> <span class="attribute">value</span>=<span class="value">"INFO"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">appender-ref</span> <span class="attribute">ref</span>=<span class="value">"console"</span>/&gt;</span>
-        <span class="comment">&lt;!-- 不要忘记在这里将自定义的eagleye appender 添加到root节点下 --&gt;</span>
-        <span class="tag">&lt;<span class="title">appender-ref</span> <span class="attribute">ref</span>=<span class="value">"eagleye"</span>/&gt;</span> 
-    <span class="tag">&lt;/<span class="title">root</span>&gt;</span>
-
-
-    如果你用的是log4j.properties文件, 如下配置:
-    log4j.appender.eagleye=com.xxx.eagleye.client.log4jappender.EagleyeAppender
-    # 这里的名称就是eagleye-admin中提到的app , eagleye会按照这个进行约定预警规则的绑定,可以和application name(loom中的)一致
-    log4j.appender.eagleye.app=eagleye-test 
-    log4j.appender.eagleye.layout=org.apache.log4j.PatternLayout
-
-    不用忘记在rootLogger中添加eagleye的appender
-    log4j.rootLogger=INFO,console,file,eagleye
-
-3. 在spring配置文件中进行如下配置:
-    <span class="comment">&lt;!-- 以下配置可以引入imago进行集中配置管理 需要显式设置lazy-init="false" 因为整个程序没有通过spring去获取eagleyeChannel对象 --&gt;</span>
-    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"eagleyeChannel"</span> <span class="attribute">class</span>=<span class="value">"com.xxx.eagleye.client.Configuration"</span> <span class="attribute">lazy-init</span>=<span class="value">"false"</span>&gt;</span>
-        <span class="comment">&lt;!-- 该redis地址主要是记录client的心跳, 日志生产力,日志总量 --&gt;</span>
-        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"redisIp"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').ip}"</span>/&gt;</span> 
-        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"redisPort"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').port}"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"redisPwd"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').pwd}"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">name</span>=<span class="value">"kafkaBroker"</span> <span class="attribute">value</span>=<span class="value">"#{configManager.getKafkaConfig('trade_public_kafka','1.1').broker}"</span>/&gt;</span> <span class="comment">&lt;!-- 需要用到进行日志收集的kafka配置 --&gt;</span>
-        <span class="comment">&lt;!--&lt;constructor-arg name="kafkaTopic" value="EAGLEYE_LOG_CHANNEL" /&gt;--&gt;</span> <span class="comment">&lt;!-- 收集日志的topic名称, 该配置默认不需要配置 --&gt;</span>
-        <span class="comment">&lt;!--&lt;constructor-arg name="sendFreq" value="3000" /&gt;--&gt;</span> <span class="comment">&lt;!-- 批量操作时间间隔, 单位 ms, 这些时间间隔往kafka批量推送一次 --&gt;</span>
-    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
-
-4. 因为使用的kafka需要用到域名, 需要配置以下kafka的host表
-   下面是测试环境的配置.
-   192.168.5.158 witgo
-   192.168.5.159 spark
-
-5. 如果要发送监控数据, 在代码中可以这样写:
-    logger.info(MonitorLog.build().type(LogType.EAGLEYE_MONITOR_LOG_REFUND_SHMJCSWGBSL).value(105D));
-
-注: 如果你想看到client发送的具体日志内容, 请在log4j.xml配置做如下配置:
-    <span class="tag">&lt;<span class="title">logger</span> <span class="attribute">name</span>=<span class="value">"com.xxx.eagleye.client.log4jappender.EagleyeAppender"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">level</span> <span class="attribute">value</span>=<span class="value">"debug"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-</code></pre><h3 id="kibana部署和配置">kibana部署和配置</h3><pre><code>概述<span class="pseudo">:Kibana</span> 是为 <span class="tag">Elasticsearch</span> 设计的开源分析和可视化平台。你可以使用 <span class="tag">Kibana</span> 来搜索，查看存储在 <span class="tag">Elasticsearch</span> 索引中的数据并与之交互。你可以很容易实现高级的数据分析和可视化，以图标的形式展现出来。
-</code></pre><h4 id="部署:">部署:</h4><pre><code><span class="number">1</span>.部署一个用于做负载的Elasticsearch,Elasticsearch的部署详见(elasticsearch 部署),部署完成后修改
-<span class="number">2</span>.下载Kibana <span class="number">4</span>
-<span class="number">3</span>.解压 <span class="class">.zip</span> 或 tar<span class="class">.gz</span> 压缩文件
-<span class="number">4</span>.配置Elasticsearch地址,在config/kibana.yml文件,配置第一步安装的elasticsearch地址.
-   elasticsearch_url: <span class="string">"http://localhost:9200"</span>
-<span class="number">5</span>.bin/kibana,启动kibana
-<span class="number">6</span>.访问<span class="number">5601</span>端口.
-</code></pre><h4 id="配置">配置</h4><pre><code><span class="number">1</span>.配置索引(相当于数据库名),es存入数据是每天创建一个索引,所以kibana要读取数据必须先配置索引,索引可以按天模糊匹配.配置方法如下图.
-配置完索引后,选择时间戳,要选择带<span class="string">"@"</span>符号的timestamp用日志进入es的时间字段.
-</code></pre><p>  <img src="http://siye1982.github.io/img/blog/eagleye/kibana_index.png" alt="kibana"></p>
-<pre><code>2.配置<span class="rule"><span class="attribute">discover</span>:<span class="value">配置各种查询数据,进行条件筛选</span></span>
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_dis_tool.png" alt="kibana"><br>   <img src="http://siye1982.github.io/img/blog/eagleye/kibana_discover.png" alt="kibana">      </p>
-<pre><code>   <span class="comment">(a)</span>.点击discover菜单,点击搜索口后面的添加按钮<span class="comment">(加号)</span>,在左侧Field项下会列出所有的字段信息,鼠标移到字段上面,会出现add按钮,点击添加,该字段会出现在上方的select field项下.
-   <span class="comment">(b)</span>.配置完成后,右边会出现选择的列和数据.
-   <span class="comment">(c)</span>.点击apply应用所选的配值
-   <span class="comment">(d)</span>.点击保存,在页面的右上方,有个保存的图标.填写保存的名字
-
-<span class="number">3.</span>配置visualize:visualize是对discover数据表的各种汇总信息,并以各种个图表显示.
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_vis_tool.png" alt="kibana"><br>   <img src="http://siye1982.github.io/img/blog/eagleye/kibana_vis.png" alt="kibana">   </p>
-<pre><code>   <span class="comment">(a)</span>.点击visualize菜单,点击搜索口后面的添加按钮<span class="comment">(加号)</span>.
-   <span class="comment">(b)</span>.选择样式
-   <span class="comment">(c)</span>.选择基础数据<span class="comment">(discover保存的基础数据)</span>
-   <span class="comment">(d)</span>.在左侧选择自己需要的统计数据,Metric选项卡中选择统计结果如<span class="comment">(count,avg,sum等)</span>.buckets下面的选项可以选择如何分组,相当于group by 后面的字段
-   <span class="comment">(e)</span>.点击apply应用所选的配值,点击右上角保存按钮,然后输入名字保存.
-
-<span class="number">4.</span>配置dashboard:将discover和visualize保存的各种表格和报表集中在一起显示
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_dash_tool.png" alt="kibana"><br>   <img src="http://siye1982.github.io/img/blog/eagleye/kib_dash.png" alt="kibana">   </p>
-<pre><code>   (a).点击上图添加按钮,跳转到选择discover和visualize页面.
-   (b).选择需要的discover和visualize页面.此时会在下放显示.
-   (c).拖动改变位置和大小.
-   (d).保存设置好的面板.
-
-<span class="number">5</span>.搜索框简易使用说明
-  <span class="number">1</span>.在特定的字段里搜索,例如：line_id:<span class="number">86169</span>
-  <span class="number">2</span>.可以用 <span class="keyword">AND</span>/<span class="keyword">OR</span> 来组合复杂的搜索，<span class="keyword">AND</span>/<span class="keyword">OR</span>必须大写,例如:food <span class="keyword">AND</span> love
-  <span class="number">3</span>.括号的使用：(<span class="variable">"played upon"</span> <span class="keyword">OR</span> <span class="variable">"every man"</span>) <span class="keyword">AND</span> stage
-  <span class="number">4</span>.数值类型的数据可以直接搜索范围：line_id:[<span class="number">30000</span> <span class="keyword">TO</span> <span class="number">80000</span>] <span class="keyword">AND</span> havoc
-  <span class="number">5</span>.搜索所有：*
-  <span class="number">6</span>.如果输入 where1 where2 两个单词,实际搜索的是where1 <span class="keyword">OR</span> where2 如果要搜索where1 where2,请用双引号引起来<span class="variable">"where1 where2"</span>
-</code></pre><h3 id="alerter_部署和配置">alerter 部署和配置</h3><pre><code>部署:
-<span class="number">1</span>. git clone git<span class="variable">@git</span>.tuan80<span class="number">0</span>-inc.com:trade_architect/eagleye.git
-<span class="number">2</span>. cd eagleye/eagleye-alerter 进入在eagleye-alerter程序根目录
-<span class="number">3</span>. 在eagleye-alerter程序根目录执行 git -pull &amp;&amp; mvn clean <span class="keyword">package</span> -Dmaven.test.skip=true -U , 完成后进入文件夹得到 项目压缩包 eagleye-alerter-<span class="number">1.0</span>.<span class="number">0</span>-all.tar.gz
-<span class="number">4</span>. 解压项目包
-<span class="number">5</span>. 执行 nohup ./start.sh  &gt; <span class="regexp">/data/applogs</span><span class="regexp">/eagleye/service</span>.<span class="keyword">log</span>  <span class="number">2</span>&gt;&amp;<span class="number">1</span>  &amp;
-
-需要注意: 
-
-<span class="number">1</span> 需要替换conf/log4j.xml 中的日志文件目录 , 和命令输出日志目录
-
-<span class="number">2</span> 需要修改run.sh 中的变量IP 为服务器IP , HEAP_DUMP_PATH 为日志目录的文件
-
-关闭:
-需要手动<span class="keyword">kill</span>掉程序进程,可以执行以下命令:
-ps -ef | <span class="keyword">grep</span> <span class="string">'com.xxx.eagleye.alerter.App'</span> | <span class="keyword">grep</span> -v <span class="string">'grep'</span> |  awk <span class="string">'{print $2}'</span> | xargs  <span class="keyword">kill</span>
-
-配置说明:
-由于alerter程序会和kafka,zookeeper集群进行通信, 所以程序运行前需要配置相关host, 配置如下:
-
-<span class="comment">#kakfa cluster</span>
-<span class="number">172.16</span>.<span class="number">11.43</span> YJ-<span class="number">18</span>-<span class="number">1</span>
-<span class="number">172.16</span>.<span class="number">11.46</span> YJ-<span class="number">18</span>-<span class="number">4</span>
-<span class="number">172.16</span>.<span class="number">11.60</span> YJ-<span class="number">17</span>-<span class="number">4</span>
-<span class="number">172.16</span>.<span class="number">11.67</span> YJ-<span class="number">17</span>-<span class="number">11</span>
-<span class="number">172.16</span>.<span class="number">11.73</span> YJ-<span class="number">16</span>-<span class="number">3</span>
-
-loomContext.xml 中可以配置日志toipc kafka消费者的消费线程数(alerterConsumerThreadNum),
- alerter程序可以部署的最大实例数为 kafka日志topic分区数/alerterConsumerThreadNum 
- 如果部署的程序实例数超过了最大实例数, 新的程序实例将会得消费不到得到topic分区, 不产生吞吐量
-
-由于alerter即是kafka消费者, 又是kafka生产者, 为了避免死循环, 程序在打印描述性日志前都都加了<span class="string">'~'</span>, 创建alerter程序的预警规则时, 应当在规则中过滤日志内容第一个字符为<span class="string">'~'</span>的情况
-</code></pre><h3 id="eagleye-admin部署">eagleye-admin部署</h3><p>   <a href="../init.sql">sql脚本</a></p>
-<pre><code><span class="number">1</span>.在trde库执行附件脚本，初始化表.   
-<span class="number">2</span>.git clone git<span class="variable">@git</span>.tuan80<span class="number">0</span>-inc.<span class="symbol">com:</span>trade_architect/eagleye.git
-<span class="number">3</span>.cd eagleye/
-<span class="number">4</span>.mvn clean; mvn -<span class="constant">DskipTests </span>package
-<span class="number">5</span>.在tomcat中部署eagleye-admin/target/eagleye-admin.war包。
-<span class="number">6</span>.初始用户名密码<span class="symbol">:admin/test</span>
-</code></pre><h2 id="非java项目对接">非java项目对接</h2><pre><code> 如果非java服务想对接到该预警平台, 请按照如下json格式:
-<span class="comment"><figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">       <span class="string">"body"</span>: <span class="string">"日志内容"</span>,</span><br><span class="line">       <span class="string">"head"</span>: &#123;</span><br><span class="line">           <span class="string">"app"</span>: <span class="string">"eagleye-test"</span>,</span><br><span class="line">           <span class="string">"ip"</span>: <span class="string">"192.168.1.100"</span>,</span><br><span class="line">           <span class="string">"level"</span>: <span class="string">"WARN"</span>,</span><br><span class="line">           <span class="string">"pid"</span>: <span class="string">"3817"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="string">"timestamp"</span>: <span class="number">1426216784971</span></span><br><span class="line">   &#125;</span><br><span class="line">   发送到kafka的 名为:<span class="type">EAGLEYE_LOG_CHANNEL</span> 的topic中</span><br><span class="line">   </span><br><span class="line">   如果是直接接入其他非java的日志, 并且还不想格式化上述json,可以直接开启一个logstash实例, 配置文件如下:</span><br><span class="line">   input &#123;</span><br><span class="line">     file &#123;</span><br><span class="line">        path =&gt; [<span class="string">"/home/zhejava/logstash/logstash-1.4.2/temp/*.log"</span>]</span><br><span class="line">       # <span class="keyword">type</span> =&gt; <span class="string">"system"</span></span><br><span class="line">       # start_position =&gt; <span class="string">"beginning"</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   filter &#123;</span><br><span class="line">     grok &#123;</span><br><span class="line">       <span class="keyword">match</span> =&gt; &#123; <span class="string">"message"</span> =&gt; <span class="string">""</span> &#125;</span><br><span class="line">       add_field =&gt; &#123;</span><br><span class="line">           <span class="string">"head.app"</span> =&gt; <span class="string">"logstash-test"</span></span><br><span class="line">           <span class="string">"head.ip"</span> =&gt; <span class="string">"192.168.5.177"</span></span><br><span class="line">           <span class="string">"head.level"</span> =&gt; <span class="string">"WARN"</span></span><br><span class="line">           #<span class="string">"timestamp"</span> =&gt; <span class="number">1426237376377</span></span><br><span class="line">           #<span class="string">"head"</span> =&gt; <span class="string">"&#123;'app' : 'eagleye-test-b','ip' : '192.168.5.244','level' : 'ERROR','pid' : '9744'&#125;"</span></span><br><span class="line">       &#125;</span><br><span class="line">   </span><br><span class="line">       remove_field =&gt; [ <span class="string">"message"</span> ]</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   # 如果是入kafka请这么写</span><br><span class="line">   output &#123;</span><br><span class="line">     #stdout &#123;</span><br><span class="line">     #   codec =&gt; rubydebug</span><br><span class="line">     #   #codec =&gt; plain</span><br><span class="line">     #&#125;</span><br><span class="line">   </span><br><span class="line">     kafka &#123;</span><br><span class="line">        #codec =&gt; plain &#123;</span><br><span class="line">        #   format =&gt; <span class="string">"%&#123;body&#125;"</span></span><br><span class="line">        #&#125;</span><br><span class="line">        broker_list =&gt; <span class="string">"witgo:9092,spark:9092"</span></span><br><span class="line">        topic_id =&gt; <span class="string">"EAGLEYE_LOG_CHANNEL"</span></span><br><span class="line">   </span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">   # 如果是入es 请这么写,不推荐直接入es, 这样就不能设置实时预警了</span><br><span class="line">   output &#123;</span><br><span class="line">         elasticsearch &#123;</span><br><span class="line">         cluster =&gt; <span class="string">"eagleye_es"</span></span><br><span class="line">         host =&gt; <span class="string">"localhost"</span></span><br><span class="line">         port =&gt; <span class="string">"9301"</span></span><br><span class="line">         protocol =&gt; <span class="string">"transport"</span></span><br><span class="line">         index =&gt; <span class="string">"eagleye-log-%&#123;+YYYY.MM.dd&#125;"</span></span><br><span class="line">         index_type =&gt; <span class="string">"log"</span></span><br><span class="line">         workers =&gt; <span class="number">2</span></span><br><span class="line">         flush_size =&gt; <span class="number">1000</span></span><br><span class="line">         template_overwrite =&gt; <span class="literal">true</span></span><br><span class="line">         &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></span>
-</code></pre><h2 id="其他">其他</h2><h3 id="es自定义检索功能说明">es自定义检索功能说明</h3><pre><code><span class="bullet">1. </span>elastic search建立索引时, 会使用现有词典进行分词, 如果用户输入的关键词不在当前词库中, 将不会搜索到结果, 遇到这种情况, 建议用户缩小关键词粒度, 并使用多个关键词进行查询
-
-<span class="bullet">2. </span>多个关键词可以用空格分开
-</code></pre><h3 id="xxx_es_index_template功能简介">xxx es index template功能简介</h3><p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.3/indices-templates.html" target="_blank" rel="external">elasticsearch template 官方文档</a></p>
-<pre><code><span class="number">1</span>. es 可用通过预先设置的<span class="keyword">template</span>来指定即将创建索引的setting 和 mapping 设置
-
-<span class="number">2</span>. 使用方式:
-
-    <span class="number">1</span>. 使用命令添加
-
-    <span class="number">2</span>. 将 <span class="keyword">template</span>模板 添加到 config/templates/ 目录
 </code></pre>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/06/18/eagleye/#more">Read More</a>
           
        </p>
     </div>
@@ -706,7 +124,7 @@ loomContext.xml 中可以配置日志toipc kafka消费者的消费线程数(aler
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/Java/">Java</a><a href="/tags/logstash/">logstash</a><a href="/tags/监控/">监控</a>
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/Java/">Java</a><a href="/tags/Logstash/">Logstash</a><a href="/tags/原创/">原创</a><a href="/tags/监控/">监控</a>
   </div>
 
 </div>
@@ -753,587 +171,11 @@ loomContext.xml 中可以配置日志toipc kafka消费者的消费线程数(aler
         <h2 id="概述">概述</h2><p>在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之间的沟通成本, 招聘新人的培训成本, 由人员更替产生的交接成本等. 这个时候多语言开发环境带来的弊端逐渐显现出来, 我们需要在这中间找到一个平衡点. </p>
 <p>在公司发展到一定规模, 肯定会产生很多业务系统, 这些业务系统需要互相之间进行调用来完成协作. Thrift帮助我们在异构语言直接的沟通建立了桥梁. 只是简单的RPC调用在服务比较少的阶段还能够接受,但是随着服务逐渐的增多,调用关系越来越复杂, 我们迫切的需要一个框架可以对所有服务进行统一的管理,监控,预警. 这是LOOM诞生的直接需求. “LOOM,织布机”,寓意可以将各个网状服务进行很好的治理.</p>
 <p>LOOM的大部分需求直接采用的阿里巴巴的服务治理框架—DUBBO, 这里向DUBBO的所有开发人员致敬, DUBBO的出现带动了SOA概念真正的落地, 相信国内很多互联网公司都在用DUBBO进行服务治理. LOOM里面关于RPC相关的工作,我们直接使用了Twitter的finagle-thrift, 它可以帮助我们非常简单的写出高性能的异步的thrift调用. 另外我们可以直接通过zipkin来进行异构语言之间的调用链信息的收集.</p>
-<h2 id="loom服务治理需求">loom服务治理需求</h2><h3 id="一期需求">一期需求</h3><p>在大规模服务化之前，应用可能只是通过Thrift，简单的暴露和引用远程服务，通过配置服务的URL地址进行调用，通过HAProxy等软件进行负载均衡。服务治理平台主要的需求可以通过下面几点来体现:</p>
-<pre><code><span class="bullet">1.  </span>当服务越来越多时，服务URL配置管理变得非常困难，负载均衡器的单点压力也越来越大。
-此时需要一个服务注册中心，动态的注册和发现服务，使服务的位置透明。
-并通过在消费方获取服务提供方地址列表，实现软负载均衡和Failover，降低对HAProxy负载均衡器的依赖，也能减少部分成本。
-
-<span class="bullet">2.  </span>当进一步发展，服务间依赖关系变得错踪复杂，甚至分不清哪个应用要在哪个应用之前启动，架构师都不能完整的描述应用的架构关系。
-这时，需要自动画出应用间的依赖关系图，以帮助架构师理清理关系。
-
-<span class="bullet">3.  </span>接着，服务的调用量越来越大，服务的容量问题就暴露出来，这个服务需要多少机器支撑？什么时候该加机器？
-为了解决这些问题，
-第一步，要将服务现在每天的调用量，响应时间，都统计出来，作为容量规划的参考指标。
-其次，要可以动态调整权重, 开启,禁用服务，在线上，将某台机器的权重一直加大，并在加大的过程中记录响应时间的变化，直到响应时间到达阈值，记录此时的访问量，再以此访问量乘以机器数反推总容量。
-</code></pre><h3 id="二期需求">二期需求</h3><pre><code>一期项目中, 我们完成了服务提供者, 消费者从启动开始总调用量的统计. 其实我们可以收集更详细的信息, 可以细化到哪个应用中的哪个方法的什么时候被调用,调用时长是多少.
-通过这些信息,我们可以通过实时计算出某台机器的某个方法响应时间变慢了等操作.
-这些操作会分几个部分:
-    <span class="number">1</span>. 原始数据的收集
-        方法名
-        类名
-        参数类型
-        参数个数
-        开始时间
-        结束时间
-        执行时间
-        ip
-        port
-        pid
-        服务名
-
-
-    <span class="number">2</span>. 基于原始数据的统计
-        每个方法从服务启动开始的调用次数.
-
-
-    <span class="number">3</span>. 界面展示:
-        (<span class="number">1</span>)针对某个服务, 某个机器上的方法调用列表如下:
-           方法名:
-           每分钟生产力 成功/失败
-           调用成功次数/失败次数
-        (<span class="number">2</span>)汇总页
-            统计服务方法相应时间分别在<span class="number">5</span>, <span class="number">10</span>, <span class="number">30</span>, <span class="number">60</span>, <span class="number">120</span>, <span class="number">300</span> 方法列表
-            eg: 服务响应时长在 [<span class="number">5</span>,<span class="number">10</span>) 之内的
-             方法名:
-             ip:port
-             pid:
-             所属服务名:
-             执行个数:
-</code></pre><h2 id="注册中心Zookeeper数据结构">注册中心Zookeeper数据结构</h2><p><img src="http://siye1982.github.io/img/blog/loom/zookeeper.png" alt="zookeeper数据结构"></p>
-<ol>
-<li><p>serviceName 是定位服务的唯一标识, 各个语言程序以该名称为基准, 该节点的value值将存储该服务的描述信息, 也需要进行encode操作.</p>
-</li>
-<li><p>serviceName下面会有四个静态节点</p>
-<p> (1)    providers节点</p>
-<ul>
-<li><p>所有服务提供者的url记录在该节点下</p>
-</li>
-<li><p>URL样例: provider://192.168.1.103:12307/loom-test-providerA?application=loom-test-providerA&amp;category=providers&amp;owner=panda&amp;pid=4078&amp;timestamp=1420708343991&amp;version=1.0</p>
-</li>
-<li><p>参数说明:</p>
-<ul>
-<li>application: 服务所在程序的名称, 只是在loom-admin中进行分组管理.</li>
-<li>category : 标识是提供者, 带有该标识的统一注册到providers节点下.</li>
-<li>owner: 服务所有者.</li>
-<li>pid: 服务所在进程的pid.</li>
-<li>timestamp: 服务启动注册上zookeeper的时间点.</li>
-<li>version: 服务的版本, 用来进行灰度发布时版本不兼容也能发布的需求.</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<pre><code>(<span class="number">2</span>) consumers 节点
-* 所有服务消费者的url注册到该节点下.
-* <span class="variable">URL</span>样例:consumer://<span class="number">192.168</span>.<span class="number">1.107</span>/loom-test-consumer<span class="variable">A</span>?application=loom-test-provider<span class="variable">A</span>&amp;category=consumers&amp;timeout=<span class="number">30000</span>&amp;pid=<span class="number">4078</span>&amp;timestamp=<span class="number">1420708343991</span>&amp;version=<span class="number">1.0</span>
-
-* 参数说明:
-  + application: 消费者所在程序的名称, 只是在loom-admin中进行分组管理.
-  + category : 标识是消费者, 带有该标识的统一注册到consumers节点下.
-  +    timeout: 消费者调用服务多长时间认为是超时,该参数根据各自客户端需求来配置, 也可以没有..
-  + pid: 消费者所在进程的pid.
-  + timestamp: 消费者启动注册上zookeeper的时间点.
-  + version: 消费者消费服务的版本, 用来进行灰度发布时版本不兼容也能发布的需求.
-
-  注: consumers下的临时节点对loom的作用只是可以观察到有多少个消费者在消费这个服务.
-
-
-(<span class="number">3</span>)    configurators 节点
-* 该节点会记录每个服务提供者的权重, 是静态节点, 即使服务丢失, 重新启动也不会丢失之前的设置.
-* <span class="variable">URL</span>样例: override://<span class="number">192.168</span>.<span class="number">1.103</span>:<span class="number">12307</span>/loom-test-provider<span class="variable">A</span>?application=loom-test-provider<span class="variable">A</span>&amp;category=configurators&amp;pid=<span class="number">4078</span>&amp;dynamic=<span class="literal">false</span>&amp;weight =<span class="number">100</span>&amp;version=<span class="number">1.0</span>
-
-* 参数说明:
-  + application: 消费者所在程序的名称, 只是在loom-admin中进行分组管理.
-  + category : 标识是路由信息, 带有该标识的统一注册到configurators节点下.
-  + disabled: 是否禁用该消费者.
-  + pid: 消费者所在进程的pid.
-  + dynamic: 是否是动态临时节点,当注册方退出时，数据依然保存在注册中心，必填。
-  + weight: 该服务提供者的权重值.
-  + version: 消费者消费服务的版本, 用来进行灰度发布时版本不兼容也能发布的需求.
-  + enabled: 覆盖规则是否生效，可不填，缺省生效:<span class="literal">true</span>. override节点是有覆盖操作的,当服务提供者启动时需要根据ip,port, version,作为判断与provider下的节点信息进行合并后提供给消费者(只是提供给消费者,而不重写provider节点).
-
-
-(<span class="number">4</span>)    routers 节点
-* 该节点会记录该服务消费者的路由信息, 目前只是记录是否禁用该消费者, 将来可能会针对该服务调用者设置服务的黑白名单等路由规则.
-* <span class="variable">URL</span>样例: route://<span class="number">192.168</span>.<span class="number">1.107</span>/loom-test-consumer<span class="variable">A</span>?application=loom-test-provider<span class="variable">A</span>&amp;category=routers&amp;disabled=<span class="literal">false</span>&amp;pid=<span class="number">4078</span>&amp;dynamic=<span class="literal">false</span>&amp;version=*
-* 参数说明:
-  + application: 消费者所在程序的名称, 只是在loom-admin中进行分组管理.
-  + category : 标识是路由信息, 带有该标识的统一注册到routers节点下.
-  + disabled: 是否禁用该消费者.
-  + pid: 消费者所在进程的pid.
-  + dynamic: 是否是动态临时节点.
-  + version: 消费者消费服务的版本, 用来进行灰度发布时版本不兼容也能发布的需求.
-</code></pre><ol>
-<li>所有url为了避免中文乱码,关键字符, 统一encode编码.</li>
-</ol>
-<hr>
-<h2 id="loom核心功能">loom核心功能</h2><h3 id="服务注册">服务注册</h3><pre><code><span class="bullet">* </span>服务启动时只需要设置启动端口, zookeeper地址, 即可通过loom将服务资源信息注册到zookeeper中, 相同服务的提供者统一注册到/loom/serviceName/providers几点下, 注册节点必须为动态临时节点.
-</code></pre><h3 id="负载均衡">负载均衡</h3><pre><code><span class="bullet">* </span>服务消费者,根据服务名称到/loom/serviceName/providers下订阅服务提供者列表. 根据weight实现负载均衡算法, 我们需要实现默认的负载均衡算法为Random算法, 并可以根据权重的调整对各个提供者的命中率进行调整.
-<span class="bullet">* </span>服务消费者需要注册到/loom/serviceName/consumers 节点下, 注册节点为动态临时节点.
-</code></pre><h3 id="服务治理">服务治理</h3><pre><code><span class="bullet">* </span>我们通过loom-admin对某个服务提供者进行权重的设置, 用来控制某个服务的访问量.
-<span class="bullet">* </span>可以在loom-admin中禁用启用某个服务消费者.
-<span class="bullet">* </span>可以统计使用的服务列表, 消费服务的程序列表.
-</code></pre><h2 id="loom_测试用例">loom 测试用例</h2><h3 id="功能测试">功能测试</h3><pre><code><span class="bullet">1. </span>权重负载均衡测试:
-   场景描述:
-<span class="code">    (1) 四台服务提供者机器</span>
-<span class="code">    (2) 权重都为100时, 发起10万次请求, 每台服务器都在25000左右, 误差不超过100次</span>
-<span class="code">    (3) 发起10万次请求, 四台服务器权重和命中次数分别为: 400:53223 ; 200:26864 ; 100:13269 ; 50:6644, 误差不超过100次</span>
-
-<span class="bullet">2. </span>服务提供者禁用, 启用测试:
-<span class="code">    如果禁用某个提供者, 那么根据剩下的所有提供者的权重重新计算负载均衡值.</span>
-
-<span class="bullet">3. </span>服务提供者和消费者version测试:
-<span class="code">    在消费者的配置中指定需要消费的服务版本, 那么运行程序时,则是获取该版本的服务提供者, 并且只根据相同版本的权重进行负载均衡.</span>
-
-<span class="bullet">4. </span>服务消费者的禁用,启用测试:
-<span class="code">    如果禁用之后, 消费者不应该再访问该提供者, 并且权重会根据现有提供者进行调整.</span>
-
-<span class="bullet">5. </span>某台服务提供者下线, 消费者会自动更新提供者列表,然后并且更新
-
-<span class="bullet">6. </span>服务消费者的禁用, 启用.
-
-<span class="bullet">7. </span>多注册中心验证
-
-<span class="bullet">8. </span>增加计数统计,只统计每分钟的生产率和调用失败率,该指标只是可以让管理员直观的看到服务启动之后生产力
-</code></pre><h3 id="性能测试(注:_未经说明的都是基于scala-2-9-2版本进行的压测)">性能测试(注: 未经说明的都是基于scala-2.9.2版本进行的压测)</h3><pre><code><span class="number">1</span>. A、B方法堵塞测试
-  场景描述：
-  （<span class="number">1</span>）同一个接口中存在两个方法，A和B。A方法有延迟，B方法正常。
-  （<span class="number">2</span>）对该接口（返回值是<span class="keyword">future</span>层）添加aop代理
-  （<span class="number">3</span>）在aop中对返回值进行处理。
-  （<span class="number">4</span>）调用A方法时正常，并发调用B方法时，线程在<span class="number">10</span>个左右的时候，总会出现个别线程的返回值在等待A方法执行完毕。
-  问题原因：
-    在对<span class="keyword">future</span>坐Aop代理时，方法返回值是<span class="keyword">future</span>类型。此类型是不堵塞线程的。在aop代理类中认为此线程已经结束，实际上又用该线程等待<span class="keyword">future</span>的返回值。等调用B的时候，有可能用重复使用该线程，导致堵塞。
-  解决办法：
-  （<span class="number">1</span>）不要在<span class="keyword">future</span>层做代理。应该保持finagle的干净性。如果有需求，建议在实现类中做代理。
-  （<span class="number">2</span>）如果非要在<span class="keyword">future</span>中加入代理，请使用<span class="keyword">future</span>的回调函数addEventListener。
-  修改后，此现象消失。
-</code></pre><p> <br></p>
-<pre><code><span class="number">2.</span> 单服务,单机器压力测试
-  场景描述:
-   <span class="comment">(1)</span> 通过loom对外提供thrift服务.
-   <span class="comment">(2)</span> 测试服务中的一个方法, 该方法只打印方法的入参, 如果打印成功, 则可以确认为方法调用成功.
-   <span class="comment">(3)</span> 压测机器基本配置, cpu: <span class="number">2</span>G <span class="number">4</span>核, memory: <span class="number">16</span>G, 服务JVM启动内存: <span class="number">256</span>M
-   <span class="comment">(4)</span> 模拟<span class="number">500</span>个独立用户, 压测两个小时.
-  结果:
-    每秒相应<span class="number">6000</span>多次, 单次请求耗时:<span class="number">60</span>ms
-</code></pre><p> <br></p>
-<pre><code><span class="number">3</span>. 单服务,单机器增加newrelic后的压力测试
-  场景描述:
-   <span class="params">(<span class="number">1</span>)</span> 通过loom对外提供thrift服务, newrelic监控其中一个执行打印日志的方法.
-   <span class="params">(<span class="number">2</span>)</span> 测试服务中的一个方法, 该方法只打印方法的入参, 如果打印成功, 则可以确认为方法调用成功.
-   <span class="params">(<span class="number">3</span>)</span> 压测机器基本配置, cpu: <span class="number">2</span>G <span class="number">4</span>核, memory: <span class="number">16</span>G, 服务JVM启动内存: <span class="number">256</span>M
-   <span class="params">(<span class="number">4</span>)</span> 模拟<span class="number">500</span>个独立用户, 压测两个小时.
-  结果:
-    每秒相应<span class="number">6000</span>多次, 单次请求耗时:<span class="number">80</span>ms 
-</code></pre><p> <br></p>
-<pre><code><span class="number">4</span>. 单服务,<span class="number">2</span>台机器提供一个服务
-  场景描述:
-    <span class="params">(<span class="number">1</span>)</span> 增加zipkin监控
-
-    <span class="params">(<span class="number">2</span>)</span> jvm内存上限为<span class="number">256</span>M
-
-    <span class="params">(<span class="number">3</span>)</span> jvm内存上限为<span class="number">1024</span>M
-
-        结果: 不同的jvm设置,都会造成内存溢出, 通过分析堆日志,是zipkin线程引起的
-             下图为,通过分析内存溢出时的堆栈信息得出的结果图.
-
-             之后又进行了一次针对zipkin的压测, jvm 启动内存为<span class="number">1</span>G,具体数据如下:
-             <span class="params">(<span class="number">1</span>)</span> 模拟<span class="number">1</span>个用户, <span class="number">2000</span>tps, 不会出现full gc
-             <span class="params">(<span class="number">2</span>)</span> 模拟<span class="number">5</span>个用户, <span class="number">7500</span>tps, 不会出现full gc
-             <span class="params">(<span class="number">3</span>)</span> 模拟<span class="number">10</span>个用户, <span class="number">300</span>tps, 频繁出现full gc, 系统大部分时间都在出来full gc
-             <span class="params">(<span class="number">4</span>)</span> 模拟<span class="number">500</span>个用户, 服务瞬间full gc,不会接受其他请求.
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/zipkinerror.jpg" alt="zipkin内存溢出">            </p>
-<p>  <br></p>
-<pre><code><span class="number">5</span>. 单服务, <span class="number">2</span>台服务器提供这个服务
-  场景描述:
-    <span class="params">(<span class="number">1</span>)</span> 增加newrelic监控
-
-    <span class="params">(<span class="number">2</span>)</span> 在server端启动finagle服务时,添加了hostConnectionMaxLifeTime<span class="params">(new Duration<span class="params">(<span class="number">300</span> * Duration.NanosPerSecond<span class="params">()</span>)</span>)</span>
-        每个链接最大存活时间为<span class="number">5</span>分钟, 这是每次loadrunner到五分钟时都会停止.
-
-    <span class="params">(<span class="number">3</span>)</span> 压测<span class="number">16</span>小时.
-
-    <span class="params">(<span class="number">4</span>)</span> 客户端线程池大小为<span class="number">300</span>
-
-    <span class="params">(<span class="number">5</span>)</span> 压测机器为<span class="number">8</span>核cpu
-
-    <span class="params">(<span class="number">6</span>)</span> loadrunner模拟<span class="number">500</span>独立用户访问
-
-    结果, 请求rpm <span class="number">60</span>万/分钟, 每台服务器接收请求为<span class="number">30</span>万, cpu大约在<span class="number">10</span><span class="built_in">%</span> jvm内存在<span class="number">256</span>M.
-          如果是长连接请求, 每个链接会有最大存活时间, 到时,服务端会关闭,所以服务端不要设置链接生命周期.
-          长时间压测时,会出现处理请求的数量逐渐下降.cpu在<span class="number">10</span><span class="built_in">%</span>左右.
-          cpu一直空闲,而处理请求的数量在逐渐下降,可能和调用的方法为空有关, 下面在方法中做一些简单的计算.在三个小时内请求数比较稳定, 之后会逐渐下降.
-    下图为loadrunner压测趋势结果
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/16hourtest.png" alt="16小时压测">      </p>
-<p> <br></p>
-<pre><code><span class="number">6.</span> 多服务压力测试
-  场景描述:
-    (<span class="number">1</span>) 服务调用链为: start=&gt;a=&gt;b=&gt;c,d=&gt;a, 具体如下图:
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/invoklink.jpg" alt="压测调用关系图"> </p>
-<pre><code>(<span class="number">2</span>) 机器配置<span class="number">8</span>核,32G内存,两台
-
-(<span class="number">3</span>) 增加newrelic监控
-
-(<span class="number">4</span>) loadrunner模拟<span class="number">500</span>独立用户访问
-
-(<span class="number">5</span>) 客户端线程池大小设置为<span class="number">8</span>个(因为是<span class="number">8</span>核<span class="built_in">cpu</span>)
-    之所以从<span class="number">300</span>变为<span class="number">8</span>个,是因为开启线程池大小为<span class="number">300</span>个时,调用的服务执行的是空方法时,接受请求的访问量会越来越大.
-    这时查看服务器的<span class="built_in">cpu</span>和内存消耗都不太高,这是怀疑可能是方法执行太快,<span class="number">8</span>核<span class="built_in">cpu</span>处理<span class="number">300</span>个线程,这样就会出现在<span class="built_in">cpu</span>内部
-    频繁出现线程切换, 从而降低机器的整体吞吐量. 我们为了降低<span class="built_in">cpu</span>上下文切换次数,将线程总数限制在<span class="number">8</span>个. 后来为了验证是否是这个问题
-    又写了一个服务,该服务方法只做了简单的<span class="number">100</span>次加计算,消费该服务的线程设为<span class="number">8</span>, 进行<span class="number">500</span>用户压测<span class="number">2</span>个小时,机器整体吞吐量维持在 <span class="number">5000</span>/s.
-    但是在这样的条件下,<span class="number">2</span>个小时之后又出现了吞吐量逐渐下降,但是并不多.因为是<span class="number">8</span>个线程,整体吞吐量并没有上去.
-    我继续调整线程数, 通常多线程可以设为<span class="built_in">cpu</span>核数的<span class="number">4</span>倍,这时设为<span class="number">32</span>个线程. 压测两个小时,这时吞吐量在<span class="number">10000</span>/s,整体性能比较平稳.
-
-  下图为多服务压测时,服务上<span class="built_in">cpu</span>每秒上下文切换次数. 因为吞吐量比较大, <span class="built_in">cpu</span>频繁进行上下文切换, 具体是什么引起的上下文切换,还没有具体跟踪.
-  现在初步怀疑是因为finagle进行通信时频繁调用系统的方法引起的.
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/cpucontext.jpg" alt="压测调用关系图"> </p>
-<pre><code>(<span class="number">6</span>) 压测<span class="number">64</span>小时
-
-结果: 这次压测,发现前<span class="number">3</span>个小时,可以维持在<span class="number">10000</span>/s 的生产力, 之后<span class="number">61</span>个小时逐渐下降,到<span class="number">48</span>小时时维持在<span class="number">3300</span>/s的生产力.这期间我一直观察服务器的负载.
-      cpu队列并没有显示出大量的任务堆积,也就是说服务器状态良好,没有满负荷运转. 这时开始怀疑是压测入口的loadrunner机器出的问题.
-      开始验证,我通过其他机器对loom集群添加额外的压力,通过newrelic监控发现服务器的生产力又上去了. 从而推断,生产力持续下降是因为loadrunner
-      输出的压力持续下降引起的. 这时找压测人员进行问题排查,发现运行loadrunner的机器负载过高,并且满负载的时间点正好是loom集群生产力下降的时间点.
-</code></pre><p>   <br></p>
-<pre><code><span class="number">7</span>. 多服务压测, 使cpu达到<span class="number">100</span><span class="comment">%</span>
-  观察zookeeper是否还能获取服务的提供者和消费者的心跳.
-</code></pre><hr>
-<pre><code>基于scala-<span class="number">2.10</span>的性能测试:
-
-场景描述: <span class="number">1000</span>/s 的访问压力
-         机器配置<span class="number">8</span>核, <span class="number">4</span>G内存, 
-
-
-服务器所在的<span class="keyword">jvm</span>状况如下图:
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/scala2.10-jconsole1.jpg" alt="压测调用关系图">    <img src="http://siye1982.github.io/img/blog/loom/scala2.10-jconsole2.jpg" alt="压测调用关系图"></p>
-<pre><code>对象回收正常, 老年代执行了唯一一次回收, 还是我手动进行的GC. 
-
-下图是loadrunner压测8小时统计图
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/scala-2.10.8hour.test.png" alt="压测调用关系图"> </p>
-<pre><code>下图是loadrunner压测14小时统计图
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/scala-2.10.14hour.test.jpg" alt="压测调用关系图"></p>
-<pre><code>下两图为loadrunner压测48小时统计图
-</code></pre><p>   <img src="http://siye1982.github.io/img/blog/loom/scala-2.10.48hour-1.jpg" alt="压测调用关系图"></p>
-<p>   <img src="http://siye1982.github.io/img/blog/loom/scala-2.10.48hour-2.jpg" alt="压测调用关系图"></p>
-<pre><code>结果: 在每秒1000访问量的压力下 48小时连续测试, <span class="tag">scala-2</span><span class="class">.10</span>版的<span class="tag">loom</span>表现正常, 响应时间, 内存回收都表现正常. 
-</code></pre><p> <br></p>
-<h2 id="loom接入说明">loom接入说明</h2><p>   前提：服务提供者和服务消费着都必须是基于finagle生成的代码，并且依赖finagle和thrift相关的包。</p>
-<pre><code>1. 在pom文件中加入如下代码：
-     <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>       
-        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>loom<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.1.5-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-     <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
-
-   如果是基于scala-2.10则引入
-   <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>       
-       <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-       <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>loom<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-       <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.1.5-2.10-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
-</code></pre><p>   <br></p>
-<pre><code>2. 添加配置文件
-   在资源文件夹下添加loomContext.xml并在启动时加载，文件内容如下：
-   <span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-   <span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.springframework.org/schema/beans"</span>
-          <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>
-          <span class="attribute">xmlns:context</span>=<span class="value">"http://www.springframework.org/schema/context"</span>
-          <span class="attribute">xmlns:loom</span>=<span class="value">"http://xxx.com/schema/loom"</span>
-          <span class="attribute">default-autowire</span>=<span class="value">"byName"</span> <span class="attribute">default-lazy-init</span>=<span class="value">"true"</span>
-          <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-                              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
-                              http://xxx.com/schema/loom http://xxx.com/schema/loom/loom.xsd"</span>&gt;</span>
-
-         <span class="comment">&lt;!--id是此应用的应用名称，请修改为自己系统的名称, 可以将该应用的负责人填写在owner属性中--&gt;</span>
-         <span class="tag">&lt;<span class="title">loom:application</span> <span class="attribute">id</span>=<span class="value">"XXXXXXXXX"</span> <span class="attribute">owner</span>=<span class="value">"xxxx"</span> /&gt;</span>
-
-         <span class="comment">&lt;!-- 如果配置该节点则是开启了简单的统计功能,可以统计某一个服务提供者和消费者的每分钟成功调用测试, 失败的调用次数,建议此功能打开 --&gt;</span>
-         <span class="tag">&lt;<span class="title">loom:count</span> <span class="attribute">id</span>=<span class="value">"count"</span> <span class="attribute">ip</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').ip}"</span>
-                         <span class="attribute">port</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').port}"</span>
-                         <span class="attribute">pwd</span>=<span class="value">"#{configManager.getRedisConfig('trade_public_redis','14.1').pwd}"</span>/&gt;</span>
-
-
-          <span class="comment">&lt;!-- 如果配置该节点则是开启了zipkin监控功能,默认是注视掉的,如果需要请打开,采样率默认是0.01  --&gt;</span>
-          <span class="comment">&lt;!-- &lt;loom:monitor id="monitor01" url="#{configManager.getConfigValue('trade_public_zipkin','zipkinUrl')}"
-                            port="#{configManager.getConfigValue('trade_public_zipkin','zipkinPort')}"
-                            samplerate="0.01"/&gt; --&gt;</span>
-
-           <span class="comment">&lt;!--zookeeper集群地址, 如果address为空则默认不实例化该注册中心,用以测试环境脱离注册中心时使用,必须配置--&gt;</span>
-           <span class="tag">&lt;<span class="title">loom:registry</span> <span class="attribute">id</span>=<span class="value">"zk01"</span> <span class="attribute">protocol</span>=<span class="value">"zookeeper"</span>
-                         <span class="attribute">address</span>=<span class="value">"#{configManager.getConfigValue('trade_public_zookeeper','zk01')}"</span>
-                         <span class="attribute">timeout</span>=<span class="value">"20000"</span>/&gt;</span> 
-
-          <span class="comment">&lt;!-- 如果想作为一个task不提供服务, 但是需要注册到zookeeper中, 则可以是不配置ref和api,端口,threads, 建议port设为0000, 这时服务名一定不能是其他真实服务的名称,可以有一个约定标识, 比如:<span class="doctag"><span class="keyword">xxx</span></span>-task --&gt;</span> 
-          <span class="comment">&lt;!--服务提供者配置, 如果上面的registry中的address设置为空,则该服务将脱离注册中心,不会注册到注册中心,可以直接通过端口对外提供服务, --&gt;</span>
-          <span class="comment">&lt;!-- threads 建议是cpu核数的四倍, 服务端提供服务时,服务超时时间, 默认30秒  --&gt;</span> 
-          <span class="tag">&lt;<span class="title">loom:service</span> <span class="attribute">id</span>=<span class="value">"XXXXX"</span>
-                        <span class="attribute">ref</span>=<span class="value">“xXXImpl"</span>
-                        <span class="attribute">api</span>=<span class="value">"com.xxx.finagle.thrift.XXXX.XXXServ"</span>
-                        <span class="attribute">port</span>=<span class="value">"12301"</span>
-                        <span class="attribute">threads</span>=<span class="value">"32"</span>
-                        <span class="attribute">version</span>=<span class="value">"1.0"</span>
-                        <span class="attribute">owner</span>=<span class="value">"XXXX"</span>
-                        <span class="attribute">registry</span>=<span class="value">"zk01"</span>
-                        <span class="attribute">timeout</span>=<span class="value">"30000"</span>
-                        <span class="attribute">remark</span>=<span class="value">"这里填写对该服务的描述"</span>/&gt;</span>
-
-          <span class="comment">&lt;!--消费其他服务配置,这里surl为具体的服务地址(比如: finagle://192.168.10.5:12306),如果填写具体地址则会脱离注册中心, 该场景是为了简化测试时脱离注册中心 --&gt;</span>
-          <span class="tag">&lt;<span class="title">loom:reference</span> <span class="attribute">id</span>=<span class="value">"xxxxReference"</span> <span class="attribute">sid</span>=<span class="value">"XXXXXXX"</span>
-                          <span class="attribute">api</span>=<span class="value">"com.xxx.finagle.thrift.XXXX.XXXServ"</span> <span class="attribute">version</span>=<span class="value">"1.0"</span>
-                          <span class="attribute">registry</span>=<span class="value">"zk01"</span> <span class="attribute">surl</span>=<span class="value">""</span> <span class="attribute">timeout</span>=<span class="value">"30000"</span>/&gt;</span>
-   <span class="tag">&lt;/<span class="title">beans</span>&gt;</span>
-
-
-   添加此配置后工程启动时会自动将服务注册到注册中心，并且自动启动相关服务，如果原来代码中有启动服务的，请关闭。
-</code></pre><p>   <br></p>
-<pre><code><span class="number">3.</span> 配置文件说明：
-
-    loom:<span class="type">application</span> 
-        <span class="property">id</span>:应用程序的唯一<span class="property">id</span>
-        owner: 应用负责人, 可以是简单的字符
-
-    loom:registry，注册中心，可以配置多个。
-        <span class="property">id</span>：注册中心的<span class="property">id</span>
-        protocol：注册中心类型，目前只支持“zookeeper”
-        address:注册中心地址列表
-        <span class="keyword">timeout</span>：注册中心请求超时时间
-
-    loom:<span class="command">count</span>, 开启服务提供者和调用者的每分钟生产力统计,该统计信息需要redis进行发送.
-        <span class="property">id</span>: <span class="command">count</span>的<span class="property">id</span>,唯一标识,每一个应用只能配置一个<span class="command">count</span>
-        ip: 用来发送统计信息的服务器ip,可以认为是redis的ip
-        port: redis的端口
-        pwd: redis的密码
-
-    loom:monitor, 开启finagle的zipkin跟踪.
-        <span class="property">id</span>: monitor的<span class="property">id</span>, 唯一标识, 每个应用只配置一个zipkin的跟踪
-        url: zipkin的地址
-        port: zipkin的端口
-        samplerate: 采样率.如果不填,默认为<span class="number">0.01</span>
-
-    loom:service 对外暴漏的服务信息，可以配置多个，配置多个时端口号不能重复
-        <span class="property">id</span>：服务的唯一<span class="property">id</span>
-        <span class="keyword">ref</span>：提供服务的实现类名称，第一个字母小写。此实现类必须继承api里面配置的服务iface接口。并且要在spring容器中注入
-            如果不设置该设置,或则设置为空,则会认为是类似task的应用,不会启动finagle服务,只是将该应用注册到zookeeper中
-        api：提供服务的服务类名，此类是finagle生成的thrift接口文件全路径。
-        port：对外提供的服务的端口号
-        threads：提供服务的线程池大小
-        <span class="property">version</span>：服务的版本号
-        owner：该服务的负责人
-        registry:该服务注册的注册中心<span class="property">id</span>
-        remark：对该服务的简单描述
-        <span class="keyword">timeout</span>: 服务端提供服务时,服务超时时间, 默认<span class="number">30</span>秒
-
-
-    loom:<span class="keyword">reference</span> 调用外部服务配置。可以配置多个
-        <span class="property">id</span>：消费者在spring容器中的唯一<span class="property">id</span>
-        sid：目标服务的服务<span class="property">id</span>
-        api：消费服务的服务类名，此类是finagle生成的代码
-        <span class="property">version</span>：调用目标服务的版本号
-        <span class="keyword">timeout</span>：调用服务的超时时间(在Await.<span class="constant">result</span>中也可以进行设置), 默认是<span class="number">30</span>秒
-        registry：此消费者要去哪个注册中心获取服务提供者列表
-        surl：服务提供者地址。如果配置此值，此消费者直接消费该地址得服务, 如果设置了该配置,则不会从zookeeper获取服务提供者地址,而是会直接访问这个地址的服务
-        owner: 该消费者负责人,默认为空, 直接取<span class="type">application</span>中的owner显示, 该属性是配合agent使用,直接使用loom的用户不需要关系和填写.
-</code></pre>  <font color="red" size="10"> 注意: 从之前的通过lvs, HAProxy等软负载去消费服务的方式, 迁移到通过loom来消费服务的方式的过程, 建议分为两个过程<br>         <br><br>          1. 指定surl地址为之前的软负载地址, 运行一段时间.<br>         <br><br>          2. 在第一个步骤稳定运行一段时间之后, 再将surl置空, 通过loom来消费服务, 如果生产环境有问题, 请立即将surl再指回软负载地址.<br>  </font> 
-
-<p>   <br></p>
-<pre><code><span class="number">4</span>. 对外提供服务
-    新建实现类，实现接口 loom:service节点中api配置的值的.iface 例如：
-    @<span class="type">Service</span>
-    public class <span class="type">MemberServiceImpl</span> implements <span class="type">MemberServ</span>.<span class="type">Iface</span>
-    此类名必须和loom:service节点里面的<span class="keyword">ref</span>值保持一致。（<span class="keyword">ref</span>值第一个字母要小写）
-</code></pre><p>   <br>        </p>
-<pre><code><span class="number">5</span>. 调用外部服务
-    在需要调用的类的上方添加如下代码，注入thrift接口。
-      @<span class="type">Resource</span>(name = <span class="string">"orderServReference"</span>)
-      <span class="type">OrderServ</span>.<span class="type">ServiceIface</span> orderServReference;
-    name值必须是 loom:reference节点的id。尖括号里面是要调用的服务类名
-
-    使用方法如下：
-    可以通过orderServReference直接获取thrift接口中的方法.
-
-    同步调用：
-     <span class="type">String</span> res = <span class="type">Await</span>.<span class="literal">result</span>(orderServReference.方法名(参数));
-
-     同步调用可以设置超时时间:
-     <span class="type">String</span> res = <span class="type">Await</span>.<span class="literal">result</span>(orderServReference.方法名(参数),new <span class="type">Duration</span>(<span class="number">10</span> * <span class="type">Duration</span>.<span class="type">NanosPerSecond</span>()));//十秒超时
-
-
-    异步调用：
-    orderServReference.方法名(参数).addEventListener(new <span class="type">FutureEventListener</span>&lt;<span class="type">String</span>&gt;() {//这里的泛型为返回值类型
-        //如果成功,res为该方法的返回值, 可以拿到该值做后续的业务处理
-        @<span class="type">Override</span>
-        public <span class="type">void</span> onSuccess(<span class="type">String</span> res) {
-
-        }
-
-        //如果失败
-        @<span class="type">Override</span>
-        public <span class="type">void</span> onFailure(<span class="type">Throwable</span> throwable) {
-
-        }
-    });
-
-<span class="number">6</span>. 记录某个服务提供者方法的每分钟的评价调用时长
-    我们在spring配置文件中又一个service结点,其中的<span class="keyword">ref</span>属性中的业务逻辑实现类.
-    在该类中的方法上添加@<span class="type">InvokeTimeTrace</span> 则loom可以和eagleye配合收集该方法每分钟的调用次数,平均时长等.
-</code></pre><hr>
-<h2 id="loom-admin使用说明">loom-admin使用说明</h2><pre><code>loom-<span class="literal">admin</span>项目是loom中的子项目, 用来对注册中心中的服务提供者, 消费者进行管理. 下面是针对该管理中心的核心功能介绍
-</code></pre><ol>
-<li>首页应用关系展示</li>
-</ol>
-<pre><code>![<span class="link_label">应用调用关系图</span>](<span class="link_url">http://siye1982.github.io/img/blog/loom/relationships.jpg</span>)    
-
-<span class="xml"><span class="tag">&lt;<span class="title">br</span>/&gt;</span></span>
-</code></pre><ol>
-<li><p>服务提供者管理</p>
-<p> <img src="http://siye1982.github.io/img/blog/loom/providers.png" alt="提供者管理"></p>
-<p> 当某个服务集群启动时, 会将各自服务提供者的地址注册到zookeeper上, 这时我们可以在提供者维度中看到所有服务的提供者.如上图:</p>
-<p> (1) 在大促前期, 如果我们需要估算生产服务器的负载容量, 我们可以通过对某一个服务提供者进行倍权操作,并随时观察该服务器的负载情况和服务的提供情况,当出现性能瓶颈时,这时将是该服务提供者的最大容量,我们可以根据该容量反推出我们需要多少服务器来应对大促情况下的高并发请求.</p>
-<p> (2) 当发现某一个服务器的负载明显高于其他服务提供者,则可以将该服务提供者进行半权操作, 以此来降低该服务器的服务请求.降低提供服务出错的几率.</p>
-<p> (3) 当要对服务进行发版或者发现严重问题时, 需要先在管理界面上将该服务提供者进行禁用, 然后再停止服务, 这样可以避免因为服务已经停止,还有链接访问该服务并造成出错的可能.</p>
-<p> (4) 可以直接对某一个字段进行实时检索.</p>
-<p> <br></p>
-</li>
-<li><p>服务消费者管理</p>
-<p>  <img src="http://siye1982.github.io/img/blog/loom/consumers.png" alt="提供者管理"></p>
-<p> 我们可以在消费者维度查看某个服务都被哪些应用消费了,并且可以定位到具体的ip,应用名. 当发现某个服务消费者出现了问题,可以通过管理界面来屏蔽某个具体的消费者.</p>
-<p> <br></p>
-</li>
-<li><p>另外我们为了更方便的进行查询各个服务直接的关系,还提供了其他维度的查询,比如: 应用维度; 机器维度; 服务维度. </p>
-<p> <br></p>
-</li>
-<li><p>针对某一个生产者实例或者消费者实例后面的总调用详情,可以链接进入具体的方法调用详情,如下图:</p>
-<p> <img src="http://siye1982.github.io/img/blog/loom/detailEntry.png" alt="调用详情入口"></p>
-<p> <img src="http://siye1982.github.io/img/blog/loom/invokeDetail.png" alt="方法级别的调用详情"></p>
-<p> <br></p>
-</li>
-<li><p>可以总览消费者或者生产者中所有方法执行时长的统计, 如下图:</p>
-<p> <img src="http://siye1982.github.io/img/blog/loom/invokeTimeout.jpg" alt="方法耗时总览"></p>
-</li>
-</ol>
-<hr>
-<h2 id="loom常见问题汇总">loom常见问题汇总</h2><h3 id="Java提供服务,_ruby开启zipkin功能,则无法调用成功,_关闭则可以调用成功-">Java提供服务, ruby开启zipkin功能,则无法调用成功, 关闭则可以调用成功.</h3><pre><code>类似异常如下:
-WARNING: Unhandled exception <span class="keyword">in</span> connection with /172.16.11.55:27428 , shutting down connection
-java.lang.NoSuchMethodError: org.apache.commons.codec.binary.Base64.encodeAsString([B)Ljava/lang/String;
-        at com.twitter.util.Base64StringEncoder<span class="label">$class</span>.<span class="keyword">encode</span>(StringEncoder.<span class="keyword">scala</span>:17)
-        at com.twitter.util.Base64StringEncoder$.<span class="keyword">encode</span>(StringEncoder.<span class="keyword">scala</span>:25)
-        at com.twitter.finagle.zipkin.thrift.RawZipkinTracer$<span class="label">$anonfun</span><span class="label">$createLogEntries</span><span class="label">$1</span>.apply(RawZipkinTracer.<span class="keyword">scala</span>:110)
-        at com.twitter.finagle.zipkin.thrift.RawZipkinTracer$<span class="label">$anonfun</span><span class="label">$createLogEntries</span><span class="label">$1</span>.apply(RawZipkinTracer.<span class="keyword">scala</span>:106)
-        at com.twitter.util.Try$.apply(Try.<span class="keyword">scala</span>:13)
-        at com.twitter.util.Future$.apply(Future.<span class="keyword">scala</span>:79)
-        at com.twitter.finagle.zipkin.thrift.RawZipkinTracer.createLogEntries(RawZipkinTracer.<span class="keyword">scala</span>:106)
-        at com.twitter.finagle.zipkin.thrift.RawZipkinTracer.logSpan(RawZipkinTracer.<span class="keyword">scala</span>:118)
-        at com.twitter.finagle.zipkin.thrift.RawZipkinTracer.mutate(RawZipkinTracer.<span class="keyword">scala</span>:142)
-        at com.twitter.finagle.zipkin.thrift.RawZipkinTracer.annotate(RawZipkinTracer.<span class="keyword">scala</span>:234)
-        at com.twitter.finagle.zipkin.thrift.RawZipkinTracer.record(RawZipkinTracer.<span class="keyword">scala</span>:153)
-        at com.twitter.finagle.zipkin.thrift.SamplingTracer.record(ZipkinTracer.<span class="keyword">scala</span>:85)
-        at com.twitter.finagle.tracing.Trace$<span class="label">$anonfun</span><span class="label">$uncheckedRecord</span><span class="label">$1</span>.apply(Trace.<span class="keyword">scala</span>:207)
-        at com.twitter.finagle.tracing.Trace$<span class="label">$anonfun</span><span class="label">$uncheckedRecord</span><span class="label">$1</span>.apply(Trace.<span class="keyword">scala</span>:207)
-        at <span class="keyword">scala</span>.collection.LinearSeqOptimized<span class="label">$class</span>.<span class="keyword">foreach</span>(LinearSeqOptimized.<span class="keyword">scala</span>:59)
-        at <span class="keyword">scala</span>.collection.immutable.<span class="keyword">List</span>.<span class="keyword">foreach</span>(<span class="keyword">List</span>.<span class="keyword">scala</span>:76)
-        at com.twitter.finagle.tracing.Trace$.uncheckedRecord(Trace.<span class="keyword">scala</span>:207)
-        at com.twitter.finagle.tracing.Trace$.record(Trace.<span class="keyword">scala</span>:248)
-        at com.twitter.finagle.thrift.ThriftServerTracingFilter$<span class="label">$anonfun</span><span class="label">$apply</span><span class="label">$2</span>$<span class="label">$anonfun</span><span class="label">$apply</span><span class="label">$4</span>.apply(ThriftServerFramedCodec.<span class="keyword">scala</span>:237)
-        at com.twitter.finagle.thrift.ThriftServerTracingFilter$<span class="label">$anonfun</span><span class="label">$apply</span><span class="label">$2</span>$<span class="label">$anonfun</span><span class="label">$apply</span><span class="label">$4</span>.apply(ThriftServerFramedCodec.<span class="keyword">scala</span>:236)
-        at com.twitter.util.Future$<span class="label">$anonfun</span><span class="label">$map</span><span class="label">$1</span>$<span class="label">$anonfun</span><span class="label">$apply</span><span class="label">$4</span>.apply(Future.<span class="keyword">scala</span>:823)
-        at com.twitter.util.Try$.apply(Try.<span class="keyword">scala</span>:13)
-        at com.twitter.util.Future$.apply(Future.<span class="keyword">scala</span>:79)
-        at com.twitter.util.Future$<span class="label">$anonfun</span><span class="label">$map</span><span class="label">$1</span>.apply(Future.<span class="keyword">scala</span>:823)
-        at com.twitter.util.Future$<span class="label">$anonfun</span><span class="label">$map</span><span class="label">$1</span>.apply(Future.<span class="keyword">scala</span>:823)
-        at com.twitter.util.Future$<span class="label">$anonfun</span><span class="label">$flatMap</span><span class="label">$1</span>.apply(Future.<span class="keyword">scala</span>:786)
-        at com.twitter.util.Future$<span class="label">$anonfun</span><span class="label">$flatMap</span><span class="label">$1</span>.apply(Future.<span class="keyword">scala</span>:785)
-        at com.twitter.util.Promise<span class="label">$Transformer</span>.liftedTree1<span class="label">$1</span>(Promise.<span class="keyword">scala</span>:95)
-        at com.twitter.util.Promise<span class="label">$Transformer</span>.k(Promise.<span class="keyword">scala</span>:95)
-        at com.twitter.util.Promise<span class="label">$Transformer</span>.apply(Promise.<span class="keyword">scala</span>:104)
-        at com.twitter.util.Promise<span class="label">$Transformer</span>.apply(Promise.<span class="keyword">scala</span>:86)
-        at com.twitter.util.Promise$<span class="label">$anon</span><span class="label">$2</span>.<span class="keyword">run</span>(Promise.<span class="keyword">scala</span>:326)
-        at com.twitter.concurrent.LocalScheduler<span class="label">$Activation</span>.<span class="keyword">run</span>(Scheduler.<span class="keyword">scala</span>:186)
-        at com.twitter.concurrent.LocalScheduler<span class="label">$Activation</span>.submit(Scheduler.<span class="keyword">scala</span>:157)
-        at com.twitter.concurrent.LocalScheduler.submit(Scheduler.<span class="keyword">scala</span>:212)
-
-
-可能存在java中的codec包版本不兼容问题, 解决办法:
-在java服务提供方程序中的pom.xml中引入:
-&lt;dependency&gt;
-    &lt;groupId&gt;commons-codec&lt;/groupId&gt;
-    &lt;artifactId&gt;commons-codec&lt;/artifactId&gt;
-    &lt;<span class="keyword">version</span>&gt;1.8&lt;/<span class="keyword">version</span>&gt;
-&lt;/dependency&gt;
-</code></pre><h3 id="loom-admin_每隔6秒报类似decode错误时,类似如下:">loom-admin 每隔6秒报类似decode错误时,类似如下:</h3><pre><code>Failed to retry subscribe {admin://<span class="number">192.168</span>.<span class="number">1.100</span>/h5wap-test?<span class="variable">category=</span>providers,consumers,routers,configurators&amp;<span class="variable">check=</span><span class="constant">false</span>&amp;<span class="variable">classifier=</span>*&amp;<span class="variable">enabled=</span>*&amp;<span class="variable">group=</span>*&amp;<span class="variable">interface=</span>h5wap-test&amp;<span class="variable">version=</span>*=[com.xxx.loom.admin.model.RegistryServerSync@<span class="number">5</span>fc625c3]}, waiting for again, cause: Failed to subscribe admin://<span class="number">192.168</span>.<span class="number">1.100</span>/h5wap-test?<span class="variable">category=</span>providers,consumers,routers,configurators&amp;<span class="variable">check=</span><span class="constant">false</span>&amp;<span class="variable">classifier=</span>*&amp;<span class="variable">enabled=</span>*&amp;<span class="variable">group=</span>*&amp;<span class="variable">interface=</span>h5wap-test&amp;<span class="variable">version=</span>* to zookeeper zookeeper://<span class="number">192.168</span>.<span class="number">10.66</span>:<span class="number">2181</span>?<span class="variable">application=</span>loom-admin&amp;<span class="variable">backup=</span><span class="number">192.168</span>.<span class="number">10.57</span>:<span class="number">2181</span>,<span class="number">192.168</span>.<span class="number">10.58</span>:<span class="number">2181</span>&amp;<span class="variable">timeout=</span><span class="number">20000</span>, cause: URLDecoder: Illegal hex characters <span class="keyword">in</span> escape (%) pattern - For input string: <span class="string">"co"</span> <span class="comment">#####[LOOM]#####  - [com.xxx.loom.registry.zookeeper.ZookeeperRegistry]</span>
-com.xxx.loom.core.rpc.RpcException: Failed to subscribe admin://<span class="number">192.168</span>.<span class="number">1.100</span>/h5wap-test?<span class="variable">category=</span>providers,consumers,routers,configurators&amp;<span class="variable">check=</span><span class="constant">false</span>&amp;<span class="variable">classifier=</span>*&amp;<span class="variable">enabled=</span>*&amp;<span class="variable">group=</span>*&amp;<span class="variable">interface=</span>h5wap-test&amp;<span class="variable">version=</span>* to zookeeper zookeeper://<span class="number">192.168</span>.<span class="number">10.66</span>:<span class="number">2181</span>?<span class="variable">application=</span>loom-admin&amp;<span class="variable">backup=</span><span class="number">192.168</span>.<span class="number">10.57</span>:<span class="number">2181</span>,<span class="number">192.168</span>.<span class="number">10.58</span>:<span class="number">2181</span>&amp;<span class="variable">timeout=</span><span class="number">20000</span>, cause: URLDecoder: Illegal hex characters <span class="keyword">in</span> escape (%) pattern - For input string: <span class="string">"co"</span>
-
-请检查相应服务节点下的所有节点url进行encode时是否正确.
-</code></pre><h3 id="如果服务消费者,报类似:_“服务消费者,_通过服务名:_[promotion-serv]_中的_thrift_api_[com-xxx-finagle-thrift-promotion-PromotionServ]_的代理调用失败,_请确认服务提供者是否启动成功_!!!!”">如果服务消费者,报类似: “服务消费者, 通过服务名: [promotion-serv]  中的 thrift api [com.xxx.finagle.thrift.promotion.PromotionServ]  的代理调用失败, 请确认服务提供者是否启动成功 !!!!”</h3><pre><code>这可能是没有服务提供者.
-也可能是网络问题,导致消费者不能访问到提供者.
-</code></pre><h3 id="finagle在代理中使用aop的问题">finagle在代理中使用aop的问题</h3><p>   场景描述：<br>        （1）同一个接口中存在两个方法，A和B。A方法有延迟，B方法正常。<br>        （2）对该接口（返回值是future层）添加aop代理<br>        （3）在aop中对返回值进行处理。<br>        （4）调用A方法时正常，并发调用B方法时，线程在10个左右的时候，总会出现个别线程的返回值在等待A方法执行完毕。<br>        问题原因：<br>          在对future坐Aop代理时，方法返回值是future类型。此类型是不堵塞线程的。在aop代理类中认为此线程已经结束，实际上又用该线程等待future的返回值。等调用B的时候，有可能用重复使用该线程，导致堵塞。<br>        解决办法：<br>        （1）不要在future层做代理。应该保持finagle的干净性。如果有需求，建议在实现类中做代理。<br>        （2）如果非要在future中加入代理，请使用future的回调函数addEventListener。<br>        修改后，此现象消失。</p>
-<h3 id="spring版本问题：">spring版本问题：</h3><p>   loom中使用的3.2.7，我们大多数应用使用的是3.2.1， 还有少部分使用的更早的版本；（消息系统使用的是3.1.0，接入时，启动spring, 报错<br>   <loom:registry id="zk01" protocol="zookeeper" address="192.168.101.194:2181" timeout="20000">  中timeout没有getter, setter升级spring版本后解决）;</loom:registry></p>
-<h3 id="service名称匹配问题">service名称匹配问题</h3><pre><code>server端注册<span class="keyword">service</span>和客户端引用<span class="keyword">service</span>的名称要一致：
-</code></pre><h3 id="redis_版本冲突问题">redis 版本冲突问题</h3><pre><code>如果出现了redis的commons-pool问题, 请升级redis的jedis的jar版本
-loom中默认是支持redis-<span class="number">2.1</span>.<span class="number">0</span> 及以上版本.
-如果你使用的是spring-data-redis ,请升级到如下版本
-<span class="variable">&lt;dependency&gt;</span>
-    <span class="variable">&lt;groupId&gt;</span>org.springframework.data<span class="variable">&lt;/groupId&gt;</span>
-    <span class="variable">&lt;artifactId&gt;</span>spring-data-redis<span class="variable">&lt;/artifactId&gt;</span>
-    <span class="variable">&lt;version&gt;</span><span class="number">1.4</span>.<span class="number">2</span>.RELEASE<span class="variable">&lt;/version&gt;</span>
-<span class="variable">&lt;/dependency&gt;</span>
-升级完之后, 配置参数少了 <span class="keyword">max</span>Active, <span class="keyword">max</span>Wait 变成 <span class="keyword">max</span>WaitMillis
-
-如果你使用的是jedis, 请升级到redis-<span class="number">2.1</span>.<span class="number">0</span>及以上版本.
-</code></pre><h3 id="通过loom调用服务,_参数不能传null的问题">通过loom调用服务, 参数不能传null的问题</h3><pre><code>请升级到1<span class="class">.1</span><span class="class">.3</span>版本
-</code></pre><h3 id="服务消费端调用服务时,_出现了Unknown异常">服务消费端调用服务时, 出现了Unknown异常</h3><pre><code>请升级到1<span class="class">.1</span><span class="class">.3</span>版本
-因为<span class="tag">finagle</span>中的服务调用是<span class="tag">Funture</span>, 异步调用, 在1<span class="class">.1</span><span class="class">.3</span>之前的版本, 在调用服务的代理中, 我会主动将<span class="tag">target</span>置为<span class="tag">null</span>, 如果服务调用过长, 异步返回时获取不到<span class="tag">target</span>,会引起这个问题
-</code></pre><h3 id="服务启动不报错,_也没有打印成功启动日志">服务启动不报错, 也没有打印成功启动日志</h3><p>   该服务的service id 名称跟spring容器中其他类实例的名称冲突, 导致服务实例被覆盖.</p>
-<p>   类似日志如下:<br>   Overriding bean definition for bean ‘expressWayBillStatService’: replacing [Generic bean: class [com.xxx.loom.config.ServiceBean];<br>   scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false;<br>   factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with<br>   [Generic bean: class [com.xxx.express.stat.service.impl.ExpressWayBillStatServiceImpl];<br>   scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null;<br>   factoryMethodName=null; initMethodName=null; destroyMethodName=null;<br>   defined in file [/home/webuser/workarea/bill/target/classes/spring/ApplicationContext-dao.xml]]</p>
-<h3 id="finagle-thrift和finagle-zipkin版本不一致的问题">finagle-thrift和finagle-zipkin版本不一致的问题</h3><pre><code>项目用的finagle-thrift_2.<span class="number">9.2</span>-<span class="number">6.10</span>.<span class="number">0</span>.jar和finagle-zipkin_2.<span class="number">9.2</span>-<span class="number">6.8</span>.<span class="number">1</span>.jar包.
-
-loom中引用的是finagle-thrift_2.<span class="number">9.2</span>-<span class="number">6.20</span>.<span class="number">0</span>.jar和finagle-zipkin_2.<span class="number">9.2</span>-<span class="number">6.20</span>.<span class="number">0</span>.jar包
-
-在配置了loom后该项目去掉了对finagle-thrift_2.<span class="number">9.2</span>-<span class="number">6.10</span>.<span class="number">0</span>.jar包的依赖,而没有去掉对finagle-zipkin_2.<span class="number">9.2</span>-<span class="number">6.8</span>.<span class="number">1</span>.jar的依赖
-
-所以打包后出现finagle-thrift_2.<span class="number">9.2</span>-<span class="number">6.20</span>.<span class="number">0</span>.jar和finagle-zipkin_2.<span class="number">9.2</span>-<span class="number">6.8</span>.<span class="number">1</span>.jar版本不一致的问题,导致下面异常.
-
-SEVERE: A server service  threw an exception
-scala<span class="class">.MatchError</span>: <span class="function"><span class="title">ServiceName</span><span class="params">(freightInsuranceServ)</span></span> (of class com<span class="class">.twitter</span><span class="class">.finagle</span><span class="class">.tracing</span><span class="class">.Annotation</span><span class="variable">$ServiceName</span>)
-    at com<span class="class">.twitter</span><span class="class">.finagle</span><span class="class">.zipkin</span><span class="class">.thrift</span><span class="class">.RawZipkinTracer</span><span class="class">.record</span>(RawZipkinTracer<span class="class">.scala</span>:<span class="number">142</span>)
-    at com<span class="class">.twitter</span><span class="class">.finagle</span><span class="class">.zipkin</span><span class="class">.thrift</span><span class="class">.SamplingTracer</span><span class="class">.record</span>(ZipkinTracer<span class="class">.scala</span>:<span class="number">85</span>)
-    at com<span class="class">.twitter</span><span class="class">.finagle</span><span class="class">.tracing</span><span class="class">.Trace</span>$<span class="variable">$anonfun</span><span class="variable">$uncheckedRecord</span>$<span class="number">1</span>.<span class="function"><span class="title">apply</span><span class="params">(Trace.scala:<span class="number">234</span>)</span></span>
-    at com<span class="class">.twitter</span><span class="class">.finagle</span><span class="class">.tracing</span><span class="class">.Trace</span>$<span class="variable">$anonfun</span><span class="variable">$uncheckedRecord</span>$<span class="number">1</span>.<span class="function"><span class="title">apply</span><span class="params">(Trace.scala:<span class="number">234</span>)</span></span>
-    at scala<span class="class">.collection</span><span class="class">.LinearSeqOptimized</span><span class="variable">$class</span>.<span class="function"><span class="title">foreach</span><span class="params">(LinearSeqOptimized.scala:<span class="number">59</span>)</span></span>
-    at scala<span class="class">.collection</span><span class="class">.immutable</span><span class="class">.List</span><span class="class">.foreach</span>(List<span class="class">.scala</span>:<span class="number">76</span>)
-
-解决办法
-
-在该系统中删掉对finagle-zipkin_2.<span class="number">9.2</span>-<span class="number">6.8</span>.<span class="number">1</span>.jar的依赖,全部用loom中对这两个包的依赖.
-</code></pre><h3 id="spring配置文件中,_通过imago获取服务名时,_在loo:service节点中的id属性使用el表达式报错的问题-">spring配置文件中, 通过imago获取服务名时, 在loo:service节点中的id属性使用el表达式报错的问题.</h3><pre><code>具体异常,类似如下:
-Caused by: org.xml.sax.SAXParseException<span class="comment">; lineNumber: 39; columnNumber: 22; cvc-datatype-valid.1.2.1: '#{configManager.getConfigValue('xxx_public_service_name','trade_subject_serv_2.0')}' 不是 'NCName' 的有效值。</span>
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:<span class="number">198</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.util.ErrorHandlerWrapper.error(ErrorHandlerWrapper.java:<span class="number">134</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:<span class="number">437</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:<span class="number">368</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:<span class="number">325</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.xs.XMLSchemaValidator$XSIErrorReporter.reportError(XMLSchemaValidator.java:<span class="number">458</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.xs.XMLSchemaValidator.reportSchemaError(XMLSchemaValidator.java:<span class="number">3237</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.xs.XMLSchemaValidator.processOneAttribute(XMLSchemaValidator.java:<span class="number">2832</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.xs.XMLSchemaValidator.processAttributes(XMLSchemaValidator.java:<span class="number">2769</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.xs.XMLSchemaValidator.handleStartElement(XMLSchemaValidator.java:<span class="number">2056</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.xs.XMLSchemaValidator.emptyElement(XMLSchemaValidator.java:<span class="number">766</span>)
-    at <span class="keyword">com</span>.sun<span class="preprocessor">.org</span>.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.scanStartElement(XMLNSDocumentScannerImpl.java:<span class="number">355</span>)
-
-如果有类似异常, 是说xml验证时, ID类型的属性不支持特殊字符(el表达式是以<span class="string">"#"</span>开头). 
-
-请升级到<span class="number">1.1</span>.5-SNAPSHOT及以上版本
-</code></pre><h3 id="服务端抛出类似_InvocationTargetException_的异常-">服务端抛出类似  InvocationTargetException 的异常.</h3><pre><code>在利用 <span class="function"><span class="keyword">Method</span> 对象的 <span class="title">invoke</span> 方法调用目标对象的方法时, 若在目标对象的方法内部抛出异常, 会抛出 <span class="title">InvocationTargetException</span> 异常, 该异常包装了目标对象的方法内部抛出异常.
-
-这可能是服务端的业务方法往上抛出了异常, 这个异常被<span class="title">loom</span>框架捕获,但是没有将异常堆栈详情打印出来, 在1.1.6-<span class="title">SNAPSHOT</span> 及以上版本会针对该异常做出特殊处理, 会将<span class="title">targetException</span>的详细信息输出.</span>
-</code></pre><h3 id="用thrift短连接调用finagle出现客户端接收不到返回值的bug">用thrift短连接调用finagle出现客户端接收不到返回值的bug</h3><pre><code>描述:服务端用loom提供服务,客户端用thrift短连接调用,调用一段时间(随机)会出现客户端读取不到返回值的情况
-
-原因:loom里面用到的commons-codec包和commons-httpclient里面用到包版本不一致造成的.
-
-解决办法:将commons-httpclient里面的包排除掉commons-codec解决问题.
-xxx
-</code></pre>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/06/18/loom-soa/#more">Read More</a>
           
        </p>
     </div>
@@ -1348,7 +190,7 @@ xxx
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/SOA/">SOA</a><a href="/tags/finagle/">finagle</a><a href="/tags/zipkin/">zipkin</a><a href="/tags/zookeeper/">zookeeper</a>
+  <span></span> <a href="/tags/Finagle/">Finagle</a><a href="/tags/Java/">Java</a><a href="/tags/SOA/">SOA</a><a href="/tags/Zipkin/">Zipkin</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/原创/">原创</a>
   </div>
 
 </div>
@@ -1403,206 +245,11 @@ xxx
 <p>上图中的箭头方向表示数据的流向. 当应用启动时, imago-client从Zookeeper获取相关配置项到本地, 并存储一份文件快照, 一份缓存快照, 应用直接从本地缓存中读取相关配置. 当Zookeeper中的配置项发生变动时, imago-client会监听到变动并更新本地文件快照和本地缓存. 在使用过程中如果Zookeeper不可用, 应用还可以从本地文件快照中获取配置进行启动. 应用始终都是从imago-client的本地缓存中获取缓存, 提高效率.</p>
 </li>
 </ol>
-<h2 id="存储在Zookeeper中的数据结构">存储在Zookeeper中的数据结构</h2><ol>
-<li>配置管理后台负责配置数据的维护，如增、删、改、查，配置数据存放于zookeeper节点之上，每个APP都有一个唯一的ID，如order的节点path为/imago/order，该节点下又可以有多个配置节点，如/imago/order/key1, /imago/order/key2… 管理后台必须校验节点PATH的唯一性.</li>
-</ol>
-<ol>
-<li><p>应用可以有两种类型</p>
-<p> (1). 公共应用, 该种应用会将一些公共资源的配置放在这种应用下面, 比如mysql的配置, redis的配置等, 这么做的目的是为了将来这些配置ip或者其他信息变更了,我们只需要修改一个地方.我们将来可以通过在imago-admin里面可以看到哪些应用引用了这些公共应用.<br> 比如,和交易相关的公共配置统一放在appkey为trade_public目录下, 具体参考如下:</p>
- <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/imago/</span>trade_public_mysql/<span class="number">1.1</span></span><br><span class="line"><span class="regexp">/imago/</span>trade_public_redis/<span class="number">1.1</span></span><br></pre></td></tr></table></figure>
-<p> (2). 普通应用, 该种应用下的配置项可以设置一些该应用特有的一些配置.</p>
-</li>
-</ol>
-<h2 id="容灾设计">容灾设计</h2><p>我们可以总结一下imago整个系统完全不可用的条件,下面是可能发生的情况:</p>
-<ol>
-<li>数据库不可用。</li>
-<li>所有zookeeper均不可用。</li>
-<li>imago-client主动删除了File Snapshot, Local cache.</li>
-</ol>
-<p>在上面2, 3都不可用时才会发生不可用的情况.这在生产环境中出现的几率是极小的.</p>
-<h2 id="测试用例">测试用例</h2><h3 id="功能测试(在没有任何异常的情况下进行)">功能测试(在没有任何异常的情况下进行)</h3><ol>
-<li>创建测试数据 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/imago/</span>app1/xxx1</span><br><span class="line"><span class="regexp">/imago/</span>app1/xxx2</span><br><span class="line"><span class="regexp">/imago/</span>app1/xxx3</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>app启动时client可以顺利从zookeeper加载相关配置到file snapshot 和 local cache. </p>
-</li>
-<li><p>验证是否可以生成文件快照</p>
- <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/.imago/imago</span>_snapshot/app1.properties</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>验证本地缓存是否可以取到这些值.</p>
-</li>
-<li><p>当zookeeper其中某一个数据发生变动时, 相应的文件快照和本地缓存是否也相应变更.</p>
-</li>
-</ol>
-<h3 id="容灾测试">容灾测试</h3><ol>
-<li><p>zookeeper集群中其中一台机器不可用, client是否可以正常从zookeeper获取数据.</p>
-</li>
-<li><p>client(非首次)启动时无法从zookeeper获取数据, 则可以从之前的文件快照获取配置数据, 并加载到本地缓存中.</p>
-</li>
-</ol>
-<h3 id="配置不可用的情况">配置不可用的情况</h3><ol>
-<li>client第一次启动时, zookeeper就不可用, 则无法从中获取数据, 并生成文件快照和本地缓存.</li>
-</ol>
-<h2 id="Imago-admin_功能说明">Imago-admin 功能说明</h2><h3 id="首页">首页</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-index.png" alt="首页"></p>
-<ol>
-<li><p>集中配置管理主要提供如下功能点:</p>
-<ul>
-<li>应用管理</li>
-<li>配置项管理(具体的配置项数据在该节点设置)</li>
-<li>用户管理</li>
-<li>资源管理(菜单和功能url的动态管理)</li>
-<li>用户组管理(进行用户的分组功能,可以给用户组分配具体的功能权限和数据权限)</li>
-<li>日志查看(终于数据的增删改的详细记录)</li>
-</ul>
-</li>
-<li><p>首页关系图可以查看某个ip上具体的pid引用了什么公共应用, 也可以查看哪些公共应用被什么程序引用了.</p>
-</li>
-</ol>
-<h3 id="应用管理">应用管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-app-manage.png" alt="App管理"></p>
-<ol>
-<li><p>可以通过应用类型, 应用key, 应用value进行简单检索</p>
-</li>
-<li><p>点击应用key上的超链接, 将会进入该应用下的配置项列表.</p>
-</li>
-<li><p>在进行数据迁移时, 只需要将mysql数据进行迁移, 然后点击”同步全量数据到Zookeeper”按钮,会将mysql中所有数据同步到zookeeper节点上,如果已经有数据在zookeeper上,并且已经有程序watch了这些节点, 那么该操作将<strong><em>会触发大量的watch操作</em></strong>. 所有,该按钮建议只在初始化时使用.</p>
-</li>
-<li><p>可以针对某个应用进行配置项的导入, 导入文件可是遵循 *.properties属性文件格式.</p>
-</li>
-<li><p>可以将某个应用下的配置项导出为 *.properties属性文件.</p>
-</li>
-<li><p>可以只针对某个应用从mysql中同步数据到Zookeeper.</p>
-</li>
-<li><p>删除某个应用, 该操作是逻辑删除, 同时会逻辑删除该应用下所有的配置项, 同时也会物理删除zookeepr上对应的数据.</p>
-</li>
-</ol>
-<p><img src="http://siye1982.github.io/img/blog/imago/imago-app-update.png" alt="App新增,修改"></p>
-<p>进行应用的新增和修改时,需要设置应用的类型:</p>
-<ul>
-<li><p>公共应用</p>
-<p>  该类型的应用,会是多个项目中使用, 比如mysql,redis,kafka等配置放在公共应用中. 同时首页上会显示公共应用被哪些程序使用的关系图.</p>
-</li>
-<li><p>普通应用</p>
-<p>  普通应用是区分公共应用而存在的, 一般应用下的独有的一下配置项放在普通应用下.</p>
-</li>
-</ul>
-<h3 id="配置项管理">配置项管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-config-manage.png" alt="配置项管理"> </p>
-<ol>
-<li><p>点击某个配置项Key上的链接,可以查看该配置项的所有历史版本.</p>
-</li>
-<li><p>可以针对配置项Key,Value进行简单检索.</p>
-</li>
-<li><p>配置项的添加功能, 只能通过具体的应用页面引导进来才能操作, 直接通过菜单上的配置项管理进入没有新增配置项功能按钮.</p>
-</li>
-</ol>
-<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-update.png" alt="配置项新增,修改"> </p>
-<p>在进行配置项的新增或修改时, 需要注意配置项的value值有模板设定, 默认下是走的文本, 但是为了便于对一些公共资源的管理,加入了类似mysql,redis,kafka等配置项的模板.</p>
-<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-code.png" alt="获取配置代码"> </p>
-<p>每一个配置项后面都可以通过配置代码按钮获取到某一个配置项在各个语言中的配置代码.</p>
-<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-getzk.png" alt="获取配置项在zk中的数据"> </p>
-<p>可以通过该方法获取该配置项在zk中具体的数据, 不用再去zookeepr上通过命令行查询.</p>
-<p><img src="http://siye1982.github.io/img/blog/imago/imago-config-version.png" alt="获取配置项在zk中的数据"> </p>
-<p>可以获取到某一配置项的所有版本变更记录, 并可以通过某一个版本进行恢复.</p>
-<h3 id="资源管理(功能权限管理)">资源管理(功能权限管理)</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-resource-manage.png" alt="获取配置代码"> </p>
-<p>在用户组管理中我们可以进行资源管理,资源管理主要可以通过树形菜单配置来控制哪些用户组里面的用户可以操作哪些功能url.用户登录后看到的左侧菜单也是通过该功能进行动态配置.</p>
-<h3 id="数据权限管理">数据权限管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-data-manage.png" alt="获取配置代码"> </p>
-<p>该功能可以配置哪些用户可以对哪些数据进行哪些操作,这里主要集中控制对app数据的控制. 如果涉及到公共应用的如果用户只有查询权限,那么他们会针对该公共应用下的配置项中的密码选项是不可见的. 这个数据操作权限由App延伸到配置项.</p>
-<h3 id="日志管理">日志管理</h3><p><img src="http://siye1982.github.io/img/blog/imago/imago-log.png" alt="获取配置代码"> </p>
-<p>对系统中比较关键的数据操作都会进行详细的日志记录, 便于进行用户行为的跟踪.</p>
-<h2 id="部署">部署</h2><h3 id="初始化Imago-admin">初始化Imago-admin</h3><p>当首次启动imago-admin时需要初始化zookeeper中的数据库配置,进入到zookeeper命令行执行以下命令:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">create</span> /imago <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql <span class="string">""</span></span><br><span class="line"><span class="built_in">create</span> /imago/trade_public_mysql/<span class="number">1.1</span> &#123;<span class="string">"ip"</span>:<span class="string">"xxx.xxx.xxx.xxx"</span>,<span class="string">"port"</span>:<span class="string">"3231"</span>,<span class="string">"type"</span>:<span class="string">"master"</span>,<span class="string">"dbs"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"xxx"</span>,<span class="string">"user"</span>:<span class="string">"trade_user"</span>,<span class="string">"pwd"</span>:<span class="string">"xxx"</span>&#125;]&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Imago-java-client_配置说明">Imago-java-client 配置说明</h3><p>具体使用步骤总结如下:</p>
-<ol>
-<li><p>在pom.xml中加入:</p>
-   <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.xxx.xxx<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>imago-java-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>1.8.0-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">exclusions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.netty<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>netty<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>大家可以在spring配置文件中嵌入:</p>
-<p>因为测试环境是复杂的, 为了应对各种情况下, imago-java-client都可用, 我将各种场景列举如下, 大家根据具体情况进行变通:<br>(1) 普通配置,  在dns正常, zookeeper服务正常的情况下: </p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean <span class="property">id</span>=<span class="string">"configManager"</span> <span class="type">class</span>=<span class="string">"com.xxx.imago.client.ConfigManager” /&gt;</span></span><br></pre></td></tr></table></figure>
-<p>   (2) 应对测试环境dns不可用的情况, 我们可以自己指定 zookeeper地址</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"configManager"</span> <span class="attribute">class</span>=<span class="value">"com.xxx.imago.client.ConfigManager”&gt;</span><br><span class="line">	&lt;constructor-arg name="</span><span class="value">serverList"</span> <span class="attribute">value</span>=<span class="value">"192.168.1.100:2181,192.168.1.101:2181,192.168.1.102:2181"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>(3) 应对测试环境zookeeper 不可用情况, 在 ~/.imago/imago_snapshot/ 目录下创建 .closezk文件(windows系统在程序所在盘符的根目录下寻找该路径)该情况, 需要快照文件已经在该路径下.(如果初始化时也不可用, 可以从imago-admin 中下载相应的配置文件放在该路径下.)</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean <span class="property">id</span>=<span class="string">"configManager"</span> <span class="type">class</span>=<span class="string">"com.xxx.imago.client.ConfigManager” /&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>在spring中的配置示例代码如下:<br> (1) 简单引用</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;property name=<span class="string">"jdbcUrl"</span> value=<span class="string">"<span class="subst">#&#123;configManager.getMysqlConfig(<span class="string">'trade_public_mysql'</span>,<span class="string">'1.1'</span>,<span class="string">'trade'</span>).url&#125;</span>"</span>/&gt;</span><br></pre></td></tr></table></figure>
-<p>  (2) 参数是变量,可以支持参数是变量的引用</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="constructor"><span class="keyword">constructor</span>-arg name="redisIp" value="#</span>&#123;configManager.getRedisConfig(<span class="string">'trade_public_redis’,&#123;configManager.getConfigValue('</span>trade_eagleye<span class="string">','</span>redis_key<span class="string">')&#125;).ip&#125;"/&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="关于通过DNS获取zookeeper集群地址">关于通过DNS获取zookeeper集群地址</h2><p> 我们的集中配置管理统一使用的域名为: zk.xxx.com, 通过dns来获取zk集群地址是为了将来如果该地址变更,每个应用可以不用修改zk集群地址.</p>
-<h2 id="什么样的配置适合放在imago中进行管理">什么样的配置适合放在imago中进行管理</h2><ol>
-<li>静态配置, 不会频繁变更的配置(比如一些业务上的开关, 阈值).</li>
-<li>公共资源配置, 比如: mysql, redis, kafka, mongodb, zookeeper等.</li>
-<li>下面这些配置不建议放在imago中进行管理.<br> (1) 基本不会变更的配置(比如: c3p0的一些基础配置, redis, kafka,mongodb等除了ip, 端口, 权限之外的一些基础配置)这些配置可以直接写死在应用中.<br> (2) 如果接入loom进行服务治理之后,消费服务的地址和端口.</li>
-</ol>
-<h2 id="备注(重要):">备注(重要):</h2><ol>
-<li>在imago-admin首页, 可以看到哪些应用的实例引用了以trade_public为前缀的公共资源.</li>
-<li>从数据库同步数据到zookeeper的功能, 仅限于初次搭建imago进行数据迁移,初始化imago时使用.该功能会触发所有数据库中存储的配置项的使用, 如果在执行时,已经有大量的imago-java-client监听了zk的数据节点, 会触发所有watch事件.</li>
-</ol>
-<h2 id="版本变更记录">版本变更记录</h2><p>imago-admin 版本变更列表</p>
-<pre><code>2<span class="class">.0</span><span class="class">.0</span>
-1. 增加功能权限,<span class="tag">app</span>数据权限控制
-2. 增加配置项的版本管理
-1<span class="class">.7</span><span class="class">.0</span>
-1、首页换成公共资源引用的关系图
-2、修复导出属性文件被截断的<span class="tag">bug</span>
-3、限制只能管理员权限的用户才能添加公共的<span class="tag">app</span>
-4、再添加公共资源的配置时提示配置<span class="tag">key</span>的规则验证
-5、去掉修改配置时<span class="tag">value</span>必填的验证
-6、修复在浏览器直接输入无权限页面时无法跳转的<span class="tag">bug</span>
-1<span class="class">.6</span><span class="class">.1</span>
-1、添加验证，登陆页面用户名或者密码为空，回车失效。
-1<span class="class">.6</span><span class="class">.0</span>
-1、添加<span class="tag">kafka</span>模板
-2、修复搜素框回车查询失效的问题
-3、配置代码加入<span class="tag">java</span>写法样例
-1<span class="class">.5</span><span class="class">.0</span>
-增加应用对应的配置项导出功能
-1<span class="class">.4</span><span class="class">.0</span>
-增加批量上传<span class="tag">propertes</span>文件的方法,减少初始化时的工作量
-1<span class="class">.3</span><span class="class">.1</span>
-启用<span class="tag">spring3</span><span class="class">.2</span>之后的<span class="tag">beans</span>特性,使运维操作与配置无关
-1<span class="class">.3</span><span class="class">.0</span>
-增加<span class="tag">mongo</span>模板
-1<span class="class">.2</span><span class="class">.1</span>
-1、修复<span class="tag">bug</span>，配置项管理页面（从应用管理点击配置项跳转而来），点击添加，自动选中所属应用
-2、应用列表页，显示备注列
-1<span class="class">.2</span><span class="class">.0</span>
-支持<span class="tag">mysql</span>,<span class="tag">redis</span>的<span class="tag">json</span>模板设置,服务嵌入代码样例
-1<span class="class">.1</span><span class="class">.0</span>
-添加用户权限管理, 配置项修改日志跟踪
-1<span class="class">.0</span><span class="class">.0</span>
-简单的<span class="tag">app</span>, <span class="tag">config</span>管理
-</code></pre><p>imago-java-client 版本变更列表</p>
-<pre><code>1<span class="class">.8</span><span class="class">.0-SNAPSHOT</span>
-增加获取公共资源(<span class="tag">mysql</span>,<span class="tag">redis</span>,<span class="tag">kafka</span>等)引用关系图
-1<span class="class">.7</span><span class="class">.0</span>
-添加<span class="tag">PropertiesUtil</span>访问类,可以用来静态访问配置
-修正启动时知道<span class="tag">appList</span>时会注册监听, 在取配置时会再次注册监听的问题
-1<span class="class">.6</span><span class="class">.0</span>
-添加<span class="tag">kafka</span>模板
-1<span class="class">.5</span><span class="class">.0</span>
-使配置不需要关心<span class="tag">appList</span>,会根据用户的使用情况,动态添加对<span class="tag">appKey</span>的监听和快照文件
-1<span class="class">.4</span><span class="class">.2</span>
-修正了如果通过添加<span class="class">.closezk</span>文件来屏蔽<span class="tag">zk</span>后,还需要通过<span class="tag">dns</span>获取<span class="tag">zk</span>地址的问题
-1<span class="class">.4</span><span class="class">.1</span>
-修正文件快照不支持<span class="tag">windows</span>的情况
-1<span class="class">.4</span><span class="class">.0</span>
-增加<span class="tag">mongo</span>模板
-1<span class="class">.3</span><span class="class">.0</span>
-可以通过数据库名获取数据库配置
-1<span class="class">.2</span><span class="class">.0</span>
-增加支持<span class="tag">redis</span>, <span class="tag">mysql</span>的<span class="tag">json</span>解析支持
-1<span class="class">.1</span><span class="class">.0</span>
-添加本地文件快照, 增加客户端高可用
-1<span class="class">.0</span><span class="class">.0</span>
-配置项获取, 监听变更
-</code></pre>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/06/17/Centralized-configuration-management/#more">Read More</a>
           
        </p>
     </div>
@@ -1617,7 +264,7 @@ xxx
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/zookeeper/">zookeeper</a><a href="/tags/配置管理/">配置管理</a>
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/原创/">原创</a><a href="/tags/配置管理/">配置管理</a>
   </div>
 
 </div>
@@ -1661,22 +308,16 @@ xxx
 </header>
     <div class="article-content">
         
-        <h2 id="具体步骤">具体步骤</h2><h3 id="在自己的github创建仓库,_比如你的github叫hook,_那么必须创建名为_hook-github-io的仓库-">在自己的github创建仓库, 比如你的github叫hook, 那么必须创建名为 hook.github.io的仓库.</h3><h3 id="然后安装Hexo-">然后安装<a href="http://hexo.io/docs/index.html" target="_blank" rel="external">Hexo</a>.</h3><h3 id="我选用Jacman主题-">我选用<a href="http://wuchong.me/jacman/2014/11/20/how-to-use-jacman/#启用" target="_blank" rel="external">Jacman</a>主题.</h3><h3 id="如果想在自己的博客中添加分类和标签,_需要按照如下Markdown格式撰写博客-">如果想在自己的博客中添加分类和标签, 需要按照如下<a href="https://help.github.com/articles/markdown-basics" target="_blank" rel="external">Markdown</a>格式撰写博客.</h3><pre><code>title: zookeeper 扩容实战
+        <h2 id="具体步骤">具体步骤</h2><h3 id="在自己的github创建仓库,_比如你的github叫hook,_那么必须创建名为_hook-github-io的仓库-">在自己的github创建仓库, 比如你的github叫hook, 那么必须创建名为 hook.github.io的仓库.</h3><h3 id="然后安装Hexo-">然后安装<a href="http://hexo.io/docs/index.html">Hexo</a>.</h3><h3 id="我选用Jacman主题-">我选用<a href="http://wuchong.me/jacman/2014/11/20/how-to-use-jacman/#启用">Jacman</a>主题.</h3><h3 id="如果想在自己的博客中添加分类和标签,_需要按照如下Markdown格式撰写博客-">如果想在自己的博客中添加分类和标签, 需要按照如下<a href="https://help.github.com/articles/markdown-basics">Markdown</a>格式撰写博客.</h3><pre><code>title: zookeeper 扩容实战
 categories: 分布式
 <span class="header">tags: zookeeper
 ---</span>
-</code></pre><h2 id="Hexo_常用命令">Hexo 常用命令</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
+</code></pre>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/06/17/init_github_pages/#more">Read More</a>
           
        </p>
     </div>
@@ -1691,7 +332,7 @@ categories: 分布式
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Github-blog/">Github blog</a>
+  <span></span> <a href="/tags/Github-blog/">Github blog</a><a href="/tags/原创/">原创</a>
   </div>
 
 </div>
@@ -1722,7 +363,7 @@ categories: 分布式
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/16/zookeeper/" title="zookeeper 扩容实战" itemprop="url">zookeeper 扩容实战</a>
+      <a href="/2015/06/16/zookeeper/" title="Zookeeper 扩容实战" itemprop="url">Zookeeper 扩容实战</a>
   </h1>
   <p class="article-author">By
        
@@ -1756,51 +397,11 @@ categories: 分布式
 <li><p>在扩容过程中需要不影响使用现有zk集群的服务. 不可以全部停止, 进行升级.</p>
 </li>
 </ol>
-<h2 id="需要注意的问题">需要注意的问题</h2><ol>
-<li><p>添加的机器数大于现有集群zk实例数.</p>
-</li>
-<li><p>三地机房, 其中机房1为主机房, 资源最多, 尽量让leader落在该机房. 机房1和机房2的延时在容忍范围内, leader也可以落在该机房, 但是需要优先考虑机房1. 因为机房3延时较大, 尽量不可以让机房3的实例担任leader角色.</p>
-</li>
-<li><p>历史遗留问题, 原有zk集群的myid是从0开始的, 这是个坑(稍后会说).</p>
-</li>
-</ol>
-<h2 id="具体步骤">具体步骤</h2><h3 id="修改myid">修改myid</h3><p>  为什么要先修改myid, 这是之前我们给自己挖的一个大坑, 这次一定要填上, 并且为以后的zk运维积累经验.因为, 我们需要leader尽量落在机房1的机器上, 鉴于zk集群进行leader中用到的快速选举算法, 集群中的机器会优先匹配zxid最大的实例(这样可以保证在数据同步时,这个实例上的数据是最新的), 如果所有实例中的zxid都一样, 那么所有实例会选举出myid最大的实例为leader. 基于这样的条件, 我们需要将机房1中的现有的5台的myid进行提升, 给机房3的zk实例腾出myid的位置(以确保在zxid一样时,它肯定不会是leader). 因为zk中myid的范围必须是大于等于0(没错,你没看错,我们使用了0, 即使官方sample配置中是从1开始, 但是我们还是使用了0), 所有我们需要先将myid=0的实例进行myid变更. </p>
-<p>1 . 修改myid=1的机器的myid为100, 依次对修改五个实例的zoo.cfg</p>
-<p>  修改完之后的配置类似如下:</p>
-<pre><code>server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55
-server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55
-server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55
-server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55
-server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55
-</code></pre><p>2 . 记录现在集群中哪台机器为leader, 该机器最后重启.</p>
-<p>3 . 依次重启myid为1,2,3,4,100的实例(注意最后重启leader)</p>
-<p><em>ok, 这里我说另外一个坑, 我们重启服务的时候最好是依从myid从小到大依次重启, 因为这个里面又涉及到zookeeper另外一个设计.<br> zookeeper是需要集群中所有集群两两建立连接, 其中配置中的3555端口是用来进行选举时机器直接建立通讯的端口, 为了避免重复创建tcp连接,<br> 如果对方myid比自己大，则关闭连接，这样导致的结果就是大id的server才会去连接小id的server，避免连接浪费.如果是最后重启myid最小的实例,该实例将不能加入到集群中,因为不能和其他集群建立连接, 这时你使用nc命令, 会有如下的提示: This ZooKeeper instance is not currently serving requests. 在zookeeper的启动日志里面你会发现这样的日志: Have smaller server identifier, so dropping the connection. 如果真的出现了这个问题, 也没关系, 但是需要先将报出该问题的实例起着,然后按照myid从小到大依次重启zk实例即可. 是的,我们确实碰到了这个问题, 因为我们稍后会将机房3的那个zk实例的myid变为0,并最后加入到11台实例的集群中,最后一直报这个问题.</em></p>
-<h3 id="添加新机器进入集群">添加新机器进入集群</h3><p>经过上面的步骤,现在来添加新机器进入集群. 因为新集群zk实例数量为11台, 那么如果能做到HA,需要保证集群中存活机器至少为6台. 鉴于这样的要求,我们并不能一次性将11台机器的配置修改为如下:</p>
-<pre><code>server.<span class="number">0=192.168.3</span>.<span class="number">1:2555:35</span>5555
-server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55
-server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55
-server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55
-server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55
-server.<span class="number">5=192.168.2</span>.<span class="number">1:2555:35</span>55
-server.<span class="number">6=192.168.2</span>.<span class="number">2:2555:35</span>55
-server.<span class="number">7=192.168.2</span>.<span class="number">3:2555:35</span>55
-server.<span class="number">8=192.168.2</span>.<span class="number">4:2555:35</span>55
-server.<span class="number">9=192.168.2</span>.<span class="number">5:2555:35</span>55
-server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55 
-</code></pre><p>我们只能先将原有的5台zk实例的集群先扩充到7台(为何不是8台?慢慢梳理一下就知道了), 然后再扩充到11台这样的步骤. 鉴于这样的思路,我们的步骤如下:</p>
-<p>1 . 选出两台新的实例, 加上之前的5台, 将他们的配置文件修改为7台,依次重启原集群zk实例,然后启动两台新加入的实例, 注意最后重启leader.</p>
-<pre><code>server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55
-server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55
-server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55
-server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55
-server.<span class="number">5=192.168.2</span>.<span class="number">1:2555:35</span>55
-server.<span class="number">6=192.168.2</span>.<span class="number">2:2555:35</span>55
-server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55 
-</code></pre><p>2 . 将zoo.cfg中的集群机器数量设为11台, 已经存在的7台zk实例集群进行重启,然后重启另外四台新zk实例. 这里你可能在启动myid=0的zk实例会出现上面描述的问题,没关系,按照上面说的步骤操作即可.</p>
-
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/06/16/zookeeper/#more">Read More</a>
           
        </p>
     </div>
@@ -1815,7 +416,7 @@ server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:3
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/zookeeper/">zookeeper</a>
+  <span></span> <a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/原创/">原创</a>
   </div>
 
 </div>
@@ -1879,15 +480,19 @@ server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:3
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/原创/" title="原创">原创<sup>5</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>3</sup></a></li>
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
 			
 		
 			
@@ -1895,11 +500,11 @@ server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:3
 			
 		
 			
-				<li><a href="/tags/finagle/" title="finagle">finagle<sup>1</sup></a></li>
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/zipkin/" title="zipkin">zipkin<sup>1</sup></a></li>
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>1</sup></a></li>
 			
 		
 			
@@ -1915,7 +520,7 @@ server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:3
 			
 		
 			
-				<li><a href="/tags/logstash/" title="logstash">logstash<sup>1</sup></a></li>
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -1928,7 +533,49 @@ server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:3
         
           <li>
             
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
             	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
             
           </li>
         
