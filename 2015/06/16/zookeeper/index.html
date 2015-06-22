@@ -14,16 +14,7 @@
     <meta name="description" content="场景描述:
 zookeeper 版本 3.4.6
 
-现有zk集群是五台, myid分别为 0, 1, 2, 3, 4
-
-三地机房
-
-机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. 
-机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.
-机房3(延时较大,在100ms).
-
-
-需要构建一个">
+现有zk集群是五台, myid分别为 0, 1, 2, 3, 4">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zookeeper 扩容实战">
 <meta property="og:url" content="http://siye1982.github.io/2015/06/16/zookeeper/index.html">
@@ -31,32 +22,14 @@ zookeeper 版本 3.4.6
 <meta property="og:description" content="场景描述:
 zookeeper 版本 3.4.6
 
-现有zk集群是五台, myid分别为 0, 1, 2, 3, 4
-
-三地机房
-
-机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. 
-机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.
-机房3(延时较大,在100ms).
-
-
-需要构建一个">
-<meta property="og:updated_time" content="2015-06-19T02:56:13.000Z">
+现有zk集群是五台, myid分别为 0, 1, 2, 3, 4">
+<meta property="og:updated_time" content="2015-06-22T11:06:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zookeeper 扩容实战">
 <meta name="twitter:description" content="场景描述:
 zookeeper 版本 3.4.6
 
-现有zk集群是五台, myid分别为 0, 1, 2, 3, 4
-
-三地机房
-
-机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. 
-机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.
-机房3(延时较大,在100ms).
-
-
-需要构建一个">
+现有zk集群是五台, myid分别为 0, 1, 2, 3, 4">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -135,13 +108,8 @@ zookeeper 版本 3.4.6
 <li><p>zookeeper 版本 3.4.6</p>
 </li>
 <li><p>现有zk集群是五台, myid分别为 0, 1, 2, 3, 4</p>
-</li>
-<li><p>三地机房</p>
-<ul>
-<li>机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. </li>
-<li>机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.</li>
-<li>机房3(延时较大,在100ms).</li>
-</ul>
+<a id="more"></a></li>
+<li><p>三地机房<br>(1). 机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房.<br>(2). 机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.<br>(3). 机房3(延时较大,在100ms).</p>
 </li>
 <li><p>需要构建一个高可用zk环境, 服务主要部署在机房1, 机房2有全量服务但是机器数量较机房1少. </p>
 </li>
@@ -152,7 +120,6 @@ zookeeper 版本 3.4.6
 <li><p>在扩容过程中需要不影响使用现有zk集群的服务. 不可以全部停止, 进行升级.</p>
 </li>
 </ol>
-<a id="more"></a>
 <h2 id="需要注意的问题">需要注意的问题</h2><ol>
 <li><p>添加的机器数大于现有集群zk实例数.</p>
 </li>

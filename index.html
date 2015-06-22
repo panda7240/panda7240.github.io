@@ -89,22 +89,14 @@
 </header>
     <div class="article-content">
         
-        <h2 id="概述">概述</h2><pre><code>监控预警平台, eagle + eye (鹰眼)的合体词, 寓意可以快速发现问题, 并及时作出响应
-
-    Eagleye整个分为:
-
-    1. eagleye-java-client: 针对java程序进行日志收集
-
-    2. eagleye-alerter 根据控制台设置的预警规则, 对匹配日志进行实时预警.
-
-    3. eagleye-admin
-      <span class="keyword">*</span> 应用管理
-      <span class="keyword">*</span> 用户管理
-      <span class="keyword">*</span> 规则管理
-      <span class="keyword">*</span> 预警设置
-      <span class="keyword">*</span> 日志检索
-      <span class="keyword">*</span> 日志统计
-</code></pre>
+        <h2 id="概述">概述</h2><p>监控预警平台, eagle + eye (鹰眼)的合体词, 寓意可以快速发现问题, 并及时作出响应,Eagleye整个分为:</p>
+<ul>
+<li>eagleye-java-client: 针对java程序进行日志收集</li>
+<li>eagleye-alerter: 根据控制台设置的预警规则, 对匹配日志进行实时预警.</li>
+<li>eagleye-admin: eagleye管理界面,可以看到各个app的接入情况,设置预警规则,进行日志检索等.</li>
+<li>eagleye-collector: eagleye日志收集器, 该收集器主要是从kafka中收集日志病存储到Elasticsearch中, 也可以用logstash替代.</li>
+<li>eagleye-task: eagleye的定时监听组建, 如果下游其他系统需要某个app日志,可以直接通过该组建发送.</li>
+</ul>
         
         
         <p class="article-more-link">
@@ -168,9 +160,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="概述">概述</h2><p>在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之间的沟通成本, 招聘新人的培训成本, 由人员更替产生的交接成本等. 这个时候多语言开发环境带来的弊端逐渐显现出来, 我们需要在这中间找到一个平衡点. </p>
-<p>在公司发展到一定规模, 肯定会产生很多业务系统, 这些业务系统需要互相之间进行调用来完成协作. Thrift帮助我们在异构语言直接的沟通建立了桥梁. 只是简单的RPC调用在服务比较少的阶段还能够接受,但是随着服务逐渐的增多,调用关系越来越复杂, 我们迫切的需要一个框架可以对所有服务进行统一的管理,监控,预警. 这是LOOM诞生的直接需求. “LOOM,织布机”,寓意可以将各个网状服务进行很好的治理.</p>
-<p>LOOM的大部分需求直接采用的阿里巴巴的服务治理框架—DUBBO, 这里向DUBBO的所有开发人员致敬, DUBBO的出现带动了SOA概念真正的落地, 相信国内很多互联网公司都在用DUBBO进行服务治理. LOOM里面关于RPC相关的工作,我们直接使用了Twitter的finagle-thrift, 它可以帮助我们非常简单的写出高性能的异步的thrift调用. 另外我们可以直接通过zipkin来进行异构语言之间的调用链信息的收集.</p>
+        <h2 id="概述">概述</h2><p>在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之间的沟通成本, 招聘新人的培训成本, 由人员更替产生的交接成本等. 这个时候多语言开发环境带来的弊端逐渐显现出来, 我们需要在这中间找到一个平衡点.<br>
         
         
         <p class="article-more-link">
@@ -235,16 +225,6 @@
     <div class="article-content">
         
         <h2 id="概述">概述</h2><p>常规项目会有很多配置文件,比如数据库链接信息, 缓存信息等. 我们通常的做法是通过配置文件进行管理可以达到只需要修改一个地方,整个项目都可以生效的目的.目前我们的开发项目繁多, 程序为了保持高可用,会进行集群部署. 这样我们要对某一个或者某几个项目进行配置文件变更时,需要逐个进行修改.这样大量的人为操作可能会增加程序升级或发布的风险.与此同时修改配置文件之后会涉及到应用的重启.为了减小发布风险,我们需要一个地方对各个系统配置进行统一的管理,这时统一配置管理系统诞生的背景,我们暂且取名为 “IMAGO”没有特殊的含义,只是一个代号.</p>
-<h2 id="架构">架构</h2><p><img src="http://siye1982.github.io/img/blog/imago/imago-architecture.png" alt="imago架构图"></p>
-<p>Imago分为两部分：</p>
-<ol>
-<li><p>配置管理控制台(imago-admin)</p>
-<p>配置管理后台提供配置管理, 简单权限管理, 详细配置变更日志管理等, 所有的配置数据最终以Mysql数据库中存储的配置为最终正确配置. </p>
-</li>
-<li><p>配置客户端(imago-client)</p>
-<p>上图中的箭头方向表示数据的流向. 当应用启动时, imago-client从Zookeeper获取相关配置项到本地, 并存储一份文件快照, 一份缓存快照, 应用直接从本地缓存中读取相关配置. 当Zookeeper中的配置项发生变动时, imago-client会监听到变动并更新本地文件快照和本地缓存. 在使用过程中如果Zookeeper不可用, 应用还可以从本地文件快照中获取配置进行启动. 应用始终都是从imago-client的本地缓存中获取缓存, 提高效率.</p>
-</li>
-</ol>
         
         
         <p class="article-more-link">
@@ -308,7 +288,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="具体步骤">具体步骤</h2><h3 id="在自己的github创建仓库,_比如你的github叫hook,_那么必须创建名为_hook-github-io的仓库-">在自己的github创建仓库, 比如你的github叫hook, 那么必须创建名为 hook.github.io的仓库.</h3><h3 id="然后安装Hexo-">然后安装<a href="http://hexo.io/docs/index.html">Hexo</a>.</h3><h3 id="我选用Jacman主题-">我选用<a href="http://wuchong.me/jacman/2014/11/20/how-to-use-jacman/#启用">Jacman</a>主题.</h3><h3 id="如果想在自己的博客中添加分类和标签,_需要按照如下Markdown格式撰写博客-">如果想在自己的博客中添加分类和标签, 需要按照如下<a href="https://help.github.com/articles/markdown-basics">Markdown</a>格式撰写博客.</h3><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: zookeeper 扩容实战</span><br><span class="line">categories: 分布式</span><br><span class="line"><span class="header">tags: zookeeper</span><br><span class="line">---</span></span><br></pre></td></tr></table></figure>
+        <h2 id="具体步骤">具体步骤</h2><h3 id="在自己的github创建仓库,_比如你的github叫hook,_那么必须创建名为_hook-github-io的仓库-">在自己的github创建仓库, 比如你的github叫hook, 那么必须创建名为 hook.github.io的仓库.</h3><h3 id="然后安装Hexo-">然后安装<a href="http://hexo.io/docs/index.html">Hexo</a>.</h3><h3 id="我选用Jacman主题-">我选用<a href="http://wuchong.me/jacman/2014/11/20/how-to-use-jacman/#启用">Jacman</a>主题.</h3>
         
         
         <p class="article-more-link">
@@ -376,23 +356,6 @@
 <li><p>zookeeper 版本 3.4.6</p>
 </li>
 <li><p>现有zk集群是五台, myid分别为 0, 1, 2, 3, 4</p>
-</li>
-<li><p>三地机房</p>
-<ul>
-<li>机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房. </li>
-<li>机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.</li>
-<li>机房3(延时较大,在100ms).</li>
-</ul>
-</li>
-<li><p>需要构建一个高可用zk环境, 服务主要部署在机房1, 机房2有全量服务但是机器数量较机房1少. </p>
-</li>
-<li><p>现在需要将机房1,2做成一个大的zk集群, 但是由于zk对双机房, 不能做到高可用, 所有加了一个机房3. 现在这三个机房的zk实例数为 5 + 5 + 1 .</p>
-</li>
-<li><p>现有zk实例为5, 但是我们需要扩容到11台, 添加实例数比原有集群实例数大.</p>
-</li>
-<li><p>在扩容过程中需要不影响使用现有zk集群的服务. 不可以全部停止, 进行升级.</p>
-</li>
-</ol>
         
         
         <p class="article-more-link">
