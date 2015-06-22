@@ -17,24 +17,8 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/06/18/loom-soa/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="概述在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/zookeeper.png">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/zipkinerror.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/16hourtest.png">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/invoklink.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/cpucontext.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/scala2.10-jconsole1.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/scala2.10-jconsole2.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/scala-2.10.8hour.test.png">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/scala-2.10.14hour.test.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/scala-2.10.48hour-1.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/scala-2.10.48hour-2.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/relationships.jpg">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/providers.png">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/consumers.png">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/detailEntry.png">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/invokeDetail.png">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/invokeTimeout.jpg">
-<meta property="og:updated_time" content="2015-06-22T14:00:23.000Z">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/loom/loom.png">
+<meta property="og:updated_time" content="2015-06-22T14:36:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LOOM服务治理">
 <meta name="twitter:description" content="概述在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之">
@@ -57,6 +41,10 @@
       
 <div>
 		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Panda" title="Panda"/></a>
+			</div>
+			
 			<div id="textlogo">
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto"></h2>
@@ -86,7 +74,21 @@
 </div>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      
+        <img src="http://siye1982.github.io/img/blog/loom/loom.png">
+      
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
   
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
