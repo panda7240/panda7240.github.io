@@ -18,7 +18,7 @@
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="概述系统取名为FLO, 这来自于一款之前比较流行的休闲小游戏&amp;lt;&amp;lt;美女餐厅&amp;gt;&amp;gt;中的女主角, 相信玩的好的玩家可以让flo有条不紊的分配各种餐厅服务任务,我们的寓意希望FLO可以帮助我们很好的去管理,监控各种调度任务.随着公司业务的快速发展, 支撑业务发展的技术框架也越来越复杂, 我们需要一些程序按照特定的规则自己执行一些逻辑.这就催生了越来越多的任务.如果从任务调用的方式上来">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/flo/flo.jpg">
-<meta property="og:updated_time" content="2015-08-05T07:06:23.000Z">
+<meta property="og:updated_time" content="2015-08-05T07:24:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="FLO集中调度系统">
 <meta name="twitter:description" content="概述系统取名为FLO, 这来自于一款之前比较流行的休闲小游戏&amp;lt;&amp;lt;美女餐厅&amp;gt;&amp;gt;中的女主角, 相信玩的好的玩家可以让flo有条不紊的分配各种餐厅服务任务,我们的寓意希望FLO可以帮助我们很好的去管理,监控各种调度任务.随着公司业务的快速发展, 支撑业务发展的技术框架也越来越复杂, 我们需要一些程序按照特定的规则自己执行一些逻辑.这就催生了越来越多的任务.如果从任务调用的方式上来">
@@ -125,7 +125,7 @@
 <li><p>定时更新缓存 </p>
 </li>
 </ul>
-<p>这些静态调度任务, 我们通常的做法是通过quartz或者java自带的task, Thread Scheduled 来完成. 我们只需要在程序启动之前就设定好执行规则即可, 犹豫我们现在业务的开发历史原因, 大多数是静态调度任务, 所以本文主要针对静态调度任务来做概要设计.</p>
+<p>这些静态调度任务, 我们通常的做法是通过quartz或者java自带的task, Thread Scheduled 来完成. 我们只需要在程序启动之前就设定好执行规则即可, 由于我们现在业务的开发历史原因, 大多数是静态调度任务, 所以本文主要针对静态调度任务来做概要设计.</p>
 <hr>
 <h3 id="动态调度任务">动态调度任务</h3><p>当某个业务逻辑在执行半小时之后需要去触发一个状态检查任务, 这是在具体的业务场景中去触发某一个调度任务, 这样的在时间上不具备确定性. 暂且称这种任务为动态调度任务. 像这种类型的调度任务, 可以在一些业务场景中减少我们轮询表中的数据状态, 这同时需要分布式MQ充当消息总线的角色.</p>
 <h2 id="系统架构">系统架构</h2><p>设计该系统的时候也是基于具体的业务场景, 尽量做到简单,通用. 为了做到部署,接入够简单, 我们尽量不用太多的中间件, 目前我们主要使用zookeeper帮助我们实现分布式锁, 心跳监控, 规则存储的需求. 当然日志收集系统是我们本身已有的产品, 可以直接接入使用. flo主要分为flo-admin, flo-client, flo-trigger三部分. 下图为flo主要结构.</p>
