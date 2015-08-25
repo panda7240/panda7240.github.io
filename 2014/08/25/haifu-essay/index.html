@@ -4,32 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Zookeeper 扩容实战 | Panda</title>
+    <title>糖果妈生产小记 | Panda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Panda">
     
 
     
-    <meta name="description" content="场景描述:
-zookeeper 版本 3.4.6
-
-现有zk集群是五台, myid分别为 0, 1, 2, 3, 4">
+    <meta name="description" content="媳妇今年一月份查出怀孕, 当时第一次在北中医三院做的B超检查, 查出是双胎, 当时那个高兴, 直到现在宝宝出生, 这一路走来, 有很多艰辛. 其间同事推荐的时光小屋,记录了媳妇怀孕的整个过程, 赞一个.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Zookeeper 扩容实战">
-<meta property="og:url" content="http://siye1982.github.io/2015/06/16/zookeeper/index.html">
+<meta property="og:title" content="糖果妈生产小记">
+<meta property="og:url" content="http://siye1982.github.io/2014/08/25/haifu-essay/index.html">
 <meta property="og:site_name" content="Panda">
-<meta property="og:description" content="场景描述:
-zookeeper 版本 3.4.6
-
-现有zk集群是五台, myid分别为 0, 1, 2, 3, 4">
-<meta property="og:updated_time" content="2015-06-25T13:44:11.000Z">
+<meta property="og:description" content="媳妇今年一月份查出怀孕, 当时第一次在北中医三院做的B超检查, 查出是双胎, 当时那个高兴, 直到现在宝宝出生, 这一路走来, 有很多艰辛. 其间同事推荐的时光小屋,记录了媳妇怀孕的整个过程, 赞一个.">
+<meta property="og:updated_time" content="2015-08-25T01:51:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zookeeper 扩容实战">
-<meta name="twitter:description" content="场景描述:
-zookeeper 版本 3.4.6
-
-现有zk集群是五台, myid分别为 0, 1, 2, 3, 4">
+<meta name="twitter:title" content="糖果妈生产小记">
+<meta name="twitter:description" content="媳妇今年一月份查出怀孕, 当时第一次在北中医三院做的B超检查, 查出是双胎, 当时那个高兴, 直到现在宝宝出生, 这一路走来, 有很多艰辛. 其间同事推荐的时光小屋,记录了媳妇怀孕的整个过程, 赞一个.">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -82,20 +73,20 @@ zookeeper 版本 3.4.6
 </div>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
   
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/16/zookeeper/" title="Zookeeper 扩容实战" itemprop="url">Zookeeper 扩容实战</a>
+      <a href="/2014/08/25/haifu-essay/" title="糖果妈生产小记" itemprop="url">糖果妈生产小记</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-16T07:52:25.000Z" itemprop="datePublished"> 发表于 2015-06-16</time>
+    <time datetime="2014-08-25T01:43:33.000Z" itemprop="datePublished"> 发表于 2014-08-25</time>
     
   </p>
 </header>
@@ -104,54 +95,18 @@ zookeeper 版本 3.4.6
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述:"><span class="toc-number">1.</span> <span class="toc-text">场景描述:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要注意的问题"><span class="toc-number">2.</span> <span class="toc-text">需要注意的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体步骤"><span class="toc-number">3.</span> <span class="toc-text">具体步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改myid"><span class="toc-number">3.1.</span> <span class="toc-text">修改myid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加新机器进入集群"><span class="toc-number">3.2.</span> <span class="toc-text">添加新机器进入集群</span></a></li></ol></li></ol>
+			
 		
 		</div>
 		
-		<h2 id="场景描述:">场景描述:</h2><ol>
-<li><p>zookeeper 版本 3.4.6</p>
-</li>
-<li><p>现有zk集群是五台, myid分别为 0, 1, 2, 3, 4</p>
-<a id="more"></a></li>
-<li><p>三地机房<br>(1). 机房1, 现有集群在该机房, 主机房, 服务的主要流量在该机房. 目前zk的5台机器在该机房.<br>(2). 机房2, 热备机房, 有全量服务但是机器数量较机房1少, 分担少部分负载, 在机房1不可用时,将会对外提供所有服务.<br>(3). 机房3(延时较大,在100ms).</p>
-</li>
-<li><p>需要构建一个高可用zk环境, 服务主要部署在机房1, 机房2有全量服务但是机器数量较机房1少. </p>
-</li>
-<li><p>现在需要将机房1,2做成一个大的zk集群, 但是由于zk对双机房, 不能做到高可用, 所有加了一个机房3. 现在这三个机房的zk实例数为 5 + 5 + 1 .</p>
-</li>
-<li><p>现有zk实例为5, 但是我们需要扩容到11台, 添加实例数比原有集群实例数大.</p>
-</li>
-<li><p>在扩容过程中需要不影响使用现有zk集群的服务. 不可以全部停止, 进行升级.</p>
-</li>
-</ol>
-<h2 id="需要注意的问题">需要注意的问题</h2><ol>
-<li><p>添加的机器数大于现有集群zk实例数.</p>
-</li>
-<li><p>三地机房, 其中机房1为主机房, 资源最多, 尽量让leader落在该机房. 机房1和机房2的延时在容忍范围内, leader也可以落在该机房, 但是需要优先考虑机房1. 因为机房3延时较大, 尽量不可以让机房3的实例担任leader角色.</p>
-</li>
-<li><p>历史遗留问题, 原有zk集群的myid是从0开始的, 这是个坑(稍后会说).</p>
-</li>
-</ol>
-<h2 id="具体步骤">具体步骤</h2><h3 id="修改myid">修改myid</h3><p>  为什么要先修改myid, 这是之前我们给自己挖的一个大坑, 这次一定要填上, 并且为以后的zk运维积累经验.因为, 我们需要leader尽量落在机房1的机器上, 鉴于zk集群进行leader中用到的快速选举算法, 集群中的机器会优先匹配zxid最大的实例(这样可以保证在数据同步时,这个实例上的数据是最新的), 如果所有实例中的zxid都一样, 那么所有实例会选举出myid最大的实例为leader. 基于这样的条件, 我们需要将机房1中的现有的5台的myid进行提升, 给机房3的zk实例腾出myid的位置(以确保在zxid一样时,它肯定不会是leader). 因为zk中myid的范围必须是大于等于0(没错,你没看错,我们使用了0, 即使官方sample配置中是从1开始, 但是我们还是使用了0), 所有我们需要先将myid=0的实例进行myid变更. </p>
-<p>1 . 修改myid=1的机器的myid为100, 依次对修改五个实例的zoo.cfg</p>
-<p>  修改完之后的配置类似如下:<br>    <figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55</span><br><span class="line">server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55</span><br><span class="line">server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55</span><br><span class="line">server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55</span><br><span class="line">server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55</span><br></pre></td></tr></table></figure></p>
-<p>2 . 记录现在集群中哪台机器为leader, 该机器最后重启.</p>
-<p>3 . 依次重启myid为1,2,3,4,100的实例(注意最后重启leader)</p>
-<p><strong><em>ok, 这里我说另外一个坑, 我们重启服务的时候最好是依从myid从小到大依次重启, 因为这个里面又涉及到zookeeper另外一个设计.zookeeper是需要集群中所有集群两两建立连接, 其中配置中的3555端口是用来进行选举时机器直接建立通讯的端口, 为了避免重复创建tcp连接,如果对方myid比自己大，则关闭连接，这样导致的结果就是大id的server才会去连接小id的server，避免连接浪费.如果是最后重启myid最小的实例,该实例将不能加入到集群中,因为不能和其他集群建立连接, 这时你使用nc命令, 会有如下的提示: This ZooKeeper instance is not currently serving requests. 在zookeeper的启动日志里面你会发现这样的日志: Have smaller server identifier, so dropping the connection. 如果真的出现了这个问题, 也没关系, 但是需要先将报出该问题的实例起着,然后按照myid从小到大依次重启zk实例即可. 是的,我们确实碰到了这个问题, 因为我们稍后会将机房3的那个zk实例的myid变为0,并最后加入到11台实例的集群中,最后一直报这个问题.</em></strong></p>
-<h3 id="添加新机器进入集群">添加新机器进入集群</h3><p>经过上面的步骤,现在来添加新机器进入集群. 因为新集群zk实例数量为11台, 那么如果能做到HA,需要保证集群中存活机器至少为6台. 鉴于这样的要求,我们并不能一次性将11台机器的配置修改为如下:<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server.<span class="number">0=192.168.3</span>.<span class="number">1:2555:35</span>5555</span><br><span class="line">server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55</span><br><span class="line">server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55</span><br><span class="line">server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55</span><br><span class="line">server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55</span><br><span class="line">server.<span class="number">5=192.168.2</span>.<span class="number">1:2555:35</span>55</span><br><span class="line">server.<span class="number">6=192.168.2</span>.<span class="number">2:2555:35</span>55</span><br><span class="line">server.<span class="number">7=192.168.2</span>.<span class="number">3:2555:35</span>55</span><br><span class="line">server.<span class="number">8=192.168.2</span>.<span class="number">4:2555:35</span>55</span><br><span class="line">server.<span class="number">9=192.168.2</span>.<span class="number">5:2555:35</span>55</span><br><span class="line">server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55</span><br></pre></td></tr></table></figure></p>
-<p>我们只能先将原有的5台zk实例的集群先扩充到7台(为何不是8台?慢慢梳理一下就知道了), 然后再扩充到11台这样的步骤. 鉴于这样的思路,我们的步骤如下:</p>
-<p>1 . 选出两台新的实例, 加上之前的5台, 将他们的配置文件修改为7台,依次重启原集群zk实例,然后启动两台新加入的实例, 注意最后重启leader.<br>    <figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server.<span class="number">1=192.168.1</span>.<span class="number">101:2555:35</span>55</span><br><span class="line">server.<span class="number">2=192.168.1</span>.<span class="number">102:2555:35</span>55</span><br><span class="line">server.<span class="number">3=192.168.1</span>.<span class="number">103:2555:35</span>55</span><br><span class="line">server.<span class="number">4=192.168.1</span>.<span class="number">104:2555:35</span>55</span><br><span class="line">server.<span class="number">5=192.168.2</span>.<span class="number">1:2555:35</span>55</span><br><span class="line">server.<span class="number">6=192.168.2</span>.<span class="number">2:2555:35</span>55</span><br><span class="line">server.<span class="number">100=192.168.1</span>.<span class="number">100:2555:35</span>55</span><br></pre></td></tr></table></figure></p>
-<p>2 . 将zoo.cfg中的集群机器数量设为11台, 已经存在的7台zk实例集群进行重启,然后重启另外四台新zk实例. 这里你可能在启动myid=0的zk实例会出现上面描述的问题,没关系,按照上面说的步骤操作即可.</p>
+		<p>   媳妇今年一月份查出怀孕, 当时第一次在北中医三院做的B超检查, 查出是双胎, 当时那个高兴, 直到现在宝宝出生, 这一路走来, 有很多艰辛. 其间同事推荐的时光小屋,记录了媳妇怀孕的整个过程, 赞一个.<br><a id="more"></a><br>     现在也是做父亲的人了, 从一开始的不知所措, 到现在慢慢觉得身上的担子越来越重, 责任越来越大. 原来的头脑发热与不冷静逐渐被对是否能达到目的的思考所替代. 碰到不能确定的问题时,总要先问一下我的目的是什么, 怎样才能将目的效果达到最优.</p>
+<p>   当初媳妇怀孕的时候定的是去海淀妇幼生宝宝. 这一路折腾, 看了很多攻略, 走了很多弯路, 花了一些冤枉钱. 觉得有必要记录一下. 顺便也锻炼一下自己的记忆力.我们应该是怀孕第四周的时候觉得不对劲, 去的北中医照的B超, 当时照完,大夫就说要住院, 我们根据自己的判断没有住, 后来看当时的决定是正确的. 之后又照了一次B超,就打算去海淀妇幼建档了, 第一次去海妇(苏州街地铁A口出, 往西走几百米的院区)挂的是妇科, 需要做一些常规检查. 因为没有办理母子健康档案(居住地所在的社区卫生所办理), 所以没有建成, 海妇建档只收八周(包括八周)以前的孕妇, 如果是超过35岁的海妇是不收的(即使是八周之前的), 需要去三级医院建档. 我们当时去基本八周, 勉勉强强的建上了档. </p>
+<p>   接下来的产检就要去定慧院区了(六号线定慧寺站出来就是), 这定慧院产检了两次, 都是一些常规检查, 为了上午能完事,我们基本都是6点半左右到医院, 基本上午十点多就能完事. 因为是双胎妊娠, 两次产检之后就让我们回本部了(之前建档的院区).  回本部之后第一次产检为了能挂上专家号, 早上四点就起床了, 6点20到了医院去了分诊大厅进行排队, 来这么早还是没有挂上专家号, 只好挂了产科高危的号, 大夫叫陈健(这大夫真不怎么样, 态度冷漠), 上来基本也不怎么看病例, 闷头写他的东西, 我媳妇又一次产检验血餐后糖高了0.1, 直接让住院, 我们觉得这个大夫不服责任, 不询问孕妇的具体情况, 只是看检查结果有一点不正常就让住院(要根据各种机器的结果判定, 谁都能当医生了). 我们最后决定先不住院, 回家买了血糖仪自己检测一段时间看看(检测期间都很正常), 后来发现当时的决定绝对正确. 因为海妇的挂号机制是: 你只要约上了一个医生给你看病, 最后从头到尾都是这一个医生给你看,以后不用挂号了, 每次看完会给你约下一次产检的时间, 到时直接去分诊就行, 所以我们之后还是找陈健, 我们之后找陈健看, 他看了直接说我们依从性不好, 也就是我他说让住院我们没住, 他没法给我们再看了(您也的给我们说具体的愿意, 详细询问我们的状况再作判断啊). 后来我们也没办法, 只好又一次早早起床来挂号, 这次基本五点就道医院, 还是没有挂上专家号, 没办法,这回挂的是徐福虹大夫, 徐大夫比较热情, 会给你说很多注意的地方, 但是他还是建议我们挂专家号. 这期间大夫又让我们住院, 没办法, 我们住了产一区, 那个环境, 晚上基本很难睡着觉, 比较艰苦, 住院区的大夫感觉会更负责一些. 就是这次住院我们才觉得之前没住院是明智之举, 晚上根本休息不好, 一个是你条件艰苦, 一个是大夫和护士对你的一些嘱咐都不太一样,这个不一样在后来生产时会更加明显. </p>
+<p>   因为是双胎, 我们产检的次数也会比较多, 大概经历了16次产检, 后来我们是通过找专家加号才勉强挂上了蒋红清的专家号, 专家和普通号明显感觉不一样, 专家态度很好, 而且诊断不犹犹豫豫, 会主动和你沟通, 这让我想起来了, 越拽的人说明他越没本事.  后来因为是有规律的宫缩, 基本5分钟一次, 我们赶快打车往医院跑, 这个时候已经34周了, 这回挂的是急诊, 给我们分到了产六, 在办住院的时候, 我看又人专门要住产六区, 后来才知道, 海妇产六和产三的口碑比较好, 护士和医生都比较负责. 这回住产六感觉确实比产一强, 看楼梯那挂的那么多锦旗也能看出来. 不过听说产一和产二的单间比较好. 这次住院第二天基本就出院了, 虚惊一场. </p>
+<p>   我们在第36周的时候来医院待产了, 当时媳妇查出是重度子痫前期, 住了一晚上, 第二天就刨了, 从决定做手术到手术完成, 大人小孩都平安出来还不到3个小时, 有点突然, 手术时间也就一个小时. 我们生产的时候住的是产三区, 产三的护士和医生都不错, 其中是于洁大夫给我们做的手术, 于大夫比较负责任, 赞一个. 这期间单间不太好排, 听说有一些孕妇本来能出院, 但是赖在单间不出院, 有时晚上就能看到很多刚住进了的孕妇没有床铺, 直接在走廊打的地铺. 媳妇生完了, 感觉还是有一个单间比较方便, 如果能排上单间, 最好去排一个, 海妇的单间有300 , 600 , 1000等等, 产后的理疗也催奶, 医院也不错, 有条件也可以做一下. 医院的产妇餐也不错, 就是有点小贵, 订了三天花了700多.</p>
+<p>   这整个过程, 感觉海妇还是不错的, 价格也不贵, 很大一部分都可以走医疗保险, 办理出院结账数据, 需要产妇出院的七个工作日之后才可以办理. 孩子出生的出生证明, 需要妈妈和孩子的结账单出来之后才能把你, 如果是父亲办理的也需要写委托书, 这些在办理住院的大厅四号窗口旁边的大柱子上都有明确的说明, 办理出生证明只有早上才能办理, 好像每天只能办50个, 需要先拿号办理. 每次来海妇产检,别看采血大厅都排那么多人, 其实基本到8点基本就没人了, 如果不着急, 完全不用去排那个采血的队伍.</p>
+<p>   自己有幸亲身经历了媳妇整个怀孕和生产的过程, 深刻体会到母亲的艰辛和伟大. 希望我妻子和孩子平平安安. </p>
 <div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
-
-
-
-
-
-
-
-
-
 
   
 	</div>
@@ -160,13 +115,13 @@ zookeeper 版本 3.4.6
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/分布式/">分布式</a>
+  <a class="article-category-link" href="/categories/生活随笔/">生活随笔</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/原创/">原创</a>
+  <span></span> <a href="/tags/刨腹产/">刨腹产</a><a href="/tags/双胞胎/">双胞胎</a><a href="/tags/海淀妇幼/">海淀妇幼</a><a href="/tags/生活随笔/">生活随笔</a>
   </div>
 
 </div>
@@ -175,7 +130,7 @@ zookeeper 版本 3.4.6
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://siye1982.github.io/2015/06/16/zookeeper/" data-title="Zookeeper 扩容实战 | Panda" data-tsina="null" class="share clearfix">
+	  <div data-url="http://siye1982.github.io/2014/08/25/haifu-essay/" data-title="糖果妈生产小记 | Panda" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -189,27 +144,19 @@ zookeeper 版本 3.4.6
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/06/17/init_github_pages/" title="用Hexo 快速创建Github Pages">
+ <a href="/2015/06/16/zookeeper/" title="Zookeeper 扩容实战">
   <strong>上一篇：</strong><br/>
   <span>
-  用Hexo 快速创建Github Pages</span>
+  Zookeeper 扩容实战</span>
 </a>
 </div>
 
-
-<div class="next">
-<a href="/2014/08/25/haifu-essay/"  title="糖果妈生产小记">
- <strong>下一篇：</strong><br/> 
- <span>糖果妈生产小记
-</span>
-</a>
-</div>
 
 </nav>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/16/zookeeper/" data-title="Zookeeper 扩容实战" data-url="http://siye1982.github.io/2015/06/16/zookeeper/"></div>
+	<div class="ds-thread" data-thread-key="2014/08/25/haifu-essay/" data-title="糖果妈生产小记" data-url="http://siye1982.github.io/2014/08/25/haifu-essay/"></div>
 </section>
 
 
@@ -219,7 +166,7 @@ zookeeper 版本 3.4.6
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述:"><span class="toc-number">1.</span> <span class="toc-text">场景描述:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要注意的问题"><span class="toc-number">2.</span> <span class="toc-text">需要注意的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#具体步骤"><span class="toc-number">3.</span> <span class="toc-text">具体步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改myid"><span class="toc-number">3.1.</span> <span class="toc-text">修改myid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加新机器进入集群"><span class="toc-number">3.2.</span> <span class="toc-text">添加新机器进入集群</span></a></li></ol></li></ol>
+ 
  
   </div>
 
