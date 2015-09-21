@@ -1,0 +1,663 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Elasticsearch使用积累(持续更新...) | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch使用积累(持续更新...)">
+<meta property="og:url" content="http://siye1982.github.io/2015/09/17/es-optimize/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
+<meta property="og:updated_time" content="2015-09-21T10:18:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch使用积累(持续更新...)">
+<meta name="twitter:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Panda" title="Panda"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto">人生需要一次All in</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/17/es-optimize/" title="Elasticsearch使用积累(持续更新...)" itemprop="url">Elasticsearch使用积累(持续更新...)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-17T03:15:01.000Z" itemprop="datePublished"> 发表于 2015-09-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用插件"><span class="toc-number">2.</span> <span class="toc-text">常用插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES集群优雅停止,启动"><span class="toc-number">3.</span> <span class="toc-text">ES集群优雅停止,启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES集群JVM调优积累"><span class="toc-number">4.</span> <span class="toc-text">ES集群JVM调优积累</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES集群健康说明"><span class="toc-number">5.</span> <span class="toc-text">ES集群健康说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES配置文件详解"><span class="toc-number">6.</span> <span class="toc-text">ES配置文件详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES使用中碰到的问题"><span class="toc-number">7.</span> <span class="toc-text">ES使用中碰到的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">8.</span> <span class="toc-text">其他</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="写在前面">写在前面</h2><p>接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集群进行持续优化, 这里是有必要记录一下我们在使用ES(后续文章中用ES代替Elasticsearch)的过程中积累的经验.<br><a id="more"></a></p>
+<h2 id="常用插件">常用插件</h2><ol>
+<li><a href="https://github.com/mobz/elasticsearch-head" target="_blank" rel="external">Head</a><br> 查看分片情况,操作简单api</li>
+</ol>
+<ol>
+<li><p><a href="https://github.com/lukas-vlcek/bigdesk" target="_blank" rel="external">Bigdesk</a><br>监控所在机器的CPU,IO,JVM等指标,简单分片概览</p>
+</li>
+<li><p><a href="https://github.com/lmenezes/elasticsearch-kopf" target="_blank" rel="external">KOPF</a><br>查看集群gc回收磁盘性能, 分片情况, 简单操作api, 感觉该插件较Head更实用一些</p>
+</li>
+<li><p><a href="https://github.com/NLPchina/elasticsearch-sql" target="_blank" rel="external">Sql</a><br> 可以通过sql进行聚合检索, 可以将sql语句翻译成ES的JSON检索语句</p>
+</li>
+</ol>
+<h2 id="ES集群优雅停止,启动">ES集群优雅停止,启动</h2><p>在一开始使用ES的时候, 都是通过 <code>kill &lt;pid&gt;</code> (不是Kill -9)来关闭ES实例. 但是每回重启后, 都会发现有很长时间的分片同步(即使没有手动删除数据等操作). 后来发现ES默认是开启自动分片均衡的. 那么如果想要我们在停止,启动某个ES实例后, 可以快速将集群状态变更为Green. 我们最好可以采用如下步骤进行:</p>
+<ol>
+<li><p><strong>暂停集群的分片自动均衡(在集群中任一台ES实例上执行都可以,只需要执行一次)</strong></p>
+ <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT <span class="string">http:</span><span class="comment">//127.0.0.1:9200/_cluster/settings -d' </span></span><br><span class="line">&#123; </span><br><span class="line">	<span class="string">"transient"</span> : &#123; </span><br><span class="line">		<span class="string">"cluster.routing.allocation.enable"</span> : <span class="string">"none"</span> </span><br><span class="line">	&#125; </span><br><span class="line">&#125;<span class="string">'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p><strong>优雅停止你要升级或检测的ES实例(不到万不得已,绝对不要用Kill -9)</strong></p>
+ <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">http:</span><span class="comment">//127.0.0.1:9200/_cluster/nodes/_local/_shutdown</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>升级重启该节点，并确认该节点重新加入到了集群中</strong></p>
+</li>
+<li><p><strong>重复上面的2,3步，操作其他集群内其他ES实例</strong></p>
+</li>
+<li><p><strong>重新启动集群的分片自动均衡(在集群中任一ES实例中执行一次即可)</strong></p>
+ <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT <span class="string">http:</span><span class="comment">//127.0.0.1:9200/_cluster/settings -d' </span></span><br><span class="line">&#123; </span><br><span class="line">	<span class="string">"transient"</span> : &#123; </span><br><span class="line">		<span class="string">"cluster.routing.allocation.enable"</span> : <span class="string">"all"</span> </span><br><span class="line">	&#125; </span><br><span class="line">&#125;<span class="string">'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="ES集群JVM调优积累">ES集群JVM调优积累</h2><p>在最开始, 我们使用的ES实例,没有涉及到很大的数据写入和检索(每天几百万数据). 当时我们配置ES的JVM(Xms=Xmx=8G)的垃圾回收器主要是CMS,具体配置如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reduce the per-thread stack size</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -Xss256k"</span></span><br><span class="line"></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UseParNewGC"</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UseConcMarkSweepGC"</span></span><br><span class="line"></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:CMSInitiatingOccupancyFraction=75"</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UseCMSInitiatingOccupancyOnly"</span></span><br></pre></td></tr></table></figure>
+<p>这个在小数据量,小内存时运行良好, 基本很少会出现Full gc.</p>
+<p>后来我们的数据量为了一天1亿多, 为了加快检索, 我们将Xms,Xmx同时调整为32G. 并按天进行索引,后来发现随着索引数增加,写入数据量增加, Full GC已经影响到了我们的写入和检索(这个时候我们的ES集群是三个实例).我们决定将G1作为垃圾回收期,但是<a href="https://www.elastic.co/guide/en/elasticsearch/guide/current/_don_8217_t_touch_these_settings.html#_garbage_collector" target="_blank" rel="external">官方并不推荐使用G1</a>, 我们还是想尝试一下换成G1, 并借此机会把JDK从1.7升级到1.8(升级很平滑), G1的具体配置如下: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UseG1GC "</span></span><br><span class="line"><span class="comment">#init_globals()末尾打印日志</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+PrintFlagsFinal "</span></span><br><span class="line"><span class="comment">#打印gc引用</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+PrintReferenceGC "</span></span><br><span class="line"><span class="comment">#输出虚拟机中GC的详细情况.</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -verbose:gc "</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+PrintGCDetails "</span></span><br><span class="line"><span class="comment">#Enables printing of time stamps at every GC. By default, this option is disabled.</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+PrintGCTimeStamps "</span></span><br><span class="line"><span class="comment">#Enables printing of information about adaptive generation sizing. By default, this option is disabled.</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+PrintAdaptiveSizePolicy "</span></span><br><span class="line"><span class="comment"># unlocks diagnostic JVM options</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UnlockDiagnosticVMOptions "</span></span><br><span class="line"><span class="comment">#to measure where the time is spent</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+G1SummarizeConcMark "</span></span><br><span class="line"><span class="comment">#设置触发标记周期的 Java 堆占用率阈值。默认占用率是整个 Java 堆的 45%。</span></span><br><span class="line"><span class="comment">#JAVA_OPTS="$JAVA_OPTS -XX:InitiatingHeapOccupancyPercent=45 "</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>TODO 之后会在这补充替换为G1后,ES集群的表现</p>
+</blockquote>
+<h2 id="ES集群健康说明">ES集群健康说明</h2><p>在Elasticsearch集群中可以监控统计很多信息，其中最重要的就是：集群健康(cluster health)。它的 status 有 <code>green</code>、<code>yellow</code>、<code>red</code> 三种；</p>
+<p>可以通过如下命令获取:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET <span class="string">http:</span><span class="comment">//127.0.0.1:9200/_cluster/health</span></span><br></pre></td></tr></table></figure>
+<p>在一个没有索引的空集群中，它将返回如下信息：</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">&#123;</span><br><span class="line">   <span class="string">"cluster_name"</span>:          <span class="string">"elasticsearch"</span>,</span><br><span class="line">   <span class="string">"status"</span>:                <span class="string">"green"</span>, &lt;1&gt;</span><br><span class="line">   <span class="string">"timed_out"</span>:             <span class="literal">false</span>,</span><br><span class="line">   <span class="string">"number_of_nodes"</span>:       <span class="number">1</span>,</span><br><span class="line">   <span class="string">"number_of_data_nodes"</span>:  <span class="number">1</span>,</span><br><span class="line">   <span class="string">"active_primary_shards"</span>: <span class="number">0</span>,</span><br><span class="line">   <span class="string">"active_shards"</span>:         <span class="number">0</span>,</span><br><span class="line">   <span class="string">"relocating_shards"</span>:     <span class="number">0</span>,</span><br><span class="line">   <span class="string">"initializing_shards"</span>:   <span class="number">0</span>,</span><br><span class="line">   <span class="string">"unassigned_shards"</span>:     <span class="number">0</span></span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><code>status</code> 是我们最应该关注的字段。<br><code>status</code> 可以告诉我们当前集群是否处于一个可用的状态。三种颜色分别代表：</p>
+<p><strong>状态说明</strong><br>green    : 所有主分片和从分片都可用<br>yellow:     所有主分片可用，但存在不可用的从分片<br>red:    存在不可用的主要分片</p>
+<h2 id="ES配置文件详解">ES配置文件详解</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line">cluster<span class="class">.name</span>: elasticsearch</span><br><span class="line">#配置es的集群名称，默认是elasticsearch，es会自动发现在同一网段下的es，如果在同一网段下有多个集群，就可以用这个属性来区分不同的集群。</span><br><span class="line"></span><br><span class="line">node<span class="class">.name</span>: <span class="string">"Franz Kafka"</span></span><br><span class="line">#节点名，默认随机指定一个name列表中名字，该列表在es的jar包中config文件夹里name.txt文件中，其中有很多作者添加的有趣名字。</span><br><span class="line"></span><br><span class="line">node<span class="class">.master</span>: true</span><br><span class="line">#指定该节点是否有资格被选举成为node，默认是true，es是默认集群中的第一台机器为master，如果这台机挂了就会重新选举master。</span><br><span class="line"></span><br><span class="line">node<span class="class">.data</span>: true</span><br><span class="line">#指定该节点是否存储索引数据，默认为true。</span><br><span class="line"></span><br><span class="line">index<span class="class">.number_of_shards</span>: <span class="number">5</span></span><br><span class="line">#设置默认索引分片个数，默认为<span class="number">5</span>片。</span><br><span class="line"></span><br><span class="line">index<span class="class">.number_of_replicas</span>: <span class="number">1</span></span><br><span class="line">#设置默认索引副本个数，默认为<span class="number">1</span>个副本。</span><br><span class="line"></span><br><span class="line">path<span class="class">.conf</span>: /path/to/conf</span><br><span class="line">#设置配置文件的存储路径，默认是es根目录下的config文件夹。</span><br><span class="line"></span><br><span class="line">path<span class="class">.data</span>: /path/to/data</span><br><span class="line">#设置索引数据的存储路径，默认是es根目录下的data文件夹，可以设置多个存储路径，用逗号隔开，例：</span><br><span class="line"><span class="id">#path</span><span class="class">.data</span>: /path/to/data1,/path/to/data2</span><br><span class="line"></span><br><span class="line">path<span class="class">.work</span>: /path/to/work</span><br><span class="line">#设置临时文件的存储路径，默认是es根目录下的work文件夹。</span><br><span class="line"></span><br><span class="line">path<span class="class">.logs</span>: /path/to/logs</span><br><span class="line">#设置日志文件的存储路径，默认是es根目录下的logs文件夹</span><br><span class="line"></span><br><span class="line">path<span class="class">.plugins</span>: /path/to/plugins</span><br><span class="line">#设置插件的存放路径，默认是es根目录下的plugins文件夹</span><br><span class="line"></span><br><span class="line">bootstrap<span class="class">.mlockall</span>: true</span><br><span class="line">#设置为true来锁住内存。因为当jvm开始swapping时es的效率会降低，所以要保证它不swap，可以把#ES_MIN_MEM和ES_MAX_MEM两个环境变量设置成同一个值，并且保证机器有足够的内存分配给es。同时也要#允许elasticsearch的进程可以锁住内存，linux下可以通过`ulimit -l unlimited`命令。</span><br><span class="line"></span><br><span class="line">network<span class="class">.bind_host</span>: <span class="number">192.168</span>.<span class="number">0.1</span></span><br><span class="line">#设置绑定的ip地址，可以是ipv4或ipv6的，默认为<span class="number">0.0</span>.<span class="number">0.0</span>。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">network<span class="class">.publish_host</span>: <span class="number">192.168</span>.<span class="number">0.1</span></span><br><span class="line">#设置其它节点和该节点交互的ip地址，如果不设置它会自动判断，值必须是个真实的ip地址。</span><br><span class="line"></span><br><span class="line">network<span class="class">.host</span>: <span class="number">192.168</span>.<span class="number">0.1</span></span><br><span class="line">#这个参数是用来同时设置bind_host和publish_host上面两个参数。</span><br><span class="line"></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.port</span>: <span class="number">9300</span></span><br><span class="line">#设置节点间交互的tcp端口，默认是<span class="number">9300</span>。</span><br><span class="line"></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.compress</span>: true</span><br><span class="line">#设置是否压缩tcp传输时的数据，默认为false，不压缩。</span><br><span class="line"></span><br><span class="line">http<span class="class">.port</span>: <span class="number">9200</span></span><br><span class="line">#设置对外服务的http端口，默认为<span class="number">9200</span>。</span><br><span class="line"></span><br><span class="line">http<span class="class">.max_content_length</span>: <span class="number">100</span>mb</span><br><span class="line">#设置内容的最大容量，默认<span class="number">100</span>mb</span><br><span class="line"></span><br><span class="line">http<span class="class">.enabled</span>: false</span><br><span class="line">#是否使用http协议对外提供服务，默认为true，开启。</span><br><span class="line"></span><br><span class="line">gateway<span class="class">.type</span>: local</span><br><span class="line">#gateway的类型，默认为local即为本地文件系统，可以设置为本地文件系统，分布式文件系统，hadoop的#HDFS，和amazon的s3服务器，其它文件系统的设置方法下次再详细说。</span><br><span class="line"></span><br><span class="line">gateway<span class="class">.recover_after_nodes</span>: <span class="number">1</span></span><br><span class="line">#设置集群中N个节点启动时进行数据恢复，默认为<span class="number">1</span>。</span><br><span class="line"></span><br><span class="line">gateway<span class="class">.recover_after_time</span>: <span class="number">5</span>m</span><br><span class="line">#设置初始化数据恢复进程的超时时间，默认是<span class="number">5</span>分钟。</span><br><span class="line"></span><br><span class="line">gateway<span class="class">.expected_nodes</span>: <span class="number">2</span></span><br><span class="line">#设置这个集群中节点的数量，默认为<span class="number">2</span>，一旦这N个节点启动，就会立即进行数据恢复。</span><br><span class="line"></span><br><span class="line">cluster<span class="class">.routing</span><span class="class">.allocation</span><span class="class">.node_initial_primaries_recoveries</span>: <span class="number">4</span></span><br><span class="line">#初始化数据恢复时，并发恢复线程的个数，默认为<span class="number">4</span>。</span><br><span class="line"></span><br><span class="line">cluster<span class="class">.routing</span><span class="class">.allocation</span><span class="class">.node_concurrent_recoveries</span>: <span class="number">2</span></span><br><span class="line">#添加删除节点或负载均衡时并发恢复线程的个数，默认为<span class="number">4</span>。</span><br><span class="line"></span><br><span class="line">indices<span class="class">.recovery</span><span class="class">.max_size_per_sec</span>: <span class="number">0</span></span><br><span class="line">#设置数据恢复时限制的带宽，如入<span class="number">100</span>mb，默认为<span class="number">0</span>，即无限制。</span><br><span class="line"></span><br><span class="line">indices<span class="class">.recovery</span><span class="class">.concurrent_streams</span>: <span class="number">5</span></span><br><span class="line">#设置这个参数来限制从其它分片恢复数据时最大同时打开并发流的个数，默认为<span class="number">5</span>。</span><br><span class="line"></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.minimum_master_nodes</span>: <span class="number">1</span></span><br><span class="line">#设置这个参数来保证集群中的节点可以知道其它N个有master资格的节点。默认为<span class="number">1</span>，对于大的集群来说，可以设置大一点的值（<span class="number">2</span>-<span class="number">4</span>）</span><br><span class="line"></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.timeout</span>: <span class="number">3s</span></span><br><span class="line">#设置集群中自动发现其它节点时ping连接超时时间，默认为<span class="number">3</span>秒，对于比较差的网络环境可以高点的值来防止自动发现时出错。</span><br><span class="line"></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.multicast</span><span class="class">.enabled</span>: false</span><br><span class="line">#设置是否打开多播发现节点，默认是true。</span><br><span class="line"></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.unicast</span><span class="class">.hosts</span>: [<span class="string">"host1"</span>, <span class="string">"host2:port"</span>, <span class="string">"host3[portX-portY]"</span>]</span><br><span class="line">#设置集群中master节点的初始列表，可以通过这些节点来自动发现新加入集群的节点。</span><br></pre></td></tr></table></figure>
+<h2 id="ES使用中碰到的问题">ES使用中碰到的问题</h2><ol>
+<li><p><strong>rejected execution (queue capacity 50) on org.elasticsearch.action.support.replication.TransportShar</strong> </p>
+<p> 该问题需要在配置文件中添加Thread pool参数.</p>
+ <figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">threadpool</span>:</span><br><span class="line">   #这是批量插入时需要做的配置</span><br><span class="line">    <span class="attribute">bulk</span>:</span><br><span class="line">       <span class="attribute">type</span>: fixed</span><br><span class="line">       <span class="attribute">size</span>: <span class="number">100</span></span><br><span class="line">       <span class="attribute">queue_size</span>: <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">   #检索时需要做的配置</span><br><span class="line">   <span class="attribute">search</span>:</span><br><span class="line">       <span class="attribute">tyep</span>: fixed</span><br><span class="line">       <span class="attribute">size</span>: <span class="number">100</span></span><br><span class="line">       <span class="attribute">queue_size</span>: <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+<p> 整个数据将会被处理它的节点载入内存中，所以如果请求量很大的话，留给其他请求的内存空间将会很少。bulk应该有一个最佳的限度。超过这个限制后，性能不但不会提升反而可能会造成宕机。</p>
+<p> 最佳的容量并不是一个确定的数值，它取决于你的硬件，你的文档大小以及复杂性，你的索引以及搜索的负载。幸运的是，这个平衡点 很容易确定：</p>
+<p> 试着去批量索引越来越多的文档。当性能开始下降的时候，就说明你的数据量太大了。一般比较好初始数量级是1000到5000个文档，或者你的文档很大，你就可以试着减小队列。 有的时候看看批量请求的物理大小是很有帮助的。1000个1KB的文档和1000个1MB的文档的差距将会是天差地别的。比较好的初始批量容量是5-15MB。</p>
+</li>
+</ol>
+<h2 id="其他">其他</h2><ol>
+<li><p><strong>批量删除索引</strong>    </p>
+ <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#可用批量删除名字以<span class="doctag"><span class="keyword">xxx</span></span>-log-2015.06开头的索引</span></span><br><span class="line">curl -XDELETE <span class="keyword">http</span>://<span class="number">127.0</span>.0.1:<span class="number">9201</span>/xxx-<span class="built_in">log</span>-<span class="number">2015.06</span>*</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p><strong>保证最大限度的使用内存而不引起OutOfMemory</strong><br> 设置es的缓存类型为Soft Reference，它的主要特点是据有较强的引用功能。只有当内存不够的时候，才进行回收这类内存，因此在内存足够的时候，它们通常不被回收。另外，这些引 用对象还能保证在Java抛出OutOfMemory 异常之前，被设置为null。它可以用于实现一些常用图片的缓存，实现Cache的功能.在es的配置文件中做如下修改:</p>
+ <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index<span class="class">.cache</span><span class="class">.field</span><span class="class">.type</span>: soft</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p><strong>通过修改Template,缩小索引大小</strong><br> 在ES的Template中做如下调整</p>
+ <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"_all"</span> : &#123; <span class="string">"enabled"</span> : <span class="literal">false</span> &#125;, <span class="comment">//可以减小索引数量</span></span><br><span class="line"><span class="string">"pid"</span>: &#123;</span><br><span class="line">       <span class="comment">//not_analyzed可以不分词, no:不索引, 去除index则会根据分词器进行分词并索引</span></span><br><span class="line">   	<span class="string">"index"</span>: <span class="string">"not_analyzed"</span>,</span><br><span class="line">    <span class="string">"type"</span>: <span class="string">"string"</span></span><br><span class="line"> &#125;,</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><strong>加快调整分片和副本时的恢复进度</strong><br> 副本配置和分片配置不一样，是可以随时调整的。有些较大的索引，甚至可以在做 optimize 前，先把副本全部取消掉，等 optimize 完后，再重新开启副本，节约单个 segment 的重复归并消耗。</li>
+</ol>
+<ol>
+<li><strong>ES的版本升级非常平滑,向前兼容做的不错</strong>    </li>
+</ol>
+<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Elasticsearch/">Elasticsearch</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/分布式/">分布式</a><a href="/tags/原创/">原创</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2015/09/17/es-optimize/" data-title="Elasticsearch使用积累(持续更新...) | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/09/21/zookeeper-group-weight/" title="Zookeeper配置中的Group和Weight">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Zookeeper配置中的Group和Weight</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/08/21/consistency/"  title="利用消息队列达成最终一致性(未完)">
+ <strong>下一篇：</strong><br/> 
+ <span>利用消息队列达成最终一致性(未完)
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/09/17/es-optimize/" data-title="Elasticsearch使用积累(持续更新...)" data-url="http://siye1982.github.io/2015/09/17/es-optimize/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用插件"><span class="toc-number">2.</span> <span class="toc-text">常用插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES集群优雅停止,启动"><span class="toc-number">3.</span> <span class="toc-text">ES集群优雅停止,启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES集群JVM调优积累"><span class="toc-number">4.</span> <span class="toc-text">ES集群JVM调优积累</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES集群健康说明"><span class="toc-number">5.</span> <span class="toc-text">ES集群健康说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES配置文件详解"><span class="toc-number">6.</span> <span class="toc-text">ES配置文件详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES使用中碰到的问题"><span class="toc-number">7.</span> <span class="toc-text">ES使用中碰到的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">8.</span> <span class="toc-text">其他</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Zookeeper/" title="Zookeeper">Zookeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/服务治理/" title="服务治理">服务治理<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/原创/" title="原创">原创<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SOA/" title="SOA">SOA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/双胞胎/" title="双胞胎">双胞胎<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/quartz/" title="quartz">quartz<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"siye1982"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255443286'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255443286' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
