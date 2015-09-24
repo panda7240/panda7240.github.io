@@ -18,7 +18,7 @@
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="概述在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/loom/loom.png">
-<meta property="og:updated_time" content="2015-09-23T09:05:42.000Z">
+<meta property="og:updated_time" content="2015-09-24T02:03:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LOOM服务治理">
 <meta name="twitter:description" content="概述在介绍LOOM之前, 说一下我对一个互联网公司多语言开发环境的感受. 现在互联网高速发展的时代,产品快速迭代会帮助我们快速产出产品原型,快速获取用户反馈,快速抢占市场. 我们需要使用适合的语言去做一些特定领域的事情. 在小型开发团队中,大概10人左右的开放团队中, 开发语言的选型不用过多的考虑管理成本,只要对产品的快速迭代有帮助的都可以使用.随着团队逐渐壮大, 我们需要更多的考虑不同开发团队之">
@@ -367,6 +367,11 @@ owner: 该消费者负责人,默认为空, 直接取application中的owner显示
 <p>  异步调用：<br>    <figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">orderServReference</span>.方法名(参数)<span class="class">.addEventListener</span>(new FutureEventListener&lt;String&gt;() &#123;<span class="comment">//这里的泛型为返回值类型</span></span><br><span class="line">	<span class="comment">//如果成功,res为该方法的返回值, 可以拿到该值做后续的业务处理</span></span><br><span class="line">	<span class="variable">@Override</span></span><br><span class="line">	public void <span class="function">onSuccess</span>(String res) &#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//如果失败</span></span><br><span class="line">	<span class="variable">@Override</span></span><br><span class="line">	public void <span class="function">onFailure</span>(Throwable throwable) &#123;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>记录某个服务提供者方法的每分钟的评价调用时长<br>我们在spring配置文件中又一个service结点,其中的ref属性中的业务逻辑实现类.在该类中的方法上添加@InvokeTimeTrace 则loom可以和eagleye配合收集该方法每分钟的调用次数,平均时长等.</li>
+</ul>
+<ul>
+<li><p>在任意一次RPC调用过程中添加附加信息到调用链中<br>  使用场景: 如果服务A 调用了服务B, 这个时候B作为服务提供者出现了一些问题(也可以传递一些普通非异常的附加信息), 我需要将该异常作为附属信息添加到调用链中.<br>  那么就可以在B的业务逻辑中添加如下代码.</p>
+  <figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 记录异常信息</span></span><br><span class="line">com.xxx.loom.zipkin.Trace.recordFault<span class="params">(<span class="string">"creatOrder"</span>, <span class="string">"NullPointException ..."</span>)</span>;</span><br><span class="line">   </span><br><span class="line"><span class="comment">// 记录普通附加信息(也可以通过该方法记录异常信息)</span></span><br><span class="line">com.xxx.loom.zipkin.Trace.recordBinary<span class="params">(<span class="string">"testBinary"</span>, <span class="string">"hello Binary, test b"</span>)</span>;</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 <h2 id="loom-admin使用说明">loom-admin使用说明</h2><p>loom-admin项目是loom中的子项目, 用来对注册中心中的服务提供者, 消费者进行管理. 下面是针对该管理中心的核心功能介绍</p>
 <ul>
