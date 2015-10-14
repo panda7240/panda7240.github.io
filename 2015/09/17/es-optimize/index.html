@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/09/17/es-optimize/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
-<meta property="og:updated_time" content="2015-10-12T08:56:45.000Z">
+<meta property="og:updated_time" content="2015-10-14T03:57:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch使用积累(持续更新...)">
 <meta name="twitter:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
@@ -145,6 +145,12 @@
 <p> 最佳的容量并不是一个确定的数值，它取决于你的硬件，你的文档大小以及复杂性，你的索引以及搜索的负载。幸运的是，这个平衡点 很容易确定：</p>
 <p> 试着去批量索引越来越多的文档。当性能开始下降的时候，就说明你的数据量太大了。一般比较好初始数量级是1000到5000个文档，或者你的文档很大，你就可以试着减小队列。 有的时候看看批量请求的物理大小是很有帮助的。1000个1KB的文档和1000个1MB的文档的差距将会是天差地别的。比较好的初始批量容量是5-15MB。</p>
 </li>
+<li><p><strong>同一天机器上不同的es实例, 同一个索引的主副分片被分在了同一台机器上</strong>  </p>
+<p> 在构建es集群的前期, 机器数量比较少, 但是机器配置还不错,可能会在一个机器上挂好几个硬盘, 开启多个es实例. 这样少量的机器,可以创建超过机器数量的es实例, 充分利用集群硬件性能,同时也具备更好的可拓展性. </p>
+<p> 一台机器上多个es实例, 可能会使同一个索引的主副分片被分在同一台机器上,这样就降低了这个索引分片的健壮性,一旦这台机器挂了, 这个索引分片上的数据就是不可用的.</p>
+<p> 基于上述的描述, es配置文件中需要对所有es实例进行分组,以保证同一个索引的主副分片不在同一台集群中, 具体配置如下:</p>
+ <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#通过node.group建立一个属性为group</span><br><span class="line">node<span class="class">.group</span>: eagleye_19</span><br><span class="line">#引用属性group的值</span><br><span class="line">cluster<span class="class">.routing</span><span class="class">.allocation</span><span class="class">.awareness</span><span class="class">.attributes</span>: group</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
 <h2 id="其他">其他</h2><ol>
 <li><p><strong>批量删除索引</strong>    </p>
@@ -161,6 +167,13 @@
 <li><strong>ES的版本升级非常平滑,向前兼容做的不错</strong>    </li>
 <li><p><strong>index设置合理的刷新时间</strong><br> 建立的索引，不会立马查到，这是为什么elasticsearch为near-real-time的原因<br>需要配置index.refresh_interval参数，默认是1s。在template中设置如下:</p>
  <figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">&#123;</span><br><span class="line"> <span class="string">"logstash"</span> : <span class="collection">&#123;</span><br><span class="line">   <span class="string">"order"</span> : <span class="number">0</span>,</span><br><span class="line">   <span class="string">"template"</span> : <span class="string">"eagleye-log*"</span>,</span><br><span class="line">   <span class="string">"settings"</span> : <span class="collection">&#123;</span><br><span class="line">     <span class="string">"index.refresh_interval"</span> : <span class="string">"2s"</span></span><br><span class="line">   &#125;</span>,</span><br><span class="line">   <span class="string">"mappings"</span> : <span class="collection">&#123;</span><br><span class="line">     <span class="string">"log"</span> : <span class="collection">&#123;</span><br><span class="line">       <span class="string">"_all"</span> : <span class="collection">&#123; <span class="string">"enabled"</span> : <span class="literal">false</span> &#125;</span>,</span><br><span class="line">       ... ...</span></span></span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p><strong>字段缓存(Field cache)设置</strong></p>
+<p> 当对字段排序或者对字段做聚合（如 facet ）时，字段缓存（ Field cache ）非常重要。 Es 会将这些待排序或者聚合字段都加载到内存，以提高对这些字段的快速访问。注意，将字段都加载到内存是非常耗费资源的，所以，你应该保证 field cache 足够大，以足以将所有的结果都缓存起来，下次排序或 facet 时不用再次从磁盘进行加载。</p>
+<p> 可以通过设置 indices.fielddata.cache.size 为具体的大小，比如 2GB ，或者可用内存的百分比，比如 40% 。请注意，这个属性是 node 级别 ( 不是 index 级别的 ). 当这个缓存不够用时，为了跟新的缓存对象腾出空间，原来缓存的字段会被挤出来，这会导致系统性能下降。所以，请保证这个值足够大，能够满足业务需求。另外，如果你没有设置这个值， es 默认缓存可以无限大。所以，在生产环境注意要设置这个值。</p>
+ <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">indices<span class="class">.fielddata</span><span class="class">.cache</span><span class="class">.size</span>:  <span class="number">20%</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
