@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/09/17/es-optimize/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
-<meta property="og:updated_time" content="2015-10-20T10:30:02.000Z">
+<meta property="og:updated_time" content="2015-10-30T03:02:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch使用积累(持续更新...)">
 <meta name="twitter:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
@@ -183,6 +183,18 @@
 </ol>
 <div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
 
+<ol>
+<li><p><strong>减小es集群脑裂的配置优化</strong></p>
+<ul>
+<li>master尽量不作为data节点</li>
+<li>discovery.zen.ping_timeout（默认值是3秒）修改,默认情况下，一个节点会认为，如果master节点在3秒之内没有应答，那么这个节点就是死掉了，而增加这个值，会增加节点等待响应的时间，从一定程度上会减少误判。</li>
+<li>discovery.zen.minimum_master_nodes（默认是1）：这个参数控制的是，一个节点需要看到的具有master节点资格的最小数量，然后才能在集群中做操作。官方的推荐值是(N/2)+1，其中N是具有master资格的节点的数量（我们的情况是3，因此这个参数设置为2，但对于只有2个节点的情况，设置为2就有些问题了，一个节点DOWN掉后，你肯定连不上2台服务器了，这点需要注意）。</li>
+<li><p>加快master发现的速度,可以将data节点的默认的master发现方式有multicast修改为unicast,并指定具体的master地址</p>
+  <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.multicast</span><span class="class">.enabled</span>: false</span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.unicast</span><span class="class">.hosts</span>: [<span class="string">"master1"</span>, <span class="string">"master2"</span>, <span class="string">"master3"</span>]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
