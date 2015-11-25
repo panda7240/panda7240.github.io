@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/09/17/es-optimize/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
-<meta property="og:updated_time" content="2015-10-30T03:02:04.000Z">
+<meta property="og:updated_time" content="2015-11-25T08:57:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch使用积累(持续更新...)">
 <meta name="twitter:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
@@ -121,6 +121,7 @@
  <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT <span class="string">http:</span><span class="comment">//127.0.0.1:9200/_cluster/settings -d' </span></span><br><span class="line">&#123; </span><br><span class="line">	<span class="string">"transient"</span> : &#123; </span><br><span class="line">		<span class="string">"cluster.routing.allocation.enable"</span> : <span class="string">"all"</span> </span><br><span class="line">	&#125; </span><br><span class="line">&#125;<span class="string">'</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
+<p>备注: <strong>如果在集群中关闭自动均衡, 业务程序在插入数据时,不会自动创建索引, 需要预先创建好索引</strong></p>
 <h2 id="ES集群JVM调优积累">ES集群JVM调优积累</h2><p>在最开始, 我们使用的ES实例,没有涉及到很大的数据写入和检索(每天几百万数据). 当时我们配置ES的JVM(Xms=Xmx=8G)的垃圾回收器主要是CMS,具体配置如下:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reduce the per-thread stack size</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -Xss256k"</span></span><br><span class="line"></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UseParNewGC"</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UseConcMarkSweepGC"</span></span><br><span class="line"></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:CMSInitiatingOccupancyFraction=75"</span></span><br><span class="line">JAVA_OPTS=<span class="string">"<span class="variable">$JAVA_OPTS</span> -XX:+UseCMSInitiatingOccupancyOnly"</span></span><br></pre></td></tr></table></figure>
 <p>这个在小数据量,小内存时运行良好, 基本很少会出现Full gc.</p>
@@ -140,7 +141,7 @@
 <h2 id="ES使用中碰到的问题">ES使用中碰到的问题</h2><ol>
 <li><p><strong>rejected execution (queue capacity 50) on org.elasticsearch.action.support.replication.TransportShar</strong> </p>
 <p> 该问题需要在配置文件中添加Thread pool参数.</p>
- <figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">threadpool</span>:</span><br><span class="line">   #这是批量插入时需要做的配置</span><br><span class="line">    <span class="attribute">bulk</span>:</span><br><span class="line">       <span class="attribute">type</span>: fixed</span><br><span class="line">       <span class="attribute">size</span>: <span class="number">100</span></span><br><span class="line">       <span class="attribute">queue_size</span>: <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">   #检索时需要做的配置</span><br><span class="line">   <span class="attribute">search</span>:</span><br><span class="line">       <span class="attribute">tyep</span>: fixed</span><br><span class="line">       <span class="attribute">size</span>: <span class="number">100</span></span><br><span class="line">       <span class="attribute">queue_size</span>: <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+ <figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">threadpool</span>:</span><br><span class="line">   #这是批量插入时需要做的配置</span><br><span class="line">    <span class="attribute">bulk</span>:</span><br><span class="line">       <span class="attribute">type</span>: fixed</span><br><span class="line">       # 设置的和cpu数量一致</span><br><span class="line">       <span class="attribute">size</span>: <span class="number">24</span></span><br><span class="line">       <span class="attribute">queue_size</span>: <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">   #检索时需要做的配置</span><br><span class="line">   <span class="attribute">search</span>:</span><br><span class="line">       <span class="attribute">tyep</span>: fixed</span><br><span class="line">       # 设置的和cpu数量一致</span><br><span class="line">       <span class="attribute">size</span>: <span class="number">24</span></span><br><span class="line">       <span class="attribute">queue_size</span>: <span class="number">10000</span></span><br></pre></td></tr></table></figure>
 <p> 整个数据将会被处理它的节点载入内存中，所以如果请求量很大的话，留给其他请求的内存空间将会很少。bulk应该有一个最佳的限度。超过这个限制后，性能不但不会提升反而可能会造成宕机。</p>
 <p> 最佳的容量并不是一个确定的数值，它取决于你的硬件，你的文档大小以及复杂性，你的索引以及搜索的负载。幸运的是，这个平衡点 很容易确定：</p>
 <p> 试着去批量索引越来越多的文档。当性能开始下降的时候，就说明你的数据量太大了。一般比较好初始数量级是1000到5000个文档，或者你的文档很大，你就可以试着减小队列。 有的时候看看批量请求的物理大小是很有帮助的。1000个1KB的文档和1000个1MB的文档的差距将会是天差地别的。比较好的初始批量容量是5-15MB。</p>
@@ -364,11 +365,23 @@
 			
 		
 			
-				<li><a href="/tags/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
 			
 		
 			
@@ -381,18 +394,6 @@
 		
 			
 				<li><a href="/tags/quartz/" title="quartz">quartz<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
 			
 		
 		</ul>
