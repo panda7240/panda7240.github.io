@@ -1,0 +1,592 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Elasticsearch独立master,tribe节点 | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="场景描述之前的ES机器是三台服务器九个实例, 之所以每台服务器上部署三个实例, 是因为机器不够, 另外一个是每个机器有三块硬盘, 24核cpu, 196G内存, 所以一个物理机上起三个实例, 可以最大限度的发挥ES集群的优势.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch独立master,tribe节点">
+<meta property="og:url" content="http://siye1982.github.io/2015/11/26/es-tribe/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="场景描述之前的ES机器是三台服务器九个实例, 之所以每台服务器上部署三个实例, 是因为机器不够, 另外一个是每个机器有三块硬盘, 24核cpu, 196G内存, 所以一个物理机上起三个实例, 可以最大限度的发挥ES集群的优势.">
+<meta property="og:updated_time" content="2015-11-27T04:16:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch独立master,tribe节点">
+<meta name="twitter:description" content="场景描述之前的ES机器是三台服务器九个实例, 之所以每台服务器上部署三个实例, 是因为机器不够, 另外一个是每个机器有三块硬盘, 24核cpu, 196G内存, 所以一个物理机上起三个实例, 可以最大限度的发挥ES集群的优势.">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Panda" title="Panda"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto">人生需要一次All in</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/26/es-tribe/" title="Elasticsearch独立master,tribe节点" itemprop="url">Elasticsearch独立master,tribe节点</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-26T02:29:36.000Z" itemprop="datePublished"> 发表于 2015-11-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述"><span class="toc-number">1.</span> <span class="toc-text">场景描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#碰到的问题:"><span class="toc-number">2.</span> <span class="toc-text">碰到的问题:</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="场景描述">场景描述</h2><p>之前的ES机器是三台服务器九个实例, 之所以每台服务器上部署三个实例, 是因为机器不够, 另外一个是每个机器有三块硬盘, 24核cpu, 196G内存, 所以一个物理机上起三个实例, 可以最大限度的发挥ES集群的优势.<br><a id="more"></a><br>集群中每个节点都可以是data和master节点, 并且和master通信的超时时间为3s.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.timeout</span>: <span class="number">3s</span></span><br></pre></td></tr></table></figure>
+<p>当我们的数据节点因为写入压力过大时, 可能会使节点之间的心跳通信超过这个时间, 那么可能会引起重新选举master的可能. 这次将新增三个实例分布到这三台服务器上, 做master节点.下面是master节点的主要配置:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">cluster.name</span>: <span class="string">eagleye_es</span></span><br><span class="line"><span class="attribute">node.name</span>: <span class="string">"eagleye_es_xx_master"</span></span><br><span class="line"></span><br><span class="line"><span class="http"><span class="attribute">node.master</span>: <span class="string">true</span></span><br><span class="line"><span class="attribute">node.data</span>: <span class="string">false</span></span><br><span class="line"></span><br><span class="line"><span class="stylus"><span class="id">#ping</span> 其它节点的超时时间</span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.ping_timeout</span>: <span class="number">30s</span></span><br><span class="line"></span><br><span class="line">#心跳timeout设为<span class="number">2</span>分钟，超过<span class="number">6</span>次心跳没有回应，则认为该节点脱离master，每隔<span class="number">20s</span>发送一次心跳。</span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.fd</span><span class="class">.ping_timeout</span>: <span class="number">120s</span></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.fd</span><span class="class">.ping_retries</span>: <span class="number">6</span></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.fd</span><span class="class">.ping_interval</span>: <span class="number">20s</span></span><br><span class="line"></span><br><span class="line">#要选出可用master, 最少需要几个master节点</span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.minimum_master_nodes</span>: <span class="number">2</span></span><br><span class="line"></span><br><span class="line">path<span class="class">.logs</span>: /var/log/es_master</span><br><span class="line">#不使用交换区</span><br><span class="line">bootstrap<span class="class">.mlockall</span>: true</span><br><span class="line"></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.port</span>: <span class="number">8309</span></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.compress</span>: true</span><br><span class="line">http<span class="class">.port</span>: <span class="number">8209</span></span></span></span><br></pre></td></tr></table></figure>
+<p>由于我们的业务场景是给业务人员提供实时的日志查询, 那么近几日的日志将会是频繁查询的对象, 那么一个月以前的日志可能少有人进行查询. 配合这样业务场景, 我们将来打算进行集群数据的冷热分离. 这次变更正好分出独立的查询节点, 并通过tribe的方式去进行. 这次增加两个tribe节点用来做查询节点, 并为之后的冷热分离做准备, tribe节点主要配置如下:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">node.name</span>: <span class="string">"eagleye_es_xx_tribe"</span></span><br><span class="line"><span class="attribute">node.data</span>: <span class="string">false</span></span><br><span class="line"><span class="attribute">node.master</span>: <span class="string">false</span></span><br><span class="line"><span class="attribute">path.logs</span>: <span class="string">/var/log/es_tribe</span></span><br><span class="line"><span class="attribute">bootstrap.mlockall</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="stylus">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.warn</span>: <span class="number">5s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.info</span>: <span class="number">1s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.debug</span>: <span class="number">500ms</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.trace</span>: <span class="number">500ms</span></span><br><span class="line"></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.warn</span>: <span class="number">5s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.info</span>: <span class="number">1s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.debug</span>: <span class="number">500ms</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.trace</span>: <span class="number">500ms</span></span><br><span class="line"></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.warn</span>: <span class="number">5s</span></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.info</span>: <span class="number">2s</span></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.debug</span>: <span class="number">500ms</span></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.trace</span>: <span class="number">500ms</span></span><br><span class="line"></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.port</span>: <span class="number">8308</span></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.compress</span>: true</span><br><span class="line">http<span class="class">.port</span>: <span class="number">8208</span></span><br><span class="line"></span><br><span class="line">tribe:</span><br><span class="line">  hot:</span><br><span class="line">    cluster<span class="class">.name</span>: eagleye_es</span><br><span class="line">  blocks:</span><br><span class="line">    write: true</span><br><span class="line">    metadata: true</span><br><span class="line">  on_conflict: prefer_hot</span><br><span class="line"></span><br><span class="line">threadpool:</span><br><span class="line">  search:</span><br><span class="line">    tyep: fixed</span><br><span class="line">    size: <span class="number">24</span></span><br><span class="line">    #用来保存请求的队列</span><br><span class="line">    queue_size: <span class="number">100</span></span></span><br></pre></td></tr></table></figure>
+<p>做到这个时候, 还需要将原有的9个节点修改为data节点, 主要配置变更如下:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node.<span class="string">data:</span> <span class="literal">true</span></span><br><span class="line">node.<span class="string">master:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h2 id="碰到的问题:">碰到的问题:</h2><ul>
+<li><p>开始master节点中并没有配置分片数量, 导致新索引按照默认的5个进行分片.<br>  后来我们在数据节点对应的template中的mapping中添加了分片信息. 主要配置修改如下:</p>
+  <figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">&#123;</span><br><span class="line"> <span class="string">"eagleye_bigindex"</span>: <span class="collection">&#123;</span><br><span class="line"></span><br><span class="line">   <span class="string">"order"</span>: <span class="number">0</span>,</span><br><span class="line">   <span class="string">"template"</span>: <span class="string">"eagleye_bigindex*"</span>,</span><br><span class="line">   <span class="string">"settings"</span>: <span class="collection">&#123;</span><br><span class="line">     <span class="string">"index.refresh_interval"</span>: <span class="string">"2s"</span></span><br><span class="line">     <span class="string">"number_of_shards"</span>: <span class="number">9</span>,</span><br><span class="line">		 <span class="string">"number_of_replicas"</span>: <span class="number">0</span>, </span><br><span class="line">   &#125;</span>,</span><br><span class="line"></span><br><span class="line">   <span class="string">"mappings"</span>: <span class="collection">&#123;</span><br><span class="line">     <span class="string">"log"</span>: <span class="collection">&#123;</span><br><span class="line">       <span class="string">"_all"</span>: <span class="collection">&#123;</span><br><span class="line">         <span class="string">"enabled"</span>: <span class="literal">false</span></span><br><span class="line">       &#125;</span>,</span><br><span class="line">       </span><br><span class="line">       ...</span><br><span class="line">       ...</span></span></span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Elasticsearch/">Elasticsearch</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/分布式/">分布式</a><a href="/tags/原创/">原创</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2015/11/26/es-tribe/" data-title="Elasticsearch独立master,tribe节点 | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/11/03/haproxy-nginx-test/"  title="HAProxy与Nginx关于动态配置的测试">
+ <strong>下一篇：</strong><br/> 
+ <span>HAProxy与Nginx关于动态配置的测试
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/26/es-tribe/" data-title="Elasticsearch独立master,tribe节点" data-url="http://siye1982.github.io/2015/11/26/es-tribe/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述"><span class="toc-number">1.</span> <span class="toc-text">场景描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#碰到的问题:"><span class="toc-number">2.</span> <span class="toc-text">碰到的问题:</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Zookeeper/" title="Zookeeper">Zookeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/服务治理/" title="服务治理">服务治理<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/原创/" title="原创">原创<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SOA/" title="SOA">SOA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/双胞胎/" title="双胞胎">双胞胎<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/quartz/" title="quartz">quartz<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"siye1982"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255443286'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255443286' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
