@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/09/17/es-optimize/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
-<meta property="og:updated_time" content="2015-12-14T03:16:48.000Z">
+<meta property="og:updated_time" content="2015-12-14T03:18:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch使用积累(持续更新...)">
 <meta name="twitter:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
@@ -158,15 +158,7 @@
 <p> 之前因为存储的内容是中英文混合的, 所以分词的时候采用最小力度分词, 这样如果要检索句子的时候, 不知道为什么, 检索不出来, 最后使用了, 如下方式可以直接检索句子了:</p>
 </li>
 </ol>
-<p><code>BoolFilterBuilder bqb = FilterBuilders.boolFilter();
-if(vo.getQueryStr() != null &amp;&amp; !vo.getQueryStr().trim().equals(&quot;&quot;)){    
-bqb.must(FilterBuilders.queryFilter(QueryBuilders.queryStringQuery( 
-ESReservedCharsUtil.removeReservedChars(vo.getQueryStr())).defaultField(&quot;body&quot;).defaultOperator(QueryStringQueryBuilder.Operator.AND)).cache(true));
-// 该种方式不能检索句子
-// for(String _s : vo.getQueryStr().split(&quot;\\s+&quot;)) {
-//     bqb.must(FilterBuilders.termFilter(&quot;body&quot;, _s));
-// }
-}</code></p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BoolFilterBuilder bqb = FilterBuilders.boolFilter<span class="params">()</span>;</span><br><span class="line"><span class="keyword">if</span><span class="params">(vo.getQueryStr<span class="params">()</span> != null &amp;&amp; !vo.getQueryStr<span class="params">()</span>.trim<span class="params">()</span>.equals<span class="params">(<span class="string">""</span>)</span>)</span>&#123;    </span><br><span class="line">bqb.must<span class="params">(FilterBuilders.queryFilter<span class="params">(QueryBuilders.queryStringQuery<span class="params">( </span><br><span class="line">ESReservedCharsUtil.removeReservedChars<span class="params">(vo.getQueryStr<span class="params">()</span>)</span>)</span>.defaultField<span class="params">(<span class="string">"body"</span>)</span>.defaultOperator<span class="params">(QueryStringQueryBuilder.Operator.AND)</span>)</span>.cache<span class="params">(<span class="literal">true</span>)</span>)</span>;</span><br><span class="line"><span class="comment">// 该种方式不能检索句子</span></span><br><span class="line"><span class="comment">// for(String _s : vo.getQueryStr().split("\\s+")) &#123;</span></span><br><span class="line"><span class="comment">//     bqb.must(FilterBuilders.termFilter("body", _s));</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="其他">其他</h2><ol>
 <li><p><strong>批量删除索引</strong>    </p>
