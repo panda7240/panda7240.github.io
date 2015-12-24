@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/12/23/es-upgrade/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="ElasticSearch 1.7.2 升级到 2.X 的流程之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
-<meta property="og:updated_time" content="2015-12-24T11:05:22.000Z">
+<meta property="og:updated_time" content="2015-12-24T11:07:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch 1.7.2 升级到 2.X 的流程">
 <meta name="twitter:description" content="ElasticSearch 1.7.2 升级到 2.X 的流程之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
@@ -141,7 +141,7 @@
   <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">ES_HEAP_SIZE=<span class="value"><span class="number">8</span>g</span></span></span><br><span class="line"><span class="setting">ES_GC_LOG_FILE=<span class="value"><span class="string">"/eagleye/data/esdata/logs/esgc.log"</span></span></span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<pre><code>如果使用的是<span class="tag">jdk1</span><span class="class">.8</span>将如下需要做如下改动
+<pre><code><span class="keyword">*</span><span class="keyword">*</span>如果使用的是jdk1.8将如下需要做如下改动<span class="keyword">*</span><span class="keyword">*</span>
 </code></pre>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment"># Add gc options. ES_GC_OPTS is unsupported, for internal testing</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"x<span class="variable">$ES_GC_OPTS</span>"</span> = <span class="string">"x"</span> ]; <span class="keyword">then</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:+UseParNewGC"</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:+UseConcMarkSweepGC"</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:CMSInitiatingOccupancyFraction=75"</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:+UseCMSInitiatingOccupancyOnly"</span></span><br><span class="line">  ES_GC_OPTS=<span class="string">"<span class="variable">$ES_GC_OPTS</span> -XX:+UseG1GC"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>复制原集群的索引元数据到新集群中(重要)<br>  元数据在master节点的data目录下, 将该目录下的所有元数据copy到新版本集群中相应位置即可</p>
