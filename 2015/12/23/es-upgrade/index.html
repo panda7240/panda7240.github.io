@@ -1,0 +1,657 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ElasticSearch 1.7.2 升级到 2.X 的流程 | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch 1.7.2 升级到 2.X 的流程">
+<meta property="og:url" content="http://siye1982.github.io/2015/12/23/es-upgrade/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
+<meta property="og:updated_time" content="2015-12-24T10:55:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch 1.7.2 升级到 2.X 的流程">
+<meta name="twitter:description" content="之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Panda" title="Panda"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto">人生需要一次All in</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/23/es-upgrade/" title="ElasticSearch 1.7.2 升级到 2.X 的流程" itemprop="url">ElasticSearch 1.7.2 升级到 2.X 的流程</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-23T08:35:16.000Z" itemprop="datePublished"> 发表于 2015-12-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#升级步骤"><span class="toc-number">1.</span> <span class="toc-text">升级步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ES集群升级"><span class="toc-number">1.1.</span> <span class="toc-text">ES集群升级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ES的客户端升级"><span class="toc-number">1.2.</span> <span class="toc-text">ES的客户端升级</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<pre><code>之前在做<span class="tag">Elasticsearch</span> 1<span class="class">.4</span><span class="class">.4</span> 到 1<span class="class">.7</span><span class="class">.2</span> 升级的过程中, 直接替换<span class="tag">ES</span>程序即可, 升级很平滑.但是这次从1<span class="class">.7</span><span class="class">.2</span>版本升级到2<span class="class">.1</span><span class="class">.0</span>版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.
+</code></pre><a id="more"></a>
+<h2 id="升级步骤">升级步骤</h2><h3 id="ES集群升级">ES集群升级</h3><p>这次升级官方给出了很多<a href="https://www.elastic.co/guide/en/elasticsearch/reference/master/breaking-changes.html" target="_blank" rel="external">Breaking changes</a>, 但是我们可以借助ES一个插件来帮助我们分析, 现有ES集群需要做出哪些改动才可以顺利升级到2.X版本.</p>
+<ul>
+<li><p>插件安装: <code>./bin/plugin -i elastic/elasticsearch-migration</code><br>  查看原集群中哪些配置和2.x版本冲突, 我们这里碰到的问题是, <strong>在mapping配置里面, 如果是同一个索引模板中,不同的type,里面如果字段名字有一样的, 但是字段模块不一致的需要修改, 即使名字一样,有的设置了分词, 有的设置了不分词也是不可以的. 2.x版本的索引压缩有很大改进.</strong> </p>
+</li>
+<li><p><a href="https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.1.1/elasticsearch-2.1.1.zip" target="_blank" rel="external">下载最新版本</a></p>
+</li>
+<li><p>将原版下的 $ES_HOME/config 下的文件全部copy到新版本中</p>
+</li>
+<li><p>将$ES_HOME/bin/elasticsearch.in.sh elasticsearch 两个文件copy到新版本中相应的路径中, 然后修改该文件中elasticsearch.x.x.jar为新版本的jar</p>
+</li>
+<li><p>将 <code>$ES_HOME/plugins</code> 文件夹copy到新版 $ES_HOME目录下</p>
+</li>
+<li><p>针对IK分词, 需要安装最新版本</p>
+<ul>
+<li><p>获取最新版本并编译, copy到新版$ES_HOME/plugins/ik下</p>
+  <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/medcl/elasticsearch-analysis-ik</span></span><br><span class="line">cd elasticsearch-analysis-ik</span><br><span class="line">mvn clean</span><br><span class="line">mvn <span class="keyword">compile</span></span><br><span class="line">mvn <span class="keyword">package</span></span><br><span class="line"><span class="keyword">copy</span> &amp; unzip <span class="keyword">file</span>  #&#123;project_path&#125;<span class="regexp">/elasticsearch-analysis-ik/</span>target<span class="regexp">/releases/</span>elasticsearch-analysis-ik-xxx.zip to your elasticsearch<span class="string">'s folder: plugins/ik</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将ik项目的config/ik中的内容copy到your-es-root/config/ik中</p>
+</li>
+</ul>
+</li>
+<li><p>更新 head 插件<br>  <code>./bin/plugin install mobz/elasticsearch-head</code></p>
+</li>
+<li><p>安装sql插件<br>  <code>./bin/plugin install https://github.com/NLPchina/elasticsearch-sql/releases/download/2.1.0/elasticsearch-sql-2.1.0.zip</code><br>  如果碰见版本不一致的,需要修改插件内部的plugin配置文件, 将其中es版本修改为匹配的.<br>  安装该插件后必须要重启</p>
+</li>
+<li><p>安装kopf插件<br>  ‘./elasticsearch/bin/plugin install lmenezes/elasticsearch-kopf/{branch|version}’</p>
+</li>
+<li><p>elasticsearch.yml 配置文件中的改动</p>
+<ul>
+<li>去除 <code>index.analysis.analyzer.default.type : &quot;ik&quot;</code></li>
+<li><p>添加主机host <code>network.host: 192.168.10.235</code></p>
+<p>如果配置中有配置自动发现的,注释掉, 并改为单播模式</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#ping</span> 其它节点的超时时间</span><br><span class="line"><span class="id">#discovery</span><span class="class">.zen</span><span class="class">.ping_timeout</span>: <span class="number">30s</span></span><br><span class="line">#要选出可用master, 最少需要几个master节点</span><br><span class="line"><span class="id">#discovery</span><span class="class">.zen</span><span class="class">.minimum_master_nodes</span>: <span class="number">2</span></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.unicast</span><span class="class">.hosts</span>: <span class="string">"192.168.10.235:9309,192.168.10.236:9309,192.168.10.237:9309"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>将$ES_HOME/bin/elasticsearch.in.sh 文件中添加如下内容</p>
+  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">ES_HEAP_SIZE=<span class="value"><span class="number">8</span>g</span></span></span><br><span class="line"><span class="setting">ES_GC_LOG_FILE=<span class="value"><span class="string">"/eagleye/data/esdata/logs/esgc.log"</span></span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  如果使用的是jdk1.8将如下需要做如下改动</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment"># Add gc options. ES_GC_OPTS is unsupported, for internal testing</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"x<span class="variable">$ES_GC_OPTS</span>"</span> = <span class="string">"x"</span> ]; <span class="keyword">then</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:+UseParNewGC"</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:+UseConcMarkSweepGC"</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:CMSInitiatingOccupancyFraction=75"</span></span><br><span class="line"><span class="comment">#  ES_GC_OPTS="$ES_GC_OPTS -XX:+UseCMSInitiatingOccupancyOnly"</span></span><br><span class="line">  ES_GC_OPTS=<span class="string">"<span class="variable">$ES_GC_OPTS</span> -XX:+UseG1GC"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>复制原集群的索引元数据到新集群中(重要)<br>  元数据在master节点的data目录下, 将该目录下的所有元数据copy到新版本集群中相应位置即可</p>
+</li>
+<li><p>关闭自动分片</p>
+  <figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT http:<span class="comment">//192.168.1.2:9200/_cluster/settings -d </span></span><br><span class="line"><span class="string">'&#123; </span><br><span class="line">	"</span>transient<span class="string">" : &#123; </span><br><span class="line">		"</span><span class="transposed_variable">cluster.</span><span class="transposed_variable">routing.</span><span class="transposed_variable">allocation.</span>enable<span class="string">" : "</span>none<span class="string">" </span><br><span class="line">  	&#125; </span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同步flush操作<br>  如果不允许任何丢失, 需要执行该操作, 如果可以容忍在短时间内的数据丢失, 可以忽略这一步骤</p>
+  <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">curl -XPOST <span class="string">http:</span><span class="comment">//192.168.1.2:9200/_flush/synced</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>需要同时停止所有集群的es服务, 然后挨个重启</p>
+  <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">http:</span><span class="comment">//192.168.1.3:9200/_cluster/nodes/_local/_shutdown</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="ES的客户端升级">ES的客户端升级</h3><p>这里主要描述java客户端的改动.</p>
+<ul>
+<li><p>pom中的es引用变更为</p>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.elasticsearch<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>elasticsearch<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">version</span>&gt;</span>2.1.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>  <strong>注意: 该版本依赖google的guava-18.0版本, 我们项目中依赖的guava-15.0导致,spring启动NoSuchClass异常, 需要同时升级guava版本</strong></p>
+</li>
+<li><p>创建客户端的改动,下面是具体变更之后的内容,官方文档可以看这具体看<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/breaking_20_java_api_changes.html#_query_filter_refactoring" target="_blank" rel="external">这里</a></p>
+<ul>
+<li><p>ESClient变更</p>
+  <figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public ESClient<span class="params">(String clusterName, String esNodes)</span> &#123;</span><br><span class="line"><span class="comment">//Settings settings = ImmutableSettings.settingsBuilder()</span></span><br><span class="line">      Settings settings = Settings.builder<span class="params">()</span></span><br><span class="line">              .put<span class="params">(<span class="string">"cluster.name"</span>, clusterName)</span></span><br><span class="line">              .put<span class="params">(<span class="string">"client.transport.sniff"</span>, <span class="literal">false</span>)</span></span><br><span class="line">              .build<span class="params">()</span>;</span><br><span class="line">      this.client = TransportClient.builder<span class="params">()</span>.settings<span class="params">(settings)</span>.build<span class="params">()</span>;<span class="comment">//new TransportClient(settings);</span></span><br><span class="line">      String[] esNodeList = esNodes.split<span class="params">(<span class="string">","</span>)</span>;</span><br><span class="line">      <span class="keyword">for</span> <span class="params">(String serv : esNodeList)</span> &#123;</span><br><span class="line">          String[] node = serv.split<span class="params">(<span class="string">":"</span>)</span>;</span><br><span class="line">          <span class="keyword">if</span> <span class="params">(node.length == <span class="number">2</span>)</span> &#123;</span><br><span class="line"><span class="comment">//this.client.addTransportAddress(new InetSocketTransportAddress(node[0], Integer.valueOf(node[1])));</span></span><br><span class="line">              this.client.addTransportAddress<span class="params">(new InetSocketTransportAddress<span class="params">(new InetSocketAddress<span class="params">(node[<span class="number">0</span>], Integer.valueOf<span class="params">(node[<span class="number">1</span>])</span>)</span>)</span>)</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code><span class="bullet">* </span>依赖的jackson版本需要跟着变更
+
+<span class="code">    <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;fasterxml<span class="class">.jackson</span><span class="class">.version</span>&gt;<span class="number">2.6</span>.<span class="number">2</span>&lt;/fasterxml<span class="class">.jackson</span><span class="class">.version</span>&gt;</span><br></pre></td></tr></table></figure></span>
+
+<span class="bullet">* </span>查询代码需要将所有Filter变更为Query
+<span class="bullet">* </span>2.1.1版本中tribe节点无法加入集群中,具体看[<span class="link_label">Github上针对这个问题的issue</span>](<span class="link_url">https://github.com/elastic/elasticsearch/issues/15373</span>)
+<span class="bullet">* </span>
+</code></pre><div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Elasticsearch/">Elasticsearch</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/分布式/">分布式</a><a href="/tags/原创/">原创</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2015/12/23/es-upgrade/" data-title="ElasticSearch 1.7.2 升级到 2.X 的流程 | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/11/26/es-tribe/"  title="Elasticsearch独立master,tribe节点">
+ <strong>下一篇：</strong><br/> 
+ <span>Elasticsearch独立master,tribe节点
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/12/23/es-upgrade/" data-title="ElasticSearch 1.7.2 升级到 2.X 的流程" data-url="http://siye1982.github.io/2015/12/23/es-upgrade/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#升级步骤"><span class="toc-number">1.</span> <span class="toc-text">升级步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ES集群升级"><span class="toc-number">1.1.</span> <span class="toc-text">ES集群升级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ES的客户端升级"><span class="toc-number">1.2.</span> <span class="toc-text">ES的客户端升级</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Zookeeper/" title="Zookeeper">Zookeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/服务治理/" title="服务治理">服务治理<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/原创/" title="原创">原创<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SOA/" title="SOA">SOA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/双胞胎/" title="双胞胎">双胞胎<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/quartz/" title="quartz">quartz<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"siye1982"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255443286'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255443286' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
