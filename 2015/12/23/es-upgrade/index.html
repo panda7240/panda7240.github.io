@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/12/23/es-upgrade/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="ElasticSearch 1.7.2 升级到 2.X 的流程之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
-<meta property="og:updated_time" content="2015-12-24T11:08:30.000Z">
+<meta property="og:updated_time" content="2015-12-25T01:51:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch 1.7.2 升级到 2.X 的流程">
 <meta name="twitter:description" content="ElasticSearch 1.7.2 升级到 2.X 的流程之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
@@ -167,17 +167,16 @@
 <li><p>ESClient变更</p>
   <figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public ESClient<span class="params">(String clusterName, String esNodes)</span> &#123;</span><br><span class="line"><span class="comment">//Settings settings = ImmutableSettings.settingsBuilder()</span></span><br><span class="line">      Settings settings = Settings.builder<span class="params">()</span></span><br><span class="line">              .put<span class="params">(<span class="string">"cluster.name"</span>, clusterName)</span></span><br><span class="line">              .put<span class="params">(<span class="string">"client.transport.sniff"</span>, <span class="literal">false</span>)</span></span><br><span class="line">              .build<span class="params">()</span>;</span><br><span class="line">      this.client = TransportClient.builder<span class="params">()</span>.settings<span class="params">(settings)</span>.build<span class="params">()</span>;<span class="comment">//new TransportClient(settings);</span></span><br><span class="line">      String[] esNodeList = esNodes.split<span class="params">(<span class="string">","</span>)</span>;</span><br><span class="line">      <span class="keyword">for</span> <span class="params">(String serv : esNodeList)</span> &#123;</span><br><span class="line">          String[] node = serv.split<span class="params">(<span class="string">":"</span>)</span>;</span><br><span class="line">          <span class="keyword">if</span> <span class="params">(node.length == <span class="number">2</span>)</span> &#123;</span><br><span class="line"><span class="comment">//this.client.addTransportAddress(new InetSocketTransportAddress(node[0], Integer.valueOf(node[1])));</span></span><br><span class="line">              this.client.addTransportAddress<span class="params">(new InetSocketTransportAddress<span class="params">(new InetSocketAddress<span class="params">(node[<span class="number">0</span>], Integer.valueOf<span class="params">(node[<span class="number">1</span>])</span>)</span>)</span>)</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 </li>
+<li><p>依赖的jackson版本需要跟着变更</p>
+  <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;fasterxml<span class="class">.jackson</span><span class="class">.version</span>&gt;<span class="number">2.6</span>.<span class="number">2</span>&lt;/fasterxml<span class="class">.jackson</span><span class="class">.version</span>&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询代码需要将所有Filter变更为Query</p>
+</li>
+<li>2.1.1版本中tribe节点无法加入集群中,具体看<a href="https://github.com/elastic/elasticsearch/issues/15373" target="_blank" rel="external">Github上针对这个问题的issue</a></li>
 </ul>
 </li>
 </ul>
-<pre><code><span class="bullet">* </span>依赖的jackson版本需要跟着变更
-
-<span class="code">    <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;fasterxml<span class="class">.jackson</span><span class="class">.version</span>&gt;<span class="number">2.6</span>.<span class="number">2</span>&lt;/fasterxml<span class="class">.jackson</span><span class="class">.version</span>&gt;</span><br></pre></td></tr></table></figure></span>
-
-<span class="bullet">* </span>查询代码需要将所有Filter变更为Query
-<span class="bullet">* </span>2.1.1版本中tribe节点无法加入集群中,具体看[<span class="link_label">Github上针对这个问题的issue</span>](<span class="link_url">https://github.com/elastic/elasticsearch/issues/15373</span>)
-<span class="bullet">* </span>
-</code></pre><div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
 
   
 	</div>
