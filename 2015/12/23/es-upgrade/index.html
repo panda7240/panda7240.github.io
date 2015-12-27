@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/12/23/es-upgrade/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="ElasticSearch 1.7.2 升级到 2.X 的流程之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
-<meta property="og:updated_time" content="2015-12-25T01:51:20.000Z">
+<meta property="og:updated_time" content="2015-12-25T06:20:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch 1.7.2 升级到 2.X 的流程">
 <meta name="twitter:description" content="ElasticSearch 1.7.2 升级到 2.X 的流程之前在做Elasticsearch 1.4.4 到 1.7.2 升级的过程中, 直接替换ES程序即可, 升级很平滑.但是这次从1.7.2版本升级到2.1.0版本就不那么顺利了. 下面会记录升级整个过程中碰到的问题.">
@@ -146,6 +146,8 @@
 <ul>
 <li><p>复制原集群的索引元数据到新集群中(重要)<br>  元数据在master节点的data目录下, 将该目录下的所有元数据copy到新版本集群中相应位置即可</p>
 </li>
+<li><p>2.1.1版本已经将config目录下的index template移除, <strong>如果是新建索引在原先config/template下的索引模板将不起作用</strong>, 如果需要给某个索引配置模板可以参考<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html#indices-templates" target="_blank" rel="external">官方文档</a></p>
+</li>
 <li><p>关闭自动分片</p>
   <figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT http:<span class="comment">//192.168.1.2:9200/_cluster/settings -d </span></span><br><span class="line"><span class="string">'&#123; </span><br><span class="line">	"</span>transient<span class="string">" : &#123; </span><br><span class="line">		"</span><span class="transposed_variable">cluster.</span><span class="transposed_variable">routing.</span><span class="transposed_variable">allocation.</span>enable<span class="string">" : "</span>none<span class="string">" </span><br><span class="line">  	&#125; </span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
 </li>
@@ -213,6 +215,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/12/25/puppet-elasticsearch/" title="puppet-elasticsearch">
+  <strong>上一篇：</strong><br/>
+  <span>
+  puppet-elasticsearch</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/11/26/es-tribe/"  title="Elasticsearch独立master,tribe节点">
@@ -323,6 +333,10 @@
 			
 		
 			
+				<li><a href="/tags/xxx/" title="xxx">xxx<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/SOA/" title="SOA">SOA<sup>1</sup></a></li>
 			
 		
@@ -364,10 +378,6 @@
 		
 			
 				<li><a href="/tags/双胞胎/" title="双胞胎">双胞胎<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/quartz/" title="quartz">quartz<sup>1</sup></a></li>
 			
 		
 		</ul>
