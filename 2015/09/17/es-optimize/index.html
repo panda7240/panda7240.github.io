@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/09/17/es-optimize/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
-<meta property="og:updated_time" content="2015-12-23T08:34:22.000Z">
+<meta property="og:updated_time" content="2015-12-31T11:41:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch使用积累(持续更新...)">
 <meta name="twitter:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
@@ -202,6 +202,14 @@
 </li>
 </ul>
 </li>
+<li><p><strong>有次出现某些分片长期处于UNASSIGNED状态，我们就可以手动分配分片到指定节点上</strong><br>  默认情况下只允许手动分配副本分片，所以如果是主分片故障，需要单独加一个allow_primary选项, 注意，如果是历史数据的话，请提前确认一下哪个节点上保留有这个分片的实际目录，且目录大小最大。然后手动分配到这个节点上。以此减少数据丢失。(我们在测试环境发现有有一天早上六点有几个分片是UNASSIGNED状态, 采用下面的命令可以使集群重回green状态)：</p>
+  <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> curl -XPOST <span class="number">127.0</span>.0.1:<span class="number">9200</span>/_cluster/reroute -d '&#123;</span><br><span class="line">  <span class="string">"commands"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"allocate"</span>: &#123;</span><br><span class="line">        <span class="string">"index"</span>: <span class="string">"eagleye_bigindex_2015.12.29"</span>,</span><br><span class="line">        <span class="string">"shard"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"node"</span>: <span class="string">"eagleye_es_236"</span>,</span><br><span class="line">        <span class="string">"allow_primary"</span>: <span class="constant">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p><strong>因为负载过高，磁盘利用率过高，服务器下线，更换磁盘等原因，可以会需要从节点上移走部分分片</strong></p>
+<pre><code><span class="comment"><figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="number">127.0</span>.0.1:<span class="number">9200</span>/_cluster/reroute -d <span class="string">'&#123;</span><br><span class="line">  "</span>commands<span class="string">": [</span><br><span class="line">    &#123;</span><br><span class="line">      "</span>move<span class="string">": &#123;</span><br><span class="line">        "</span>index<span class="string">": "</span><span class="transposed_variable">eagleye_bigindex_2015.</span><span class="number">12.29</span><span class="string">",</span><br><span class="line">        "</span>shard<span class="string">": 1,</span><br><span class="line">        "</span>from_node<span class="string">": "</span>eagleye_es_235<span class="string">",</span><br><span class="line">        "</span>to_node<span class="string">": "</span>eagleye_es_237<span class="string">"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure></span>
+</code></pre></li>
 </ol>
   
 	</div>
