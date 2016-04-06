@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2015/09/17/es-optimize/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
-<meta property="og:updated_time" content="2015-12-31T11:45:33.000Z">
+<meta property="og:updated_time" content="2016-01-04T03:00:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch使用积累(持续更新...)">
 <meta name="twitter:description" content="写在前面接触Elasticsearch已经有几年的时间, 从一开始在自己的普通台式机上搭建单实例来简单记录测试环境的日志, 到现在生产上用9个Elasticsearch实例搭成的集群来记录商城后台服务的全量日志. 使用场景没变,都是用了记录日志, 并做实时检索和统计. 但是随着每天记录的数据量快速递增,QPS快速递增,我们经常会碰到一些性能问题,这些问题一直在驱动我们对Elasticsearch集">
@@ -113,9 +113,12 @@
 </li>
 <li><p><strong>优雅停止你要升级或检测的ES实例(不到万不得已,绝对不要用Kill -9)</strong></p>
   <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">http:</span><span class="comment">//127.0.0.1:9200/_cluster/nodes/_local/_shutdown</span></span><br></pre></td></tr></table></figure>
+<p>  备注: 在2.0版本之后将废弃该api</p>
+  <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The <span class="title">_shutdown</span> API has been removed <span class="keyword">without</span> <span class="operator">a</span> replacement. Nodes should be managed via <span class="operator">the</span> operating <span class="keyword">system</span> <span class="operator">and</span> <span class="operator">the</span> provided <span class="built_in">start</span>/<span class="built_in">stop</span> scripts.</span><br></pre></td></tr></table></figure>
 </li>
-<li><p><strong>升级重启该节点，并确认该节点重新加入到了集群中</strong></p>
-</li>
+</ul>
+<ul>
+<li><strong>升级重启该节点，并确认该节点重新加入到了集群中</strong></li>
 <li><strong>重复上面的2,3步，操作其他集群内其他ES实例</strong></li>
 <li><p><strong>重新启动集群的分片自动均衡(在集群中任一ES实例中执行一次即可)</strong></p>
   <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT <span class="string">http:</span><span class="comment">//127.0.0.1:9200/_cluster/settings -d' </span></span><br><span class="line">&#123; </span><br><span class="line">	<span class="string">"transient"</span> : &#123; </span><br><span class="line">		<span class="string">"cluster.routing.allocation.enable"</span> : <span class="string">"all"</span> </span><br><span class="line">	&#125; </span><br><span class="line">&#125;<span class="string">'</span></span><br></pre></td></tr></table></figure>
@@ -306,6 +309,10 @@
 		  
 		
 		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
 		  
 		
@@ -391,6 +398,10 @@
 			
 		
 			
+				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
 			
 		
@@ -404,10 +415,6 @@
 		
 			
 				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -505,7 +512,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="Panda">Panda</a>
 		

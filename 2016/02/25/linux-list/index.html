@@ -1,0 +1,660 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Linux常用命令知识积累(持续更新) | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="写在前面虽然平时大部分工作都是和Java相关的开发, 但是每天都会接触Linux系统, 尤其是使用了Mac之后, 每天都是工作在黑色背景的命令行环境中. 自己记忆力不好, 很多有用的Linux命令不能很好的记忆, 现在逐渐总结一下, 以便后续查看.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux常用命令知识积累(持续更新)">
+<meta property="og:url" content="http://siye1982.github.io/2016/02/25/linux-list/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="写在前面虽然平时大部分工作都是和Java相关的开发, 但是每天都会接触Linux系统, 尤其是使用了Mac之后, 每天都是工作在黑色背景的命令行环境中. 自己记忆力不好, 很多有用的Linux命令不能很好的记忆, 现在逐渐总结一下, 以便后续查看.">
+<meta property="og:updated_time" content="2016-04-06T00:35:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux常用命令知识积累(持续更新)">
+<meta name="twitter:description" content="写在前面虽然平时大部分工作都是和Java相关的开发, 但是每天都会接触Linux系统, 尤其是使用了Mac之后, 每天都是工作在黑色背景的命令行环境中. 自己记忆力不好, 很多有用的Linux命令不能很好的记忆, 现在逐渐总结一下, 以便后续查看.">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Panda" title="Panda"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto">人生需要一次All in</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/25/linux-list/" title="Linux常用命令知识积累(持续更新)" itemprop="url">Linux常用命令知识积累(持续更新)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-25T12:57:03.000Z" itemprop="datePublished"> 发表于 2016-02-25</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux关机,重启"><span class="toc-number">1.1.</span> <span class="toc-text">Linux关机,重启</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看CPU信息"><span class="toc-number">1.2.</span> <span class="toc-text">查看CPU信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统信息"><span class="toc-number">1.3.</span> <span class="toc-text">系统信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#建立软连接"><span class="toc-number">1.4.</span> <span class="toc-text">建立软连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rpm相关"><span class="toc-number">1.5.</span> <span class="toc-text">rpm相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看当前用户环境变量"><span class="toc-number">1.6.</span> <span class="toc-text">查看当前用户环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vim操作"><span class="toc-number">1.7.</span> <span class="toc-text">vim操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sshkey"><span class="toc-number">1.8.</span> <span class="toc-text">sshkey</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打开只读文件,修改后需要保存时(不用切换用户即可保存的方式)"><span class="toc-number">1.9.</span> <span class="toc-text">打开只读文件,修改后需要保存时(不用切换用户即可保存的方式)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令重命名"><span class="toc-number">1.10.</span> <span class="toc-text">命令重命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看磁盘,_文件目录"><span class="toc-number">1.11.</span> <span class="toc-text">查看磁盘, 文件目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#检索命令"><span class="toc-number">1.12.</span> <span class="toc-text">检索命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iptables"><span class="toc-number">1.13.</span> <span class="toc-text">iptables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wc命令"><span class="toc-number">1.14.</span> <span class="toc-text">wc命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用压缩,_解压缩命令"><span class="toc-number">1.15.</span> <span class="toc-text">常用压缩, 解压缩命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后台运行命令"><span class="toc-number">1.16.</span> <span class="toc-text">后台运行命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作目录,_文件"><span class="toc-number">1.17.</span> <span class="toc-text">操作目录, 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监控linux性能命令"><span class="toc-number">1.18.</span> <span class="toc-text">监控linux性能命令</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="写在前面">写在前面</h1><p>虽然平时大部分工作都是和Java相关的开发, 但是每天都会接触Linux系统, 尤其是使用了Mac之后, 每天都是工作在黑色背景的命令行环境中. 自己记忆力不好, 很多有用的Linux命令不能很好的记忆, 现在逐渐总结一下, 以便后续查看.<br><a id="more"></a></p>
+<h2 id="Linux关机,重启">Linux关机,重启</h2><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关机</span></span><br><span class="line"><span class="keyword">shutdown</span> -h now</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line"><span class="keyword">shutdown</span> -r now</span><br></pre></td></tr></table></figure>
+<h2 id="查看CPU信息">查看CPU信息</h2><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat /<span class="keyword">proc</span>/cpuinfo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看有几个逻辑cpu, 包括cpu型号</span></span><br><span class="line">cat /<span class="keyword">proc</span>/cpuinfo | grep name | cut -f2 -d: | uniq -c</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看有几颗cpu,每颗分别是几核</span></span><br><span class="line">cat /<span class="keyword">proc</span>/cpuinfo | grep physical | uniq -c</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前CPU运行在32bit还是64bit模式下, 如果是运行在32bit下也不代表CPU不支持64bit</span></span><br><span class="line">getconf <span class="type">LONG_BIT</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果大于0, 说明支持64bit计算. lm指long mode, 支持lm则是64bit</span></span><br><span class="line">cat /<span class="keyword">proc</span>/cpuinfo | grep flags | grep ' lm ' | wc -l</span><br></pre></td></tr></table></figure>
+<h2 id="系统信息">系统信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看系统是64位还是32位</span></span><br><span class="line">uname <span class="operator">-a</span></span><br></pre></td></tr></table></figure>
+<h2 id="建立软连接">建立软连接</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln <span class="operator">-s</span> /usr/<span class="built_in">local</span>/jdk1.<span class="number">8</span>/ jdk</span><br></pre></td></tr></table></figure>
+<h2 id="rpm相关">rpm相关</h2><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 查看是否通过rpm安装了该软件</span></span><br><span class="line">rpm -qa <span class="string">| grep 软件名</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看当前用户环境变量">查看当前用户环境变量</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_ins">env</span></span><br></pre></td></tr></table></figure>
+<h2 id="vim操作">vim操作</h2><ul>
+<li><p>文件内容替换</p>
+  <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#normal模式下 g表示全局, x表示查找的内容, y表示替换后的内容</span></span><br><span class="line"><span class="symbol">:%s/x/y/g</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#normal模式下</span></span><br><span class="line"><span class="number">0</span>  <span class="comment"># 光标移到行首(数字0)</span></span><br><span class="line"><span class="variable">$ </span> <span class="comment"># 光标移至行尾</span></span><br><span class="line">shift + g <span class="comment"># 跳到文件最后</span></span><br><span class="line">gg <span class="comment"># 跳到文件头</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示行号</span></span><br><span class="line"><span class="symbol">:set</span> nu</span><br><span class="line"></span><br><span class="line"><span class="comment"># 去除行号</span></span><br><span class="line"><span class="symbol">:set</span> nonu</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检索</span></span><br><span class="line">/xxx(检索内容)  <span class="comment"># 从头检索, 按n查找下一个</span></span><br><span class="line">?xxx(检索内容)  <span class="comment"># 从尾部检索</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="sshkey">sshkey</h2><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 创建sshkey</span></span><br><span class="line">ssh-keygen -t rsa -C your_email@example.com</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#id_rsa.pub 的内容拷贝到要控制的服务器的 home/username/.ssh/authorized_keys 中,如果没有则新建(.ssh权限为700, authorized_keys权限为600)</span></span><br></pre></td></tr></table></figure>
+<h2 id="打开只读文件,修改后需要保存时(不用切换用户即可保存的方式)">打开只读文件,修改后需要保存时(不用切换用户即可保存的方式)</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在normal模式下</span></span><br><span class="line"><span class="symbol">:w</span> !sudo tee %</span><br></pre></td></tr></table></figure>
+<h2 id="命令重命名">命令重命名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在各个用户的.bash_profile中添加重命名配置</span></span><br><span class="line"><span class="built_in">alias</span> ll=<span class="string">'ls -alF'</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看磁盘,_文件目录">查看磁盘, 文件目录</h2><ul>
+<li><p>查看磁盘分区信息</p>
+  <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看目录及子目录大小</p>
+  <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -<span class="keyword">H</span> -<span class="literal">h</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="检索命令">检索命令</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在目录下找后缀是.mysql的文件</span><br><span class="line"><span class="keyword">find</span> <span class="regexp">/home/</span>eagleye -name <span class="string">'*.mysql'</span> -<span class="keyword">print</span></span><br></pre></td></tr></table></figure>
+<h2 id="iptables">iptables</h2><figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看iptables状态</span></span><br><span class="line"><span class="keyword">service</span> iptables <span class="literal">status</span></span><br></pre></td></tr></table></figure>
+<h2 id="wc命令">wc命令</h2><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 查看文件里有多少行</span></span><br><span class="line">wc -l filename</span><br><span class="line"> </span><br><span class="line"><span class="preprocessor"># 看文件里有多少个word</span></span><br><span class="line">wc -w filename</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 文件里最长的那一行是多少个字</span></span><br><span class="line">wc -L filename</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 统计字节数</span></span><br><span class="line">wc -c</span><br></pre></td></tr></table></figure>
+<h2 id="常用压缩,_解压缩命令">常用压缩, 解压缩命令</h2><ul>
+<li><p>压缩命令</p>
+  <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar czvf xxx<span class="class">.tar</span> 压缩目录</span><br><span class="line"></span><br><span class="line">zip -r xxx<span class="class">.zip</span> 压缩目录</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>解压缩命令</p>
+  <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">tar</span> <span class="tag">zxvf</span> <span class="tag">xxx</span><span class="class">.tar</span></span><br><span class="line"></span><br><span class="line"><span class="tag">unzip</span> <span class="tag">xxx</span><span class="class">.zip</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="后台运行命令">后台运行命令</h2><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 后台运行,并且有nohup.out输出</span></span><br><span class="line">nohup xxx &amp;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 后台运行, 不输出任何日志</span></span><br><span class="line">nohup xxx &gt; /dev/<span class="literal">null</span> &amp;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 后台运行, 并将错误信息做标准输出到日志中 </span></span><br><span class="line">nohup xxx &gt;out.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+<h2 id="操作目录,_文件">操作目录, 文件</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#复制</span></span><br><span class="line">cp xxx.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制并强制覆盖同名文件</span></span><br><span class="line">cp -f xxx.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制文件夹</span></span><br><span class="line">cp -r xxx(源文件夹) yyy(目标文件夹)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 远程复制</span></span><br><span class="line">scp -<span class="constant">P </span>ssh端口 username<span class="variable">@10</span>.<span class="number">10.10</span>.<span class="number">101</span><span class="symbol">:/home/username/xxx</span> /home/xxx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 级联创建目录</span></span><br><span class="line">mkdir -p /xxx/yyy/zzz</span><br></pre></td></tr></table></figure>
+<h2 id="监控linux性能命令">监控linux性能命令</h2><ul>
+<li><p>给定时间监控CPU使用率, 内存使用, 虚拟内存交互, IO读写</p>
+  <figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 2表示每2秒采集一次状态信息, 1表示只采集一次(忽略既是一直采集)</span><br><span class="line">vmstat 2 1</span><br><span class="line"></span><br><span class="line">eg:</span><br><span class="line">r b swpd free buff cache si so bi bo in cs us sy id wa</span><br><span class="line"><span class="number">1 0 0 34</span><span class="number">99840 31583</span><span class="number">6 3819660</span> <span class="number">0 0 0 1</span> <span class="number">2 0 0 0</span> 100 0</span><br><span class="line"><span class="number">0 0 0 34</span><span class="number">99584 31583</span><span class="number">6 3819660</span> <span class="number">0 0 0 0</span> <span class="number">88 158 0 0</span> 100 0</span><br><span class="line"><span class="number">0 0 0 34</span><span class="number">99708 31583</span><span class="number">6 3819660</span> <span class="number">0 0 0 2</span> <span class="number">86 162 0 0</span> 100 0</span><br><span class="line"><span class="number">0 0 0 34</span><span class="number">99708 31583</span><span class="number">6 3819660</span> <span class="number">0 0 0 10</span> <span class="number">81 151 0 0</span> 100 0</span><br><span class="line"><span class="number">1 0 0 34</span><span class="number">99732 31583</span><span class="number">6 3819660</span> <span class="number">0 0 0 2</span> <span class="number">83 154 0 0</span> 100 0</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>r</strong> 表示运行队列(就是说多少个进程真的分配到CPU)，我测试的服务器目前CPU比较空闲，没什么程序在跑，当这个值超过了CPU数目，就会出现CPU瓶颈了。这个也和top的负载有关系，一般负载超过了3就比较高，超过了5就高，超过了10就不正常了，服务器的状态很危险。top的负载类似每秒的运行队列。如果运行队列过大，表示你的CPU很繁忙，一般会造成CPU使用率很高。</p>
+</li>
+<li><p><strong>b</strong> 表示阻塞的进程,这个不多说，进程阻塞，大家懂的。</p>
+</li>
+<li><p><strong>swpd</strong> 虚拟内存已使用的大小，如果大于0，表示你的机器物理内存不足了，如果不是程序内存泄露的原因，那么你该升级内存了或者把耗内存的任务迁移到其他机器。</p>
+</li>
+<li><p><strong>free</strong>   空闲的物理内存的大小，我的机器内存总共8G，剩余3415M。</p>
+</li>
+<li><p><strong>buff</strong>   Linux/Unix系统是用来存储，目录里面有什么内容，权限等的缓存，我本机大概占用300多M</p>
+</li>
+<li><p><strong>cache</strong> cache直接用来记忆我们打开的文件,给文件做缓冲，我本机大概占用300多M(这里是Linux/Unix的聪明之处，把空闲的物理内存的一部分拿来做文件和目录的缓存，是为了提高 程序执行的性能，当程序使用内存时，buffer/cached会很快地被使用。)</p>
+</li>
+<li><p><strong>si</strong>  每秒从磁盘读入虚拟内存的大小，如果这个值大于0，表示物理内存不够用或者内存泄露了，要查找耗内存进程解决掉。我的机器内存充裕，一切正常。</p>
+</li>
+<li><p><strong>so</strong>  每秒虚拟内存写入磁盘的大小，如果这个值大于0，同上。</p>
+</li>
+<li><p><strong>bi</strong>  块设备每秒接收的块数量，这里的块设备是指系统上所有的磁盘和其他块设备，默认块大小是1024byte，我本机上没什么IO操作，所以一直是0，但是我曾在处理拷贝大量数据(2-3T)的机器上看过可以达到140000/s，磁盘写入速度差不多140M每秒</p>
+</li>
+<li><p><strong>bo</strong> 块设备每秒发送的块数量，例如我们读取文件，bo就要大于0。bi和bo一般都要接近0，不然就是IO过于频繁，需要调整。</p>
+</li>
+<li><p><strong>in</strong> 每秒CPU的中断次数，包括时间中断</p>
+</li>
+<li><p><strong>cs</strong> 每秒上下文切换次数，例如我们调用系统函数，就要进行上下文切换，线程的切换，也要进程上下文切换，这个值要越小越好，太大了，要考虑调低线程或者进程的数目,例如在apache和nginx这种web服务器中，我们一般做性能测试时会进行几千并发甚至几万并发的测试，选择web服务器的进程可以由进程或者线程的峰值一直下调，压测，直到cs到一个比较小的值，这个进程和线程数就是比较合适的值了。系统调用也是，每次调用系统函数，我们的代码就会进入内核空间，导致上下文切换，这个是很耗资源，也要尽量避免频繁调用系统函数。上下文切换次数过多表示你的CPU大部分浪费在上下文切换，导致CPU干正经事的时间少了，CPU没有充分利用，是不可取的。</p>
+</li>
+<li><p><strong>us</strong> 用户CPU时间，我曾经在一个做加密解密很频繁的服务器上，可以看到us接近100,r运行队列达到80(机器在做压力测试，性能表现不佳)。</p>
+</li>
+<li><p><strong>sy</strong> 系统CPU时间，如果太高，表示系统调用时间长，例如是IO操作频繁。</p>
+</li>
+<li><p><strong>id</strong>  空闲 CPU时间，一般来说，id + us + sy = 100,一般我认为id是空闲CPU使用率，us是用户CPU使用率，sy是系统CPU使用率。</p>
+</li>
+<li><p><strong>wt</strong> 等待IO CPU时间。</p>
+</li>
+</ul>
+</li>
+</ul>
+<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2016/02/25/linux-list/" data-title="Linux常用命令知识积累(持续更新) | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/12/30/summary-2015/"  title="2015个人总结">
+ <strong>下一篇：</strong><br/> 
+ <span>2015个人总结
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/02/25/linux-list/" data-title="Linux常用命令知识积累(持续更新)" data-url="http://siye1982.github.io/2016/02/25/linux-list/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux关机,重启"><span class="toc-number">1.1.</span> <span class="toc-text">Linux关机,重启</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看CPU信息"><span class="toc-number">1.2.</span> <span class="toc-text">查看CPU信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统信息"><span class="toc-number">1.3.</span> <span class="toc-text">系统信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#建立软连接"><span class="toc-number">1.4.</span> <span class="toc-text">建立软连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rpm相关"><span class="toc-number">1.5.</span> <span class="toc-text">rpm相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看当前用户环境变量"><span class="toc-number">1.6.</span> <span class="toc-text">查看当前用户环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vim操作"><span class="toc-number">1.7.</span> <span class="toc-text">vim操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sshkey"><span class="toc-number">1.8.</span> <span class="toc-text">sshkey</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打开只读文件,修改后需要保存时(不用切换用户即可保存的方式)"><span class="toc-number">1.9.</span> <span class="toc-text">打开只读文件,修改后需要保存时(不用切换用户即可保存的方式)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令重命名"><span class="toc-number">1.10.</span> <span class="toc-text">命令重命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看磁盘,_文件目录"><span class="toc-number">1.11.</span> <span class="toc-text">查看磁盘, 文件目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#检索命令"><span class="toc-number">1.12.</span> <span class="toc-text">检索命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iptables"><span class="toc-number">1.13.</span> <span class="toc-text">iptables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wc命令"><span class="toc-number">1.14.</span> <span class="toc-text">wc命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用压缩,_解压缩命令"><span class="toc-number">1.15.</span> <span class="toc-text">常用压缩, 解压缩命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后台运行命令"><span class="toc-number">1.16.</span> <span class="toc-text">后台运行命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作目录,_文件"><span class="toc-number">1.17.</span> <span class="toc-text">操作目录, 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监控linux性能命令"><span class="toc-number">1.18.</span> <span class="toc-text">监控linux性能命令</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Zookeeper/" title="Zookeeper">Zookeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/服务治理/" title="服务治理">服务治理<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/原创/" title="原创">原创<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SOA/" title="SOA">SOA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"siye1982"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255443286'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255443286' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
