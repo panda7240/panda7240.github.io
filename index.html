@@ -80,7 +80,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/04/07/zipkin/" title="zipkin" itemprop="url">zipkin</a>
+      <a href="/2016/04/07/zipkin/" title="基于Zipkin的Thrift服务RPC调用链跟踪" itemprop="url">基于Zipkin的Thrift服务RPC调用链跟踪</a>
   </h1>
   <p class="article-author">By
        
@@ -93,7 +93,7 @@
 </header>
     <div class="article-content">
         
-        <h1 id="概述">概述</h1><p>Zipkin是一个分布式系统性能跟踪的工具，可搜集各服务调用数据，并提供分析查询展示功能。帮助识别分布式RPC调用链里，哪一个调用比较耗时，性能有问题，以及是否有异常等，使得诊断分布式系统性能成为可能。</p>
+        <h1 id="概述">概述</h1><p>我们现在所处的生产环境是一个集Nodejs, Go, Java, Ruby, Scala等多种语言程序的混合场景.Twitter的Finagle框架, 是一个基于Thrift协议的RPC框架,其中Zipkin是针对Finagle框架的一个基于Thrift协议的RPC调用链跟踪的工具，可搜集各服务调用数据，并提供分析查询展示功能。帮助识别分布式RPC调用链里，哪一个调用比较耗时，性能有问题，以及是否有异常等，使得诊断分布式系统性能成为可能。<br>
         
         
         <p class="article-more-link">
