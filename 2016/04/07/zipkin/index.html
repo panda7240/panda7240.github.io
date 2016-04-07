@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://siye1982.github.io/2016/04/07/zipkin/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="概述我们现在所处的生产环境是一个集Nodejs, Go, Java, Ruby, Scala等多种语言程序的混合场景.Twitter的Finagle框架, 是一个基于Thrift协议的RPC框架,其中Zipkin是针对Finagle框架的一个基于Thrift协议的RPC调用链跟踪的工具，可搜集各服务调用数据，并提供分析查询展示功能。帮助识别分布式RPC调用链里，哪一个调用比较耗时，性能有问题，以及">
-<meta property="og:updated_time" content="2016-04-07T08:06:47.000Z">
+<meta property="og:updated_time" content="2016-04-07T08:08:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于Zipkin的Thrift服务RPC调用链跟踪">
 <meta name="twitter:description" content="概述我们现在所处的生产环境是一个集Nodejs, Go, Java, Ruby, Scala等多种语言程序的混合场景.Twitter的Finagle框架, 是一个基于Thrift协议的RPC框架,其中Zipkin是针对Finagle框架的一个基于Thrift协议的RPC调用链跟踪的工具，可搜集各服务调用数据，并提供分析查询展示功能。帮助识别分布式RPC调用链里，哪一个调用比较耗时，性能有问题，以及">
@@ -186,7 +186,8 @@
 <h2 id="Span(记录每次调用信息)">Span(记录每次调用信息)</h2><p><strong>JSON串范例(格式化)：</strong></p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">span&#123;</span><br><span class="line">    <span class="string">"app"</span>: <span class="string">"app"</span>, <span class="comment">//所属应用</span></span><br><span class="line">    <span class="string">"flag"</span>: <span class="string">"flag"</span>, <span class="comment">//cscr标明是调用端，srss标明是被调用端。标识, 一个span数据 ,会有基本的cr, cs, sr, ss四个点. 但是获取数据时,一般只能两两获取, 所以, 一个span通常会被分割为cr, cs和 sr, ss分别发送</span></span><br><span class="line">    <span class="string">"ip"</span>: <span class="string">"192.168.10.100"</span>, <span class="comment">//ip地址</span></span><br><span class="line">    <span class="string">"mname"</span>: <span class="string">"mname"</span>, <span class="comment">//方法名</span></span><br><span class="line">    <span class="string">"pid"</span>: <span class="string">"pid"</span>, <span class="comment">//进程id</span></span><br><span class="line">    <span class="string">"port"</span>: <span class="number">1000</span>, <span class="comment">//端口, 如果是cscr客户端, 则为0</span></span><br><span class="line">    <span class="string">"psid"</span>: <span class="string">"psid"</span>, <span class="comment">//parent span id</span></span><br><span class="line">    <span class="string">"sid"</span>: <span class="string">"sid"</span>, <span class="comment">//spanId</span></span><br><span class="line">    <span class="string">"sname"</span>: <span class="string">"sname"</span>, <span class="comment">//服务名</span></span><br><span class="line">    <span class="string">"etime"</span>: <span class="number">1449072000000</span>, <span class="comment">//结束时间点, 单位到ms,如果是client端,则是cr时间点, 如果是server端,则是ss时间点</span></span><br><span class="line">    <span class="string">"stime"</span>: <span class="number">1449039924512</span>, <span class="comment">//开始时间点, 单位到ms, 如果是client端,则是cs时间点, 如果是server端,则是sr时间点</span></span><br><span class="line">    <span class="string">"duration"</span>: <span class="number">32075488</span>, <span class="comment">//结束时间点减去开始时间点的, 调用的区间时长, 单位ms</span></span><br><span class="line">    <span class="string">"tid"</span>: <span class="string">"tid"</span>, <span class="comment">//traceId</span></span><br><span class="line">    <span class="string">"timestamp"</span>: <span class="number">1449039924548</span> <span class="comment">//产生的时间点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>备注: span信息的json,添加’span’头信息, 在通过kafka做收集时, 通过该头信息将span信息路由到独立的es的index中. 每一条span记录其实是半个span信息, 要么是client端产生的, 要么是server端产生的.</strong></p>
-<h2 id="BinaryAnnotation(可以用来传递用户session_id的信息,_也可以传递其他业务信息)">BinaryAnnotation(可以用来传递用户session_id的信息, 也可以传递其他业务信息)</h2><p><strong>JSON串范例(格式化)：</strong></p>
+<h2 id="BinaryAnnotation(可以用来传递用户session_id的信息,_也可以传递其他业务信息)">BinaryAnnotation(可以用来传递用户session_id的信息, 也可以传递其他业务信息)</h2><ul>
+<li><p>JSON串范例(格式化)</p>
 <pre><code>{
     <span class="string">"app"</span>: <span class="string">"app"</span>, <span class="comment">//所属应用</span>
     <span class="string">"ip"</span>: <span class="string">"ip"</span>, <span class="comment">//ip地址,冗余信息</span>
@@ -200,7 +201,10 @@
     <span class="string">"type"</span>: <span class="string">"type"</span>, <span class="comment">//类型,用来区分是记录异常的还是业务流程的等等, 默认是'common'即可</span>
     <span class="string">"value"</span>: <span class="string">"value"</span> <span class="comment">//如果是传递用户session信息 ,可以直接写在该字段中.</span>
 }
-</code></pre><p><strong>备注:这里将BinaryAnnotation独立记录, 并发送到kafka消息队列, 其通过sid关联具体的span信息.</strong>     </p>
+</code></pre></li>
+<li><p>备注:这里将BinaryAnnotation独立记录, 并发送到kafka消息队列, 其通过sid关联具体的span信息.</p>
+</li>
+</ul>
 <hr>
 <h1 id="java使用zipkin经验">java使用zipkin经验</h1><ul>
 <li>客户端调用服务端失败（服务端没启动），客户端的annotations有cs、cr</li>
