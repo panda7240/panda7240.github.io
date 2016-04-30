@@ -18,7 +18,7 @@
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面最近一年多一直在做服务治理相关的开发工作. 起初服务监控采用了成本比较低的方式来实现(提供者,消费者自己按分钟维度上报健康数据到Redis,但是这种方式只是在Java的服务提供者和消费者做到了很好的实现, 其他语言目前只能上报很少部分的监控数据). 因为公司的开发语言是多样的, 其中包括: Nodejs, Ruby, Golang, Java, Scala等, 那么将来要对监控数据的模型拓">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/beats/beats-petals.png">
-<meta property="og:updated_time" content="2016-04-30T06:24:42.000Z">
+<meta property="og:updated_time" content="2016-04-30T06:26:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过Packetbeat抓取Finagle协议数据包(自定义Thrift协议)总结">
 <meta name="twitter:description" content="写在前面最近一年多一直在做服务治理相关的开发工作. 起初服务监控采用了成本比较低的方式来实现(提供者,消费者自己按分钟维度上报健康数据到Redis,但是这种方式只是在Java的服务提供者和消费者做到了很好的实现, 其他语言目前只能上报很少部分的监控数据). 因为公司的开发语言是多样的, 其中包括: Nodejs, Ruby, Golang, Java, Scala等, 那么将来要对监控数据的模型拓">
@@ -148,10 +148,11 @@
 </li>
 </ul>
 <ul>
-<li>协议解析的具体方法修改, 主要业务抓包分析将在这个方法中完成,我们本次改动也是针对这个方法的修改<pre><code>!<span class="attr_selector">[]</span>(<span class="attribute">http</span>:<span class="comment">//siye1982.github.io/img/blog/beats/14619847474701.jpg)</span>
-</code></pre></li>
+<li>协议解析的具体方法修改, 主要业务抓包分析将在这个方法中完成,我们本次改动也是针对这个方法的修改</li>
 </ul>
-<h1 id="原生Thrift简单分析">原生Thrift简单分析</h1><h2 id="通讯协议格式">通讯协议格式</h2><ul>
+<hr>
+<pre><code>!<span class="attr_selector">[]</span>(<span class="attribute">http</span>:<span class="comment">//siye1982.github.io/img/blog/beats/14619847474701.jpg)</span>
+</code></pre><h1 id="原生Thrift简单分析">原生Thrift简单分析</h1><h2 id="通讯协议格式">通讯协议格式</h2><ul>
 <li>TCompactProtocol</li>
 <li><p>TBinaryProtocol(我们主要采用这种格式进行通讯)<br>  TBinaryProtocol下通信方式采用TFramedTransport，即以帧的方式对数据进行传输</p>
 <p>  注意: 服务端, 服务端需要采用Framed的方式进行通信, packetbeat采用Framed的方式进行抓包分析, 如果thrift的传输方式不是这种方式, packetbeat将解析不出</p>
