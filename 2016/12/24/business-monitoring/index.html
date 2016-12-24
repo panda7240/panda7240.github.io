@@ -4,24 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Rabbitmq学习笔记(未完) | Panda</title>
+    <title>DIGGER业务监控 | Panda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Panda">
     
 
     
-    <meta name="description" content="写在前面我们在进行分布式系统开发时, 为了提升性能, 系统之间松耦合对接, 我们需要在一些业务场景中使用MQ. 在使用MQ时不仅需要考虑MQ API的易用性, 可靠性, 也需要考虑MQ本身是否提供简单,快捷的可视化管理监控界面. 基于这几方面的考虑, 和具体的业务场景, Rabbitmq这个消息中间件进入了我们的选型范围. 本文主要结合Rabbitmq官方文档,和互联网上其他Rabbitmq使用者">
+    <meta name="description" content="（转载本站文章请注明作者和出处 Panda）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Rabbitmq学习笔记(未完)">
-<meta property="og:url" content="http://siye1982.github.io/2015/07/10/rabbitmq-study/index.html">
+<meta property="og:title" content="DIGGER业务监控">
+<meta property="og:url" content="http://siye1982.github.io/2016/12/24/business-monitoring/index.html">
 <meta property="og:site_name" content="Panda">
-<meta property="og:description" content="写在前面我们在进行分布式系统开发时, 为了提升性能, 系统之间松耦合对接, 我们需要在一些业务场景中使用MQ. 在使用MQ时不仅需要考虑MQ API的易用性, 可靠性, 也需要考虑MQ本身是否提供简单,快捷的可视化管理监控界面. 基于这几方面的考虑, 和具体的业务场景, Rabbitmq这个消息中间件进入了我们的选型范围. 本文主要结合Rabbitmq官方文档,和互联网上其他Rabbitmq使用者">
-<meta property="og:image" content="http://siye1982.github.io/img/blog/rabbitmq/rabbitmq-banner.png">
-<meta property="og:updated_time" content="2015-07-10T04:04:08.000Z">
+<meta property="og:description" content="（转载本站文章请注明作者和出处 Panda）">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/digger/digger.png">
+<meta property="og:updated_time" content="2016-12-24T02:27:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rabbitmq学习笔记(未完)">
-<meta name="twitter:description" content="写在前面我们在进行分布式系统开发时, 为了提升性能, 系统之间松耦合对接, 我们需要在一些业务场景中使用MQ. 在使用MQ时不仅需要考虑MQ API的易用性, 可靠性, 也需要考虑MQ本身是否提供简单,快捷的可视化管理监控界面. 基于这几方面的考虑, 和具体的业务场景, Rabbitmq这个消息中间件进入了我们的选型范围. 本文主要结合Rabbitmq官方文档,和互联网上其他Rabbitmq使用者">
+<meta name="twitter:title" content="DIGGER业务监控">
+<meta name="twitter:description" content="（转载本站文章请注明作者和出处 Panda）">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -80,7 +80,7 @@
   <div class="photoset">
     
       
-        <img src="http://siye1982.github.io/img/blog/rabbitmq/rabbitmq-banner.png">
+        <img src="http://siye1982.github.io/img/blog/digger/digger.png">
       
     
   </div>
@@ -94,14 +94,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/10/rabbitmq-study/" title="Rabbitmq学习笔记(未完)" itemprop="url">Rabbitmq学习笔记(未完)</a>
+      <a href="/2016/12/24/business-monitoring/" title="DIGGER业务监控" itemprop="url">DIGGER业务监控</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-10T02:07:32.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    <time datetime="2016-12-24T02:12:31.000Z" itemprop="datePublished"> 发表于 2016-12-24</time>
     
   </p>
 </header>
@@ -110,32 +110,27 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rabbitmq关键字"><span class="toc-number">2.</span> <span class="toc-text">Rabbitmq关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Producer(生产者)"><span class="toc-number">2.1.</span> <span class="toc-text">Producer(生产者)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Queue(消息队列)"><span class="toc-number">2.2.</span> <span class="toc-text">Queue(消息队列)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Temporary_queues(临时队列)"><span class="toc-number">2.3.</span> <span class="toc-text">Temporary queues(临时队列)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exchanges(交换,中继器)"><span class="toc-number">2.4.</span> <span class="toc-text">Exchanges(交换,中继器)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Consumer(消费者)"><span class="toc-number">2.5.</span> <span class="toc-text">Consumer(消费者)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bindings(绑定规则)"><span class="toc-number">2.6.</span> <span class="toc-text">Bindings(绑定规则)</span></a></li></ol></li></ol>
+			
 		
 		</div>
 		
-		<h2 id="写在前面">写在前面</h2><p>我们在进行分布式系统开发时, 为了提升性能, 系统之间松耦合对接, 我们需要在一些业务场景中使用MQ. 在使用MQ时不仅需要考虑MQ API的易用性, 可靠性, 也需要考虑MQ本身是否提供简单,快捷的可视化管理监控界面. 基于这几方面的考虑, 和具体的业务场景, Rabbitmq这个消息中间件进入了我们的选型范围. 本文主要结合<a href="http://www.rabbitmq.com" target="_blank" rel="external">Rabbitmq</a>官方文档,和互联网上其他Rabbitmq使用者的经验(涉及到引用地方会标明详细出处),记录学习Rabbitmq的过程.<br><a id="more"></a></p>
-<h2 id="Rabbitmq关键字">Rabbitmq关键字</h2><h3 id="Producer(生产者)">Producer(生产者)</h3><p><img src="http://siye1982.github.io/img/blog/rabbitmq/producer.png" alt="生产者"></p>
-<h3 id="Queue(消息队列)">Queue(消息队列)</h3><p><img src="http://siye1982.github.io/img/blog/rabbitmq/queue.png" alt="消息队列"></p>
-<h3 id="Temporary_queues(临时队列)">Temporary queues(临时队列)</h3><p>临时队列在创建时,队列名称由rabbitmq自动创建(也可以通过uuid指定队列名称). 该队列是非持久的,唯一的,当与队列断开连接时,该队列自动删除.</p>
-<h3 id="Exchanges(交换,中继器)">Exchanges(交换,中继器)</h3><p><img src="http://siye1982.github.io/img/blog/rabbitmq/exchanges.png" alt="交换,中继器"></p>
-<p>消息生产者会将消息发送给交换器, 然后根据设定的规则将消息路由到指定的queue中. 这里会有几种模式: direct(点对点直接发送)、topic(组播)、fanout(广播). 这里topic模式可以通过设置变成direct或fanout模式.</p>
-<h3 id="Consumer(消费者)">Consumer(消费者)</h3><p><img src="http://siye1982.github.io/img/blog/rabbitmq/consumer.png" alt="消费者"></p>
-<h3 id="Bindings(绑定规则)">Bindings(绑定规则)</h3><p><img src="http://siye1982.github.io/img/blog/rabbitmq/bindings.png" alt="绑定规则"></p>
-<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>  
+		<a id="more"></a>
+<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/学习笔记/">学习笔记</a>
+  <a class="article-category-link" href="/categories/监控预警/">监控预警</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/AMQP/">AMQP</a><a href="/tags/MQ/">MQ</a><a href="/tags/Rabbitmq/">Rabbitmq</a><a href="/tags/分布式/">分布式</a>
+  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/原创/">原创</a><a href="/tags/监控预警/">监控预警</a>
   </div>
 
 </div>
@@ -144,7 +139,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://siye1982.github.io/2015/07/10/rabbitmq-study/" data-title="Rabbitmq学习笔记(未完) | Panda" data-tsina="null" class="share clearfix">
+	  <div data-url="http://siye1982.github.io/2016/12/24/business-monitoring/" data-title="DIGGER业务监控 | Panda" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -157,19 +152,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/05/flo/" title="FLO集中调度系统">
-  <strong>上一篇：</strong><br/>
-  <span>
-  FLO集中调度系统</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/06/18/eagleye/"  title="EAGLEYE监控预警平台">
+<a href="/2016/04/30/packetbeat/"  title="通过Packetbeat抓取Finagle协议数据包(自定义Thrift协议)总结">
  <strong>下一篇：</strong><br/> 
- <span>EAGLEYE监控预警平台
+ <span>通过Packetbeat抓取Finagle协议数据包(自定义Thrift协议)总结
 </span>
 </a>
 </div>
@@ -178,7 +165,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/10/rabbitmq-study/" data-title="Rabbitmq学习笔记(未完)" data-url="http://siye1982.github.io/2015/07/10/rabbitmq-study/"></div>
+	<div class="ds-thread" data-thread-key="2016/12/24/business-monitoring/" data-title="DIGGER业务监控" data-url="http://siye1982.github.io/2016/12/24/business-monitoring/"></div>
 </section>
 
 
@@ -188,7 +175,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rabbitmq关键字"><span class="toc-number">2.</span> <span class="toc-text">Rabbitmq关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Producer(生产者)"><span class="toc-number">2.1.</span> <span class="toc-text">Producer(生产者)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Queue(消息队列)"><span class="toc-number">2.2.</span> <span class="toc-text">Queue(消息队列)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Temporary_queues(临时队列)"><span class="toc-number">2.3.</span> <span class="toc-text">Temporary queues(临时队列)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exchanges(交换,中继器)"><span class="toc-number">2.4.</span> <span class="toc-text">Exchanges(交换,中继器)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Consumer(消费者)"><span class="toc-number">2.5.</span> <span class="toc-text">Consumer(消费者)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bindings(绑定规则)"><span class="toc-number">2.6.</span> <span class="toc-text">Bindings(绑定规则)</span></a></li></ol></li></ol>
+ 
  
   </div>
 
