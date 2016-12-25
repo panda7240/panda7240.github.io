@@ -20,7 +20,7 @@
 <meta property="og:description" content="系统定位业务监控, 主要侧重对业务数据的实时监控, 以日志的方式进行数据收集, 对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等. 
 发现问题原因之后我们需要解决问题, 最终目的是可以基于我们分析的结果给运维动作做出决策, 以达到自动化运维的目的. 另外, 明确系统用户">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/digger/digger.png">
-<meta property="og:updated_time" content="2016-12-25T06:52:38.000Z">
+<meta property="og:updated_time" content="2016-12-25T06:55:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DIGGER业务监控">
 <meta name="twitter:description" content="系统定位业务监控, 主要侧重对业务数据的实时监控, 以日志的方式进行数据收集, 对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等. 
@@ -180,11 +180,8 @@
 <p> 报警步骤：</p>
 <p> 1) 离散度判断，某一分钟，前15分钟（含当前）的真实值和基线，取残差，计算后3个和前12个平均数之差（记作A），计算前12个的标准差（计作B），如果|A| &lt;= 2.5 * |B|，认为数据的突变程度不够，不往下走；</p>
 <p> 2) 阈值判断，阈值和业务相关，其实是经过不断的报警实验之后，作出的认为合理的值，判断步骤如下：</p>
-<pre><code>(<span class="number">1</span>) 利用分段线性函数，传入当前预测值，计算<span class="number">4</span>个阈值梯度：threadholdNonSensitive &gt; threadholdSensitive_1 &gt; threadholdSensitive_1 &gt; threadholdSensitive_2 &gt; threadholdSensitive_3 .
-(<span class="number">2</span>) 取最后一个残差（计作diff1），最后<span class="number">2</span>个残差的平均数（计作diff2），最后<span class="number">3</span>个残差的平均数（计作diff3）.
-(<span class="number">3</span>) 如果是对于数据下降敏感的（比如提单、推单），则当数据下降时（残差 &lt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdSensitive_1<span class="regexp">/2/</span><span class="number">3</span>，则进入下一步；当数据上升时（残差 &gt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步. 
-(<span class="number">4</span>) 如果是对于数据上升敏感的（比如消单），则当数据上升时（残差 &gt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdSensitive_1<span class="regexp">/2/</span><span class="number">3</span>，则进入下一步；当数据下降时（残差 &lt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步
-</code></pre><p> 3) 由于分段阈值的设置需要考虑分段和对业务理解，也可以不用分段阈值，直接用百分比，比如浮动30%报警<br> 4) 历史趋势对比，和历史数据进行纵向比较，取过去5天，当前分钟前后各1分钟，共计15个点，如果超过3个点报警，说明这个点的数据突变是这个业务的特性，则不会报警<br> 5) 经过离散度、阈值、历史趋势对比判断，都监测通过之后，开始根据配置进行报警。</p>
+ <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>) 利用分段线性函数，传入当前预测值，计算<span class="number">4</span>个阈值梯度：threadholdNonSensitive &gt; threadholdSensitive_1 &gt; threadholdSensitive_1 &gt; threadholdSensitive_2 &gt; threadholdSensitive_3 .</span><br><span class="line">(<span class="number">2</span>) 取最后一个残差（计作diff1），最后<span class="number">2</span>个残差的平均数（计作diff2），最后<span class="number">3</span>个残差的平均数（计作diff3）.</span><br><span class="line">(<span class="number">3</span>) 如果是对于数据下降敏感的（比如提单、推单），则当数据下降时（残差 &lt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdSensitive_1<span class="regexp">/2/</span><span class="number">3</span>，则进入下一步；当数据上升时（残差 &gt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步. </span><br><span class="line">(<span class="number">4</span>) 如果是对于数据上升敏感的（比如消单），则当数据上升时（残差 &gt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdSensitive_1<span class="regexp">/2/</span><span class="number">3</span>，则进入下一步；当数据下降时（残差 &lt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步</span><br></pre></td></tr></table></figure>
+<p> 3) 由于分段阈值的设置需要考虑分段和对业务理解，也可以不用分段阈值，直接用百分比，比如浮动30%报警<br> 4) 历史趋势对比，和历史数据进行纵向比较，取过去5天，当前分钟前后各1分钟，共计15个点，如果超过3个点报警，说明这个点的数据突变是这个业务的特性，则不会报警<br> 5) 经过离散度、阈值、历史趋势对比判断，都监测通过之后，开始根据配置进行报警。</p>
 </li>
 </ol>
 <h2 id="监控收藏">监控收藏</h2><p><img src="http://siye1982.github.io/img/blog/digger/digger_favorite.png" alt="监控收藏"><br>公司现在有很多第三方监控系统, 比如: Falcon, Cat等. DIGGER项目提供对这些第三方监控页面的收藏, 以便方便的进行快速方位, 大家可以通过系统菜单中的菜单管理来进行配置, 主要功能如下:</p>
