@@ -18,7 +18,7 @@
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="系统定位业务监控, 主要侧重对业务数据的实时监控, 以日志的方式进行数据收集, 对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等.">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/digger/digger.png">
-<meta property="og:updated_time" content="2016-12-25T04:39:28.000Z">
+<meta property="og:updated_time" content="2016-12-25T05:35:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DIGGER业务监控">
 <meta name="twitter:description" content="系统定位业务监控, 主要侧重对业务数据的实时监控, 以日志的方式进行数据收集, 对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等.">
@@ -110,12 +110,12 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#系统定位"><span class="toc-number">1.</span> <span class="toc-text">系统定位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概要设计"><span class="toc-number">2.</span> <span class="toc-text">概要设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.1.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据收集流向"><span class="toc-number">2.2.</span> <span class="toc-text">数据收集流向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统结构"><span class="toc-number">2.3.</span> <span class="toc-text">系统结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#预测报警"><span class="toc-number">3.</span> <span class="toc-text">预测报警</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#碰到的问题"><span class="toc-number">4.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#系统定位"><span class="toc-number">1.</span> <span class="toc-text">系统定位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#系统设计"><span class="toc-number">2.</span> <span class="toc-text">系统设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.1.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据收集流向"><span class="toc-number">2.2.</span> <span class="toc-text">数据收集流向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统结构"><span class="toc-number">2.3.</span> <span class="toc-text">系统结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心产品功能"><span class="toc-number">3.</span> <span class="toc-text">核心产品功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">3.1.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件监控"><span class="toc-number">3.2.</span> <span class="toc-text">事件监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#健康检查"><span class="toc-number">3.3.</span> <span class="toc-text">健康检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预测报警"><span class="toc-number">3.4.</span> <span class="toc-text">预测报警</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监控收藏"><span class="toc-number">3.5.</span> <span class="toc-text">监控收藏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#降级限流管理"><span class="toc-number">3.6.</span> <span class="toc-text">降级限流管理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#碰到的问题"><span class="toc-number">4.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
 		
 		</div>
 		
 		<h1 id="系统定位">系统定位</h1><p>业务监控, 主要侧重对业务数据的实时监控, 以日志的方式进行数据收集, 对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等.<br><a id="more"></a><br>发现问题原因之后我们需要解决问题, 最终目的是可以基于我们分析的结果给运维动作做出决策, 以达到自动化运维的目的. 另外, 明确系统用户将有助于把控业务监控产品的设计方向, 业务监控系统的第一用户是RD, 不是老板, 我们是要帮助RD更快的发现问题, 预知问题, 提供标准化解决问题的建议.</p>
-<h1 id="概要设计">概要设计</h1><h2 id="数据模型">数据模型</h2><p><img src="http://siye1982.github.io/img/blog/digger/data_model.png" alt="数据模型"></p>
+<h1 id="系统设计">系统设计</h1><h2 id="数据模型">数据模型</h2><p><img src="http://siye1982.github.io/img/blog/digger/data_model.png" alt="数据模型"></p>
 <ul>
 <li>BusinessLog: 需要在业务中进行埋点, 业务主动以固定的格式通过日志输出的方式上报数据, 然后Digger会实时汇总分析, 通过各种曲线展示业务状态的走势.</li>
 <li>EventLog: 随着各个业务系统的成长, 每天会有各种事件产生. 当某些系统有问题时, 通常会产生各种报警事件. 另外, 系统大部分的故障都会和发布新版本,配置变更有关系, 记录这些事件并加以分析, 可以帮助我们快速定位问题的根源.</li>
@@ -132,8 +132,18 @@
 <li>Elasticsearch中会存储聚合分析后的结果数据, 最终通过Digger-admin读取展示监控图表给用户.</li>
 </ol>
 <h2 id="系统结构">系统结构</h2><p><img src="http://siye1982.github.io/img/blog/digger/digger_structure.png" alt="系统结构"></p>
+<ol>
+<li>Digger-client: 业务监控系统首先需要有一个足够轻量的client用来帮助业务服务低成本的进行业务状态数据的埋点收集.</li>
+<li>Digger-collector: 对已有的基础监控系统产生的数据进行收集, 这其中需要兼容各种数据收集接口,同时对于一些特殊的系统, 还需要暴露自己的http服务, 以便其他系统通过回调http接口的方式收集监控数据.</li>
+<li>Digger-processor: 该组件主要是针对收集上来的各种类型的数据定时的进行统计分析, 并将结果数据以日志的方式回写到Elasticsearch中.</li>
+<li>Digger-admin: 该组件主要是暴露给Digger业务监控的用户管理界面, 在这里面可以定制自己的监控图表,对自己关系的服务进行监控检查等. 关于核心业务监控产品都将在该组件中体现.</li>
+</ol>
 <p>现有报警数据种类繁多, 每天产生的数量庞大, 这其中有相当一部分数据是因为阈值设定不合理而引起的误报而是会降低报警的实用性, 我们需要实时收集这些报警事件并做二次统计分析, 报警事件由多种方式发出, 所以需要有独立的collector组件负责收集这些事件, 后续其他类型业务数据的收集也可以通过collector完成.由于异常数据, 业务数据, 事件数据都有各自的结构, 为了简化日志格式化处理过程, 我们需要封装一个client来做这个事情, 尽量使日志格式化的动作对业务方透明.</p>
-<h1 id="预测报警">预测报警</h1><h1 id="碰到的问题">碰到的问题</h1><div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+<h1 id="核心产品功能">核心产品功能</h1><h2 id="业务大盘">业务大盘</h2><p><img src="http://siye1982.github.io/img/blog/digger/digger_business_panel.png" alt="业务大盘"></p>
+<h2 id="事件监控">事件监控</h2><p><img src="http://siye1982.github.io/img/blog/digger/digger_event_panel.png" alt="事件监控"></p>
+<h2 id="健康检查">健康检查</h2><p><img src="http://siye1982.github.io/img/blog/digger/digger_health_panel.png" alt="健康检查"></p>
+<h2 id="预测报警">预测报警</h2><h2 id="监控收藏">监控收藏</h2><p><img src="http://siye1982.github.io/img/blog/digger/digger_favorite.png" alt="监控收藏"></p>
+<h2 id="降级限流管理">降级限流管理</h2><h1 id="碰到的问题">碰到的问题</h1><div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
 
   
 	</div>
@@ -193,7 +203,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#系统定位"><span class="toc-number">1.</span> <span class="toc-text">系统定位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概要设计"><span class="toc-number">2.</span> <span class="toc-text">概要设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.1.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据收集流向"><span class="toc-number">2.2.</span> <span class="toc-text">数据收集流向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统结构"><span class="toc-number">2.3.</span> <span class="toc-text">系统结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#预测报警"><span class="toc-number">3.</span> <span class="toc-text">预测报警</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#碰到的问题"><span class="toc-number">4.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#系统定位"><span class="toc-number">1.</span> <span class="toc-text">系统定位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#系统设计"><span class="toc-number">2.</span> <span class="toc-text">系统设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.1.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据收集流向"><span class="toc-number">2.2.</span> <span class="toc-text">数据收集流向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统结构"><span class="toc-number">2.3.</span> <span class="toc-text">系统结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心产品功能"><span class="toc-number">3.</span> <span class="toc-text">核心产品功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">3.1.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件监控"><span class="toc-number">3.2.</span> <span class="toc-text">事件监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#健康检查"><span class="toc-number">3.3.</span> <span class="toc-text">健康检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预测报警"><span class="toc-number">3.4.</span> <span class="toc-text">预测报警</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监控收藏"><span class="toc-number">3.5.</span> <span class="toc-text">监控收藏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#降级限流管理"><span class="toc-number">3.6.</span> <span class="toc-text">降级限流管理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#碰到的问题"><span class="toc-number">4.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
  
   </div>
 
