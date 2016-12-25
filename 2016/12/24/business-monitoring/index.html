@@ -18,7 +18,7 @@
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="系统定位业务监控, 主要侧重对业务数据的实时监控, 以日志的方式进行数据收集, 对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等.">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/digger/digger.png">
-<meta property="og:updated_time" content="2016-12-25T04:10:13.000Z">
+<meta property="og:updated_time" content="2016-12-25T04:11:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DIGGER业务监控">
 <meta name="twitter:description" content="系统定位业务监控, 主要侧重对业务数据的实时监控, 以日志的方式进行数据收集, 对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等.">
@@ -123,11 +123,7 @@
 </ul>
 <h2 id="数据流向">数据流向</h2><p><img src="http://siye1982.github.io/img/blog/digger/digger_data_flow.png" alt="数据流向"></p>
 <ol>
-<li>业务服务中产生的数据主要包含两大类:<ul>
-<li>不需要业务服务埋点, 通用底层监控框架自动收集的数据. 这其中包括: 系统指标,性能指标,服务异常等.</li>
-<li>需要业务服务埋点,自己上报业务状态日志. 这部分数据会直接通过日志的方式流入日志收集通道.</li>
-</ul>
-</li>
+<li>业务服务中产生的数据主要包含两大类:<br> (1) 不需要业务服务埋点, 通用底层监控框架自动收集的数据. 这其中包括: 系统指标,性能指标,服务异常等.<br> (2) 需要业务服务埋点,自己上报业务状态日志. 这部分数据会直接通过日志的方式流入日志收集通道.</li>
 <li>底层监控系统主要是类似zabbix的系统层级的监控系统, 我们主要使用的是Cat,Falcon等开源系统, 这些系统本身可以配置各种报警规则, 并可以对异常日志进行归类统计. 因为各个系统产生的事件发送方式繁多, 我们如果各个去适配,后续的维护成本会非常高.这时我们将考虑推动事件接收通道的统一.</li>
 <li>公司层面所有的事件都会通过IM的方式推动给各个团队, 这时我们申请开通了Digger系统自己的IM账号, 并推动各个事件产生方统一给Digger的IM账号发送事件信息. </li>
 <li>Digger系统会部署自己的数据收集器(Digger-collector), 用来收集IM通道中的各种事件,以及其他特殊原因产生的监控数据.</li>
