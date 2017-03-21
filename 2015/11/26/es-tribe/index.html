@@ -22,6 +22,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch独立master,tribe节点">
 <meta name="twitter:description" content="场景描述之前的ES机器是三台服务器九个实例, 之所以每台服务器上部署三个实例, 是因为机器不够, 另外一个是每个机器有三块硬盘, 24核cpu, 196G内存, 所以一个物理机上起三个实例, 可以最大限度的发挥ES集群的优势.">
+<meta name="twitter:image" content="http://siye1982.github.io/img/blog/es_tribe/architecture.png">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -33,7 +34,7 @@
     <link rel="apple-touch-icon" href="/img/logo.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -49,7 +50,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -65,7 +66,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -87,33 +88,33 @@
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-26T02:29:36.000Z" itemprop="datePublished"> 发表于 2015-11-26</time>
+    <time datetime="2015-11-26T02:29:36.000Z" itemprop="datePublished"> Published 2015-11-26</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述"><span class="toc-number">1.</span> <span class="toc-text">场景描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#现在的ES集群结构"><span class="toc-number">2.</span> <span class="toc-text">现在的ES集群结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#碰到的问题"><span class="toc-number">3.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
 		
 		</div>
 		
 		<h2 id="场景描述">场景描述</h2><p>之前的ES机器是三台服务器九个实例, 之所以每台服务器上部署三个实例, 是因为机器不够, 另外一个是每个机器有三块硬盘, 24核cpu, 196G内存, 所以一个物理机上起三个实例, 可以最大限度的发挥ES集群的优势.<br><a id="more"></a><br>集群中每个节点都可以是data和master节点, 并且和master通信的超时时间为3s.</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">discovery<span class="class">.zen</span><span class="class">.ping</span><span class="class">.timeout</span>: <span class="number">3s</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">discovery<span class="selector-class">.zen</span><span class="selector-class">.ping</span><span class="selector-class">.timeout</span>: <span class="number">3s</span></div></pre></td></tr></table></figure>
 <p>当我们的数据节点因为写入压力过大时, 可能会使节点之间的心跳通信超过这个时间, 那么可能会引起重新选举master的可能. 这次将新增三个实例分布到这三台服务器上, 做master节点.下面是master节点的主要配置:</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">cluster.name</span>: <span class="string">eagleye_es</span></span><br><span class="line"><span class="attribute">node.name</span>: <span class="string">"eagleye_es_xx_master"</span></span><br><span class="line"></span><br><span class="line"><span class="http"><span class="attribute">node.master</span>: <span class="string">true</span></span><br><span class="line"><span class="attribute">node.data</span>: <span class="string">false</span></span><br><span class="line"></span><br><span class="line"><span class="stylus"><span class="id">#ping</span> 其它节点的超时时间</span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.ping_timeout</span>: <span class="number">30s</span></span><br><span class="line"></span><br><span class="line">#心跳timeout设为<span class="number">2</span>分钟，超过<span class="number">6</span>次心跳没有回应，则认为该节点脱离master，每隔<span class="number">20s</span>发送一次心跳。</span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.fd</span><span class="class">.ping_timeout</span>: <span class="number">120s</span></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.fd</span><span class="class">.ping_retries</span>: <span class="number">6</span></span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.fd</span><span class="class">.ping_interval</span>: <span class="number">20s</span></span><br><span class="line"></span><br><span class="line">#要选出可用master, 最少需要几个master节点</span><br><span class="line">discovery<span class="class">.zen</span><span class="class">.minimum_master_nodes</span>: <span class="number">2</span></span><br><span class="line"></span><br><span class="line">path<span class="class">.logs</span>: /var/log/es_master</span><br><span class="line">#不使用交换区</span><br><span class="line">bootstrap<span class="class">.mlockall</span>: true</span><br><span class="line"></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.port</span>: <span class="number">8309</span></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.compress</span>: true</span><br><span class="line">http<span class="class">.port</span>: <span class="number">8209</span></span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">cluster<span class="selector-class">.name</span>: eagleye_es</div><div class="line">node<span class="selector-class">.name</span>: <span class="string">"eagleye_es_xx_master"</span></div><div class="line"></div><div class="line">node<span class="selector-class">.master</span>: true</div><div class="line">node<span class="selector-class">.data</span>: false</div><div class="line"></div><div class="line"><span class="selector-id">#ping</span> 其它节点的超时时间</div><div class="line">discovery<span class="selector-class">.zen</span><span class="selector-class">.ping_timeout</span>: <span class="number">30s</span></div><div class="line"></div><div class="line">#心跳timeout设为<span class="number">2</span>分钟，超过<span class="number">6</span>次心跳没有回应，则认为该节点脱离master，每隔<span class="number">20s</span>发送一次心跳。</div><div class="line">discovery<span class="selector-class">.zen</span><span class="selector-class">.fd</span><span class="selector-class">.ping_timeout</span>: <span class="number">120s</span></div><div class="line">discovery<span class="selector-class">.zen</span><span class="selector-class">.fd</span><span class="selector-class">.ping_retries</span>: <span class="number">6</span></div><div class="line">discovery<span class="selector-class">.zen</span><span class="selector-class">.fd</span><span class="selector-class">.ping_interval</span>: <span class="number">20s</span></div><div class="line"></div><div class="line">#要选出可用master, 最少需要几个master节点</div><div class="line">discovery<span class="selector-class">.zen</span><span class="selector-class">.minimum_master_nodes</span>: <span class="number">2</span></div><div class="line"></div><div class="line">path<span class="selector-class">.logs</span>: /var/log/es_master</div><div class="line">#不使用交换区</div><div class="line">bootstrap<span class="selector-class">.mlockall</span>: true</div><div class="line"></div><div class="line">transport<span class="selector-class">.tcp</span><span class="selector-class">.port</span>: <span class="number">8309</span></div><div class="line">transport<span class="selector-class">.tcp</span><span class="selector-class">.compress</span>: true</div><div class="line">http<span class="selector-class">.port</span>: <span class="number">8209</span></div></pre></td></tr></table></figure>
 <p>由于我们的业务场景是给业务人员提供实时的日志查询, 那么近几日的日志将会是频繁查询的对象, 那么一个月以前的日志可能少有人进行查询. 配合这样业务场景, 我们将来打算进行集群数据的冷热分离. 这次变更正好分出独立的查询节点, 并通过tribe的方式去进行. 这次增加两个tribe节点用来做查询节点, 并为之后的冷热分离做准备, tribe节点主要配置如下:</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">node.name</span>: <span class="string">"eagleye_es_xx_tribe"</span></span><br><span class="line"><span class="attribute">node.data</span>: <span class="string">false</span></span><br><span class="line"><span class="attribute">node.master</span>: <span class="string">false</span></span><br><span class="line"><span class="attribute">path.logs</span>: <span class="string">/var/log/es_tribe</span></span><br><span class="line"><span class="attribute">bootstrap.mlockall</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="stylus">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.warn</span>: <span class="number">5s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.info</span>: <span class="number">1s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.debug</span>: <span class="number">500ms</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.query</span><span class="class">.trace</span>: <span class="number">500ms</span></span><br><span class="line"></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.warn</span>: <span class="number">5s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.info</span>: <span class="number">1s</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.debug</span>: <span class="number">500ms</span></span><br><span class="line">index<span class="class">.search</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.fetch</span><span class="class">.trace</span>: <span class="number">500ms</span></span><br><span class="line"></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.warn</span>: <span class="number">5s</span></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.info</span>: <span class="number">2s</span></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.debug</span>: <span class="number">500ms</span></span><br><span class="line">index<span class="class">.indexing</span><span class="class">.slowlog</span><span class="class">.threshold</span><span class="class">.index</span><span class="class">.trace</span>: <span class="number">500ms</span></span><br><span class="line"></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.port</span>: <span class="number">8308</span></span><br><span class="line">transport<span class="class">.tcp</span><span class="class">.compress</span>: true</span><br><span class="line">http<span class="class">.port</span>: <span class="number">8208</span></span><br><span class="line"></span><br><span class="line">tribe:</span><br><span class="line">  hot:</span><br><span class="line">    cluster<span class="class">.name</span>: eagleye_es</span><br><span class="line">  blocks:</span><br><span class="line">    write: true</span><br><span class="line">    metadata: true</span><br><span class="line">  on_conflict: prefer_hot</span><br><span class="line"></span><br><span class="line">threadpool:</span><br><span class="line">  search:</span><br><span class="line">    tyep: fixed</span><br><span class="line">    size: <span class="number">24</span></span><br><span class="line">    #用来保存请求的队列</span><br><span class="line">    queue_size: <span class="number">100</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">node<span class="selector-class">.name</span>: <span class="string">"eagleye_es_xx_tribe"</span></div><div class="line">node<span class="selector-class">.data</span>: false</div><div class="line">node<span class="selector-class">.master</span>: false</div><div class="line">path<span class="selector-class">.logs</span>: /var/log/es_tribe</div><div class="line">bootstrap<span class="selector-class">.mlockall</span>: true</div><div class="line"></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.query</span><span class="selector-class">.warn</span>: <span class="number">5s</span></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.query</span><span class="selector-class">.info</span>: <span class="number">1s</span></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.query</span><span class="selector-class">.debug</span>: <span class="number">500ms</span></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.query</span><span class="selector-class">.trace</span>: <span class="number">500ms</span></div><div class="line"></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.fetch</span><span class="selector-class">.warn</span>: <span class="number">5s</span></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.fetch</span><span class="selector-class">.info</span>: <span class="number">1s</span></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.fetch</span><span class="selector-class">.debug</span>: <span class="number">500ms</span></div><div class="line">index<span class="selector-class">.search</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.fetch</span><span class="selector-class">.trace</span>: <span class="number">500ms</span></div><div class="line"></div><div class="line">index<span class="selector-class">.indexing</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.index</span><span class="selector-class">.warn</span>: <span class="number">5s</span></div><div class="line">index<span class="selector-class">.indexing</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.index</span><span class="selector-class">.info</span>: <span class="number">2s</span></div><div class="line">index<span class="selector-class">.indexing</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.index</span><span class="selector-class">.debug</span>: <span class="number">500ms</span></div><div class="line">index<span class="selector-class">.indexing</span><span class="selector-class">.slowlog</span><span class="selector-class">.threshold</span><span class="selector-class">.index</span><span class="selector-class">.trace</span>: <span class="number">500ms</span></div><div class="line"></div><div class="line">transport<span class="selector-class">.tcp</span><span class="selector-class">.port</span>: <span class="number">8308</span></div><div class="line">transport<span class="selector-class">.tcp</span><span class="selector-class">.compress</span>: true</div><div class="line">http<span class="selector-class">.port</span>: <span class="number">8208</span></div><div class="line"></div><div class="line">tribe:</div><div class="line">  hot:</div><div class="line">    cluster<span class="selector-class">.name</span>: eagleye_es</div><div class="line">  blocks:</div><div class="line">    write: true</div><div class="line">    metadata: true</div><div class="line">  on_conflict: prefer_hot</div><div class="line"></div><div class="line">threadpool:</div><div class="line">  search:</div><div class="line">    tyep: fixed</div><div class="line">    size: <span class="number">24</span></div><div class="line">    #用来保存请求的队列</div><div class="line">    queue_size: <span class="number">100</span></div></pre></td></tr></table></figure>
 <p>做到这个时候, 还需要将原有的9个节点修改为data节点, 主要配置变更如下:</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node.<span class="string">data:</span> <span class="literal">true</span></span><br><span class="line">node.<span class="string">master:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">node</span>.data:<span class="title"> true</span></div><div class="line"><span class="keyword">node</span>.master:<span class="title"> false</span></div></pre></td></tr></table></figure>
 <p>最后我们在查询程序中, 就不能指定集群的名字了, 而是直接通过tribe节点进行检索</p>
-<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> private static void init<span class="params">()</span> &#123;</span><br><span class="line">        Settings settings = ImmutableSettings.settingsBuilder<span class="params">()</span></span><br><span class="line"><span class="comment">//                .put("cluster.name", AppConstants.EAGLEYE_ES_CLUSTER)  // 由于使用了 节点 , 就不能加 cluster.name 属性了</span></span><br><span class="line">                .put<span class="params">(<span class="string">"client.transport.sniff"</span>, <span class="literal">false</span>)</span></span><br><span class="line">                .build<span class="params">()</span>;</span><br><span class="line">        client = new TransportClient<span class="params">(settings)</span>;</span><br><span class="line">        String esNodes = PropertiesUtil.getProperty<span class="params">(AppConstants.EAGLEYE_IMAGO_KEY, AppConstants.EAGLEYE_ES_TRIBES_KEY)</span>;</span><br><span class="line"><span class="comment">//        String esNodes = PropertiesUtil.getProperty(AppConstants.EAGLEYE_IMAGO_KEY, AppConstants.EAGLEYE_ES_NODES_KEY);</span></span><br><span class="line">        String[] esNodeList = esNodes.split<span class="params">(<span class="string">","</span>)</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="params">(String serv : esNodeList)</span> &#123;</span><br><span class="line">            String[] node = serv.split<span class="params">(<span class="string">":"</span>)</span>;</span><br><span class="line">            <span class="keyword">if</span> <span class="params">(node.length == <span class="number">2</span>)</span> &#123;</span><br><span class="line"></span><br><span class="line">                client.addTransportAddress<span class="params">(new InetSocketTransportAddress<span class="params">(node[<span class="number">0</span>], Integer.valueOf<span class="params">(node[<span class="number">1</span>])</span>)</span>)</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"> private static void init() &#123;</div><div class="line">        Settings settings = ImmutableSettings.settingsBuilder()</div><div class="line">//                .put(<span class="string">"cluster.name"</span>, AppConstants.EAGLEYE_ES_CLUSTER)  // 由于使用了 节点 , 就不能加 cluster.name 属性了</div><div class="line">                .put(<span class="string">"client.transport.sniff"</span>, <span class="literal">false</span>)</div><div class="line">                .build();</div><div class="line">        client = new TransportClient(settings);</div><div class="line">        <span class="keyword">String</span> esNodes = PropertiesUtil.getProperty(AppConstants.EAGLEYE_IMAGO_KEY, AppConstants.EAGLEYE_ES_TRIBES_KEY);</div><div class="line">//        <span class="keyword">String</span> esNodes = PropertiesUtil.getProperty(AppConstants.EAGLEYE_IMAGO_KEY, AppConstants.EAGLEYE_ES_NODES_KEY);</div><div class="line">        <span class="keyword">String</span>[] esNodeList = esNodes.split(<span class="string">","</span>);</div><div class="line">        for (<span class="keyword">String</span> serv : esNodeList) &#123;</div><div class="line">            <span class="keyword">String</span>[] <span class="keyword">node</span> <span class="title">= serv</span>.split(<span class="string">":"</span>);</div><div class="line">            if (<span class="keyword">node</span>.<span class="title">length</span> == <span class="number">2</span>) &#123;</div><div class="line"></div><div class="line">                client.addTransportAddress(new InetSocketTransportAddress(<span class="keyword">node</span><span class="title">[0</span>], Integer.valueOf(<span class="keyword">node</span><span class="title">[1</span>])));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <h2 id="现在的ES集群结构">现在的ES集群结构</h2><p><img src="http://siye1982.github.io/img/blog/es_tribe/architecture.png" alt="ES集群架构图"></p>
 <h2 id="碰到的问题">碰到的问题</h2><ul>
 <li><p>开始master节点中并没有配置分片数量, 导致新索引按照默认的5个进行分片.<br>  后来我们在数据节点对应的template中的mapping中添加了分片信息. 主要配置修改如下:</p>
-  <figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">&#123;</span><br><span class="line"> <span class="string">"eagleye_bigindex"</span>: <span class="collection">&#123;</span><br><span class="line"></span><br><span class="line">   <span class="string">"order"</span>: <span class="number">0</span>,</span><br><span class="line">   <span class="string">"template"</span>: <span class="string">"eagleye_bigindex*"</span>,</span><br><span class="line">   <span class="string">"settings"</span>: <span class="collection">&#123;</span><br><span class="line">     <span class="string">"index.refresh_interval"</span>: <span class="string">"2s"</span></span><br><span class="line">     <span class="string">"number_of_shards"</span>: <span class="number">9</span>,</span><br><span class="line">		 <span class="string">"number_of_replicas"</span>: <span class="number">0</span>, </span><br><span class="line">   &#125;</span>,</span><br><span class="line"></span><br><span class="line">   <span class="string">"mappings"</span>: <span class="collection">&#123;</span><br><span class="line">     <span class="string">"log"</span>: <span class="collection">&#123;</span><br><span class="line">       <span class="string">"_all"</span>: <span class="collection">&#123;</span><br><span class="line">         <span class="string">"enabled"</span>: <span class="literal">false</span></span><br><span class="line">       &#125;</span>,</span><br><span class="line">       </span><br><span class="line">       ...</span><br><span class="line">       ...</span></span></span></span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"> <span class="string">"eagleye_bigindex"</span>: &#123;</div><div class="line"></div><div class="line">   <span class="string">"order"</span>: <span class="number">0</span>,</div><div class="line">   <span class="string">"template"</span>: <span class="string">"eagleye_bigindex*"</span>,</div><div class="line">   <span class="string">"settings"</span>: &#123;</div><div class="line">     <span class="string">"index.refresh_interval"</span>: <span class="string">"2s"</span></div><div class="line">     <span class="string">"number_of_shards"</span>: <span class="number">9</span>,</div><div class="line">		 <span class="string">"number_of_replicas"</span>: <span class="number">0</span>, </div><div class="line">   &#125;,</div><div class="line"></div><div class="line">   <span class="string">"mappings"</span>: &#123;</div><div class="line">     <span class="string">"log"</span>: &#123;</div><div class="line">       <span class="string">"_all"</span>: &#123;</div><div class="line">         <span class="string">"enabled"</span>: <span class="literal">false</span></div><div class="line">       &#125;,</div><div class="line">       </div><div class="line">       ...</div><div class="line">       ...</div></pre></td></tr></table></figure>
 </li>
 </ul>
 <div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
@@ -131,7 +132,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/分布式/">分布式</a><a href="/tags/原创/">原创</a>
+  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/分布式/">分布式</a>
   </div>
 
 </div>
@@ -179,22 +180,22 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景描述"><span class="toc-number">1.</span> <span class="toc-text">场景描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#现在的ES集群结构"><span class="toc-number">2.</span> <span class="toc-text">现在的ES集群结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#碰到的问题"><span class="toc-number">3.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -238,7 +239,7 @@
 		  
 		
 		  
-			<li><a href="/categories/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -247,11 +248,11 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/原创/" title="原创">原创<sup>16</sup></a></li>
+				<li><a href="/tags/原创/" title="原创">原创<sup>17</sup></a></li>
 			
 		
 			
@@ -264,6 +265,10 @@
 		
 			
 				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
 			
 		
 			
@@ -283,35 +288,7 @@
 			
 		
 			
-				<li><a href="/tags/随笔/" title="随笔">随笔<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Elasticserch/" title="Elasticserch">Elasticserch<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Beats/" title="Beats">Beats<sup>1</sup></a></li>
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
 			
@@ -319,15 +296,39 @@
 			
 		
 			
-				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -335,7 +336,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -390,7 +391,7 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -425,7 +426,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="Panda">Panda</a>
 		
@@ -596,7 +597,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

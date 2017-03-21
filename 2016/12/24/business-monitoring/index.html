@@ -28,6 +28,7 @@
 <meta name="twitter:description" content="写在前面目前看到业界介绍贴近业务监控的整理还比较少, 更多的是一些对系统层级的监控, 所以把自己针对业务监控的一些思路整理记录在这, 以便后续翻阅修正.
 业务监控, 主要侧重对业务状态数据的实时监控, 收集数据后对业务数据进行深入的统计分析, 帮助业务方发现问题, 定位问题根源. 这其中数据分为: 业务自身输出的业务日志(比如: 提单, 推单, 接单等状态数据), 业务异常, 报警事件等. 
 发现">
+<meta name="twitter:image" content="http://siye1982.github.io/img/blog/digger/digger.png">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -39,7 +40,7 @@
     <link rel="apple-touch-icon" href="/img/logo.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -55,7 +56,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -71,7 +72,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -107,14 +108,14 @@
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2016-12-24T02:12:31.000Z" itemprop="datePublished"> 发表于 2016-12-24</time>
+    <time datetime="2016-12-24T02:12:31.000Z" itemprop="datePublished"> Published 2016-12-24</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#系统设计"><span class="toc-number">2.</span> <span class="toc-text">系统设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.1.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据收集流向"><span class="toc-number">2.2.</span> <span class="toc-text">数据收集流向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统结构"><span class="toc-number">2.3.</span> <span class="toc-text">系统结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心产品功能"><span class="toc-number">3.</span> <span class="toc-text">核心产品功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">3.1.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件监控"><span class="toc-number">3.2.</span> <span class="toc-text">事件监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#健康检查"><span class="toc-number">3.3.</span> <span class="toc-text">健康检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预测报警"><span class="toc-number">3.4.</span> <span class="toc-text">预测报警</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监控收藏"><span class="toc-number">3.5.</span> <span class="toc-text">监控收藏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#降级限流管理"><span class="toc-number">3.6.</span> <span class="toc-text">降级限流管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动化运维"><span class="toc-number">3.7.</span> <span class="toc-text">自动化运维</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#碰到的问题"><span class="toc-number">4.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
 		
@@ -184,7 +185,7 @@
 <p> 报警步骤：</p>
 <p> 1)  离散度判断，某一分钟，前15分钟（含当前）的真实值和基线，取残差，计算后3个和前12个平均数之差（记作A），计算前12个的标准差（计作B），如果|A| &lt;= 2.5 * |B|，认为数据的突变程度不够，不往下走；</p>
 <p> 2)  阈值判断，阈值和业务相关，其实是经过不断的报警实验之后，作出的认为合理的值，判断步骤如下：</p>
- <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>) 利用分段线性函数，传入当前预测值，计算<span class="number">4</span>个阈值梯度：threadholdNonSensitive &gt; threadholdSensitive_1 &gt; threadholdSensitive_1 &gt; threadholdSensitive_2 &gt; threadholdSensitive_3 .</span><br><span class="line">(<span class="number">2</span>) 取最后一个残差（计作diff1），最后<span class="number">2</span>个残差的平均数（计作diff2），最后<span class="number">3</span>个残差的平均数（计作diff3）.</span><br><span class="line">(<span class="number">3</span>) 如果是对于数据下降敏感的（比如提单、推单），则当数据下降时（残差 &lt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdSensitive_1<span class="regexp">/2/</span><span class="number">3</span>，则进入下一步；当数据上升时（残差 &gt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步. </span><br><span class="line">(<span class="number">4</span>) 如果是对于数据上升敏感的（比如消单），则当数据上升时（残差 &gt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdSensitive_1<span class="regexp">/2/</span><span class="number">3</span>，则进入下一步；当数据下降时（残差 &lt; <span class="number">0</span>），diff1<span class="regexp">/2/</span><span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步</span><br></pre></td></tr></table></figure>
+ <figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(<span class="number">1</span>) 利用分段线性函数，传入当前预测值，计算<span class="number">4</span>个阈值梯度：threadholdNonSensitive &gt; threadholdSensitive_1 &gt; threadholdSensitive_1 &gt; threadholdSensitive_2 &gt; threadholdSensitive_3 .</div><div class="line">(<span class="number">2</span>) 取最后一个残差（计作diff1），最后<span class="number">2</span>个残差的平均数（计作diff2），最后<span class="number">3</span>个残差的平均数（计作diff3）.</div><div class="line">(<span class="number">3</span>) 如果是对于数据下降敏感的（比如提单、推单），则当数据下降时（残差 &lt; <span class="number">0</span>），diff1/<span class="number">2</span>/<span class="number">3</span>，分别大于threadholdSensitive_1/<span class="number">2</span>/<span class="number">3</span>，则进入下一步；当数据上升时（残差 &gt; <span class="number">0</span>），diff1/<span class="number">2</span>/<span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步. </div><div class="line">(<span class="number">4</span>) 如果是对于数据上升敏感的（比如消单），则当数据上升时（残差 &gt; <span class="number">0</span>），diff1/<span class="number">2</span>/<span class="number">3</span>，分别大于threadholdSensitive_1/<span class="number">2</span>/<span class="number">3</span>，则进入下一步；当数据下降时（残差 &lt; <span class="number">0</span>），diff1/<span class="number">2</span>/<span class="number">3</span>，分别大于threadholdNonSensitive，则进入下一步</div></pre></td></tr></table></figure>
 <p> 3)  由于分段阈值的设置需要考虑分段和对业务理解，也可以不用分段阈值，直接用百分比，比如浮动30%报警.</p>
 <p> 4)  历史趋势对比，和历史数据进行纵向比较，取过去5天，当前分钟前后各1分钟，共计15个点，如果超过3个点报警，说明这个点的数据突变是这个业务的特性，则不会报警.</p>
 <p> 5)  经过离散度、阈值、历史趋势对比判断，都监测通过之后，开始根据配置进行报警.</p>
@@ -220,7 +221,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/原创/">原创</a><a href="/tags/监控预警/">监控预警</a>
+  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/监控预警/">监控预警</a><a href="/tags/Elasticsearch/">Elasticsearch</a>
   </div>
 
 </div>
@@ -242,6 +243,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2017/03/21/2017-03-21/" title="2017-03-21 阴天">
+  <strong>上一篇：</strong><br/>
+  <span>
+  2017-03-21 阴天</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2016/04/30/packetbeat/"  title="通过Packetbeat抓取Finagle协议数据包(自定义Thrift协议)总结">
@@ -260,22 +269,22 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#系统设计"><span class="toc-number">2.</span> <span class="toc-text">系统设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.1.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据收集流向"><span class="toc-number">2.2.</span> <span class="toc-text">数据收集流向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统结构"><span class="toc-number">2.3.</span> <span class="toc-text">系统结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心产品功能"><span class="toc-number">3.</span> <span class="toc-text">核心产品功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">3.1.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件监控"><span class="toc-number">3.2.</span> <span class="toc-text">事件监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#健康检查"><span class="toc-number">3.3.</span> <span class="toc-text">健康检查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#预测报警"><span class="toc-number">3.4.</span> <span class="toc-text">预测报警</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监控收藏"><span class="toc-number">3.5.</span> <span class="toc-text">监控收藏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#降级限流管理"><span class="toc-number">3.6.</span> <span class="toc-text">降级限流管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动化运维"><span class="toc-number">3.7.</span> <span class="toc-text">自动化运维</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#碰到的问题"><span class="toc-number">4.</span> <span class="toc-text">碰到的问题</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -319,7 +328,7 @@
 		  
 		
 		  
-			<li><a href="/categories/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -328,11 +337,11 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/原创/" title="原创">原创<sup>16</sup></a></li>
+				<li><a href="/tags/原创/" title="原创">原创<sup>17</sup></a></li>
 			
 		
 			
@@ -345,6 +354,10 @@
 		
 			
 				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
 			
 		
 			
@@ -364,35 +377,7 @@
 			
 		
 			
-				<li><a href="/tags/随笔/" title="随笔">随笔<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Elasticserch/" title="Elasticserch">Elasticserch<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Beats/" title="Beats">Beats<sup>1</sup></a></li>
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
 			
@@ -400,15 +385,39 @@
 			
 		
 			
-				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -416,7 +425,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -471,7 +480,7 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -506,7 +515,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="Panda">Panda</a>
 		
@@ -677,7 +686,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

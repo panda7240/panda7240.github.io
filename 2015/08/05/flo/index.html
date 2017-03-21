@@ -22,6 +22,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="FLO集中调度系统">
 <meta name="twitter:description" content="概述系统取名为FLO, 这来自于一款之前比较流行的休闲小游戏&amp;lt;&amp;lt;美女餐厅&amp;gt;&amp;gt;中的女主角, 相信玩的好的玩家可以让flo有条不紊的分配各种餐厅服务任务,我们的寓意希望FLO可以帮助我们很好的去管理,监控各种调度任务.随着公司业务的快速发展, 支撑业务发展的技术框架也越来越复杂, 我们需要一些程序按照特定的规则自己执行一些逻辑.这就催生了越来越多的任务.如果从任务调用的方式上来">
+<meta name="twitter:image" content="http://siye1982.github.io/img/blog/flo/flo.jpg">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -33,7 +34,7 @@
     <link rel="apple-touch-icon" href="/img/logo.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -49,7 +50,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -65,7 +66,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -101,14 +102,14 @@
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-05T01:59:00.000Z" itemprop="datePublished"> 发表于 2015-08-05</time>
+    <time datetime="2015-08-05T01:59:00.000Z" itemprop="datePublished"> Published 2015-08-05</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#静态调度任务"><span class="toc-number">1.1.</span> <span class="toc-text">静态调度任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态调度任务"><span class="toc-number">1.2.</span> <span class="toc-text">动态调度任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统架构"><span class="toc-number">2.</span> <span class="toc-text">系统架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Zookeeper中的数据结构"><span class="toc-number">2.1.</span> <span class="toc-text">Zookeeper中的数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flo-admin"><span class="toc-number">2.2.</span> <span class="toc-text">flo-admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flo-trigger"><span class="toc-number">2.3.</span> <span class="toc-text">flo-trigger</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flo-client"><span class="toc-number">2.4.</span> <span class="toc-text">flo-client</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li></ol>
 		
@@ -242,22 +243,22 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#静态调度任务"><span class="toc-number">1.1.</span> <span class="toc-text">静态调度任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态调度任务"><span class="toc-number">1.2.</span> <span class="toc-text">动态调度任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统架构"><span class="toc-number">2.</span> <span class="toc-text">系统架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Zookeeper中的数据结构"><span class="toc-number">2.1.</span> <span class="toc-text">Zookeeper中的数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flo-admin"><span class="toc-number">2.2.</span> <span class="toc-text">flo-admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flo-trigger"><span class="toc-number">2.3.</span> <span class="toc-text">flo-trigger</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flo-client"><span class="toc-number">2.4.</span> <span class="toc-text">flo-client</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -301,7 +302,7 @@
 		  
 		
 		  
-			<li><a href="/categories/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -310,11 +311,11 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/原创/" title="原创">原创<sup>16</sup></a></li>
+				<li><a href="/tags/原创/" title="原创">原创<sup>17</sup></a></li>
 			
 		
 			
@@ -327,6 +328,10 @@
 		
 			
 				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
 			
 		
 			
@@ -346,35 +351,7 @@
 			
 		
 			
-				<li><a href="/tags/随笔/" title="随笔">随笔<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Elasticserch/" title="Elasticserch">Elasticserch<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Beats/" title="Beats">Beats<sup>1</sup></a></li>
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
 			
@@ -382,15 +359,39 @@
 			
 		
 			
-				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -398,7 +399,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -453,7 +454,7 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -488,7 +489,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="Panda">Panda</a>
 		
@@ -659,7 +660,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

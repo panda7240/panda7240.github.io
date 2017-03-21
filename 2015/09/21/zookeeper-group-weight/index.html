@@ -35,7 +35,7 @@
     <link rel="apple-touch-icon" href="/img/logo.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -51,7 +51,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -67,7 +67,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -89,24 +89,24 @@
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-21T07:52:25.000Z" itemprop="datePublished"> 发表于 2015-09-21</time>
+    <time datetime="2015-09-21T07:52:25.000Z" itemprop="datePublished"> Published 2015-09-21</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单理解"><span class="toc-number">1.</span> <span class="toc-text">简单理解</span></a></li></ol>
 		
 		</div>
 		
 		<h2 id="简单理解">简单理解</h2><p>Zookeeper的集群有一个法则，整个集群的数量要过半存活，集群就是稳定的。在这法则之外，官方文档中还提供了Group和Weight的配置。Zookeeper的Group配置的意思就是对整个大的zk集群进行分组.</p>
-<p>例如，我们有1、2、3、4、5、6、7七个节点。我们做如下配置：<br><a id="more"></a><br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">group</span>.1=<span class="number">1</span>:<span class="number">2</span>:<span class="number">3</span></span><br><span class="line"><span class="keyword">group</span>.2=<span class="number">4</span>:<span class="number">5</span>:<span class="number">6</span></span><br><span class="line"><span class="keyword">group</span>.2=<span class="number">7</span></span><br></pre></td></tr></table></figure></p>
+<p>例如，我们有1、2、3、4、5、6、7七个节点。我们做如下配置：<br><a id="more"></a><br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">group</span><span class="number">.1</span>=<span class="number">1</span>:<span class="number">2</span>:<span class="number">3</span></div><div class="line"><span class="keyword">group</span><span class="number">.2</span>=<span class="number">4</span>:<span class="number">5</span>:<span class="number">6</span></div><div class="line"><span class="keyword">group</span><span class="number">.2</span>=<span class="number">7</span></div></pre></td></tr></table></figure></p>
 <p>将七台机器分为三个组，这时，只要三个组中的两个是稳定的，整个集群的状态就是稳定的。即有2n+1个组，只要有n+1个组是稳定状态，整个集群就是稳定的。也就是过半原则。</p>
 <p>Zookeeper的Weight配置要和Group配置一起使用。官方文档中介绍Weight时提到此值影响集群节点Leader的选取，经过实际测试和翻阅zk的投票源码，Weight等于0的节点不参与投票，没有被选举权。而不影响投票的权重. 源码片段如下:</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">boolean</span> <span class="title">totalOrderPredicate</span><span class="params">(<span class="keyword">long</span> newId, <span class="keyword">long</span> newZxid, <span class="keyword">long</span> newEpoch,<span class="keyword">long</span> curId, <span class="keyword">long</span> curZxid, <span class="keyword">long</span> curEpoch)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (self.getQuorumVerifier().getWeight(newId) == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> ((newEpoch &gt; curEpoch) || </span><br><span class="line">			 (newEpoch == curEpoch &amp;&amp; newZxid &gt; curZxid) || </span><br><span class="line">			 (newZxid == curZxid &amp;&amp; newId &gt; curId));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">protected boolean totalOrderPredicate(long <span class="keyword">new</span><span class="type">Id</span>, long <span class="keyword">new</span><span class="type">Zxid</span>, long <span class="keyword">new</span><span class="type">Epoch</span>,long curId, long curZxid, long curEpoch)&#123;</div><div class="line">	<span class="keyword">if</span> (self.getQuorumVerifier().getWeight(<span class="keyword">new</span><span class="type">Id</span>) == <span class="number">0</span>)&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">return</span> ((<span class="keyword">new</span><span class="type">Epoch</span> &gt; curEpoch) || </div><div class="line">			 (<span class="keyword">new</span><span class="type">Epoch</span> == curEpoch &amp;&amp; <span class="keyword">new</span><span class="type">Zxid</span> &gt; curZxid) || </div><div class="line">			 (<span class="keyword">new</span><span class="type">Zxid</span> == curZxid &amp;&amp; <span class="keyword">new</span><span class="type">Id</span> &gt; curId));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Weight可以调节一个组内单个节点的权重，默认每个节点的权重是1（如果配置是0不参与leader的选举）.每个组有一个法定数的概念，法定人数等于组内所有节点的权重之和.此时判断一个组是否稳定，是要判断存活的节点权重之和是否大于该组法定数的权重.</p>
 <p>接上面的例子，我们做如下配置:</p>
 <pre><code><span class="attribute">weight.1</span>=<span class="string">3
@@ -130,7 +130,7 @@ weight.7=1</span>
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/分布式/">分布式</a><a href="/tags/原创/">原创</a>
+  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/分布式/">分布式</a>
   </div>
 
 </div>
@@ -178,22 +178,22 @@ weight.7=1</span>
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单理解"><span class="toc-number">1.</span> <span class="toc-text">简单理解</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -237,7 +237,7 @@ weight.7=1</span>
 		  
 		
 		  
-			<li><a href="/categories/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -246,11 +246,11 @@ weight.7=1</span>
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/原创/" title="原创">原创<sup>16</sup></a></li>
+				<li><a href="/tags/原创/" title="原创">原创<sup>17</sup></a></li>
 			
 		
 			
@@ -263,6 +263,10 @@ weight.7=1</span>
 		
 			
 				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
 			
 		
 			
@@ -282,35 +286,7 @@ weight.7=1</span>
 			
 		
 			
-				<li><a href="/tags/随笔/" title="随笔">随笔<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Elasticserch/" title="Elasticserch">Elasticserch<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Beats/" title="Beats">Beats<sup>1</sup></a></li>
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
 			
@@ -318,15 +294,39 @@ weight.7=1</span>
 			
 		
 			
-				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -334,7 +334,7 @@ weight.7=1</span>
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -389,7 +389,7 @@ weight.7=1</span>
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -424,7 +424,7 @@ weight.7=1</span>
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="Panda">Panda</a>
 		
@@ -595,7 +595,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

@@ -38,6 +38,7 @@
 
 各个语言开发客户端来接入到现有框架中, 这就需要各个需要拿到服务地址列表进行后续的连接维护和负载均衡.
 非Java语言通过接入HAProxy或Nginx来接入框架, 这就需要我们可以动态加载HAProxy的配置.">
+<meta name="twitter:image" content="http://siye1982.github.io/img/blog/haproxy/haproxy1.png">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -49,7 +50,7 @@
     <link rel="apple-touch-icon" href="/img/logo.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -65,7 +66,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -81,7 +82,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -103,14 +104,14 @@
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-03T01:33:52.000Z" itemprop="datePublished"> 发表于 2015-11-03</time>
+    <time datetime="2015-11-03T01:33:52.000Z" itemprop="datePublished"> Published 2015-11-03</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整理的测试过程"><span class="toc-number">2.</span> <span class="toc-text">整理的测试过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx和HAProxy在Tcp方面代理的情况。"><span class="toc-number">2.1.</span> <span class="toc-text">Nginx和HAProxy在Tcp方面代理的情况。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">2.2.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
 		
@@ -138,7 +139,7 @@
 <li>支持配置变更后自动发邮件</li>
 <li>支持更加复杂的健康检查功能</li>
 <li><p>HAProxy 1.6.+ 开始引入了dns 功能, 下面是 dns 配置的一个例子，也是我们使用动态切换配置的核心功能： </p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">resolvers</span> <span class="tag">mydns</span></span><br><span class="line"><span class="tag">nameserver</span> <span class="tag">dns1</span> 10<span class="class">.0</span><span class="class">.0</span><span class="class">.1</span><span class="pseudo">:53</span></span><br><span class="line"><span class="tag">nameserver</span> <span class="tag">dns2</span> 10<span class="class">.0</span><span class="class">.0</span><span class="class">.2</span><span class="pseudo">:53</span></span><br><span class="line"><span class="tag">resolve_retries</span>       3</span><br><span class="line"><span class="tag">timeout</span> <span class="tag">retry</span>         1<span class="tag">s</span></span><br><span class="line"><span class="tag">hold</span> <span class="tag">valid</span>           10<span class="tag">s</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">resolvers</span> <span class="selector-tag">mydns</span></div><div class="line"><span class="selector-tag">nameserver</span> <span class="selector-tag">dns1</span> 10<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span><span class="selector-pseudo">:53</span></div><div class="line"><span class="selector-tag">nameserver</span> <span class="selector-tag">dns2</span> 10<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.2</span><span class="selector-pseudo">:53</span></div><div class="line"><span class="selector-tag">resolve_retries</span>       3</div><div class="line"><span class="selector-tag">timeout</span> <span class="selector-tag">retry</span>         1<span class="selector-tag">s</span></div><div class="line"><span class="selector-tag">hold</span> <span class="selector-tag">valid</span>           10<span class="selector-tag">s</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>目前测试了3种方案：</p>
@@ -231,7 +232,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/HAProxy/">HAProxy</a><a href="/tags/Nginx/">Nginx</a><a href="/tags/分布式/">分布式</a><a href="/tags/转载/">转载</a>
+  <span></span> <a href="/tags/分布式/">分布式</a><a href="/tags/转载/">转载</a><a href="/tags/HAProxy/">HAProxy</a><a href="/tags/Nginx/">Nginx</a>
   </div>
 
 </div>
@@ -279,22 +280,22 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整理的测试过程"><span class="toc-number">2.</span> <span class="toc-text">整理的测试过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx和HAProxy在Tcp方面代理的情况。"><span class="toc-number">2.1.</span> <span class="toc-text">Nginx和HAProxy在Tcp方面代理的情况。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">2.2.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -338,7 +339,7 @@
 		  
 		
 		  
-			<li><a href="/categories/随笔/" title="随笔">随笔<sup>3</sup></a></li>
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -347,11 +348,11 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/原创/" title="原创">原创<sup>16</sup></a></li>
+				<li><a href="/tags/原创/" title="原创">原创<sup>17</sup></a></li>
 			
 		
 			
@@ -364,6 +365,10 @@
 		
 			
 				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>3</sup></a></li>
 			
 		
 			
@@ -383,35 +388,7 @@
 			
 		
 			
-				<li><a href="/tags/随笔/" title="随笔">随笔<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Rabbitmq/" title="Rabbitmq">Rabbitmq<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MQ/" title="MQ">MQ<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AMQP/" title="AMQP">AMQP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Elasticserch/" title="Elasticserch">Elasticserch<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Beats/" title="Beats">Beats<sup>1</sup></a></li>
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
 			
@@ -419,15 +396,39 @@
 			
 		
 			
-				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -435,7 +436,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -490,7 +491,7 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -525,7 +526,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
 		
 		<a href="/about" target="_blank" title="Panda">Panda</a>
 		
@@ -696,7 +697,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
