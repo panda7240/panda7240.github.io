@@ -77,6 +77,74 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/03/haproxy-nginx-test/" title="HAProxy与Nginx关于动态配置的测试" itemprop="url">HAProxy与Nginx关于动态配置的测试</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-03T01:33:52.000Z" itemprop="datePublished"> Published 2015-11-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="写在前面">写在前面</h2><p>目前公司在做基于thrift的服务治理, 目前有针对Java的服务治理框架, 其他语言也想接入到该框架中.现在有两种方案来进行接入, 分别如下:</p>
+<ul>
+<li>各个语言开发客户端来接入到现有框架中, 这就需要各个需要拿到服务地址列表进行后续的连接维护和负载均衡.</li>
+<li>非Java语言通过接入HAProxy或Nginx来接入框架, 这就需要我们可以动态加载HAProxy的配置.</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/11/03/haproxy-nginx-test/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/服务治理/">服务治理</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/分布式/">分布式</a><a href="/tags/转载/">转载</a><a href="/tags/HAProxy/">HAProxy</a><a href="/tags/Nginx/">Nginx</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/03/haproxy-nginx-test/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/03/haproxy-nginx-test/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/21/zookeeper-group-weight/" title="Zookeeper配置中的Group和Weight" itemprop="url">Zookeeper配置中的Group和Weight</a>
   </h1>
   <p class="article-author">By
@@ -111,7 +179,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/分布式/">分布式</a>
+  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/分布式/">分布式</a><a href="/tags/Zookeeper/">Zookeeper</a>
   </div>
 
 </div>
@@ -441,7 +509,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/Java/">Java</a><a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/监控/">监控</a><a href="/tags/Logstash/">Logstash</a>
+  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/Elasticsearch/">Elasticsearch</a><a href="/tags/Java/">Java</a><a href="/tags/监控/">监控</a><a href="/tags/Logstash/">Logstash</a>
   </div>
 
 </div>
@@ -636,7 +704,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/分布式/">分布式</a>
+  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/分布式/">分布式</a><a href="/tags/Zookeeper/">Zookeeper</a>
   </div>
 
 </div>
@@ -648,70 +716,6 @@
 	
 	  	<span></span>
 		<a href="/2015/06/16/zookeeper/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/16/zookeeper/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/14/init_github_pages/" title="用Hexo 快速创建Github Pages" itemprop="url">用Hexo 快速创建Github Pages</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-14T01:52:25.000Z" itemprop="datePublished"> Published 2015-06-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="具体步骤">具体步骤</h2><h3 id="在自己的github创建仓库,_比如你的github叫hook,_那么必须创建名为_hook-github-io的仓库-">在自己的github创建仓库, 比如你的github叫hook, 那么必须创建名为 hook.github.io的仓库.</h3><h3 id="然后安装Hexo-">然后安装<a href="http://hexo.io/docs/index.html">Hexo</a>.</h3><h3 id="我选用Jacman主题-">我选用<a href="http://wuchong.me/blog/2014/11/20/how-to-use-jacman/">Jacman</a>主题.</h3>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/14/init_github_pages/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/随笔/">随笔</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/Github-blog/">Github blog</a><a href="/tags/Hexo/">Hexo</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/14/init_github_pages/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/14/init_github_pages/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -771,6 +775,10 @@
 		  
 		
 		  
+			<li><a href="/categories/数据分析/" title="数据分析">数据分析<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
 		  
 		
@@ -796,7 +804,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/原创/" title="原创">原创<sup>17</sup></a></li>
+				<li><a href="/tags/原创/" title="原创">原创<sup>18</sup></a></li>
 			
 		
 			
@@ -832,7 +840,15 @@
 			
 		
 			
-				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
+				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
 			
 		
 			
@@ -841,10 +857,6 @@
 		
 			
 				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
 			
 		
 			
@@ -860,11 +872,7 @@
 			
 		
 			
-				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+				<li><a href="/tags/分布式事务/" title="分布式事务">分布式事务<sup>1</sup></a></li>
 			
 		
 			
