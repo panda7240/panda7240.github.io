@@ -4,24 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>第一次数据分析作业-Stroop | Panda</title>
+    <title>统计学作业-Stroop | Panda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Panda">
     
 
     
-    <meta name="description" content="背景">
+    <meta name="description" content="背景在一个 Stroop （斯特鲁普）任务中，参与者得到了一列文字，每个文字都用一种油墨颜色展示。参与者的任务是将文字的打印颜色大声说出来。这项任务有两个条件：一致文字条件，和不一致文字条件。在一致文字条件中，显示的文字是与它们的打印颜色匹配的颜色词，如“红色”、“蓝色”。在不一致文字条件中，显示的文字是与它们的打印颜色不匹配的颜色词，如“紫色”、“橙色”。在每个情况中，我们将计量说出同等大小的列">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第一次数据分析作业-Stroop">
+<meta property="og:title" content="统计学作业-Stroop">
 <meta property="og:url" content="http://siye1982.github.io/2017/06/27/udacity-stroop/index.html">
 <meta property="og:site_name" content="Panda">
-<meta property="og:description" content="背景">
+<meta property="og:description" content="背景在一个 Stroop （斯特鲁普）任务中，参与者得到了一列文字，每个文字都用一种油墨颜色展示。参与者的任务是将文字的打印颜色大声说出来。这项任务有两个条件：一致文字条件，和不一致文字条件。在一致文字条件中，显示的文字是与它们的打印颜色匹配的颜色词，如“红色”、“蓝色”。在不一致文字条件中，显示的文字是与它们的打印颜色不匹配的颜色词，如“紫色”、“橙色”。在每个情况中，我们将计量说出同等大小的列">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/udacity/stroop.jpg">
-<meta property="og:updated_time" content="2017-06-27T00:34:12.000Z">
+<meta property="og:updated_time" content="2017-06-27T01:04:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第一次数据分析作业-Stroop">
-<meta name="twitter:description" content="背景">
+<meta name="twitter:title" content="统计学作业-Stroop">
+<meta name="twitter:description" content="背景在一个 Stroop （斯特鲁普）任务中，参与者得到了一列文字，每个文字都用一种油墨颜色展示。参与者的任务是将文字的打印颜色大声说出来。这项任务有两个条件：一致文字条件，和不一致文字条件。在一致文字条件中，显示的文字是与它们的打印颜色匹配的颜色词，如“红色”、“蓝色”。在不一致文字条件中，显示的文字是与它们的打印颜色不匹配的颜色词，如“紫色”、“橙色”。在每个情况中，我们将计量说出同等大小的列">
 <meta name="twitter:image" content="http://siye1982.github.io/img/blog/udacity/stroop.jpg">
 
     
@@ -95,7 +95,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/06/27/udacity-stroop/" title="第一次数据分析作业-Stroop" itemprop="url">第一次数据分析作业-Stroop</a>
+      <a href="/2017/06/27/udacity-stroop/" title="统计学作业-Stroop" itemprop="url">统计学作业-Stroop</a>
   </h1>
   <p class="article-author">By
        
@@ -111,12 +111,18 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#任务清单"><span class="toc-number">2.</span> <span class="toc-text">任务清单</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_我们的自变量是什么？因变量是什么？"><span class="toc-number">2.1.</span> <span class="toc-text">1. 我们的自变量是什么？因变量是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-number">2.1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对号入座"><span class="toc-number">2.1.2.</span> <span class="toc-text">对号入座</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_此任务的适当假设集是什么？你想执行什么类型的统计测试？为你的选择提供正当理由-"><span class="toc-number">2.2.</span> <span class="toc-text">2. 此任务的适当假设集是什么？你想执行什么类型的统计测试？为你的选择提供正当理由.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_报告关于此数据集的一些描述性统计。包含至少一个集中趋势测量和至少一个变异测量。"><span class="toc-number">2.3.</span> <span class="toc-text">3. 报告关于此数据集的一些描述性统计。包含至少一个集中趋势测量和至少一个变异测量。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_提供显示样本数据分布的一个或两个可视化。用一两句话说明你从图中观察到的结果。"><span class="toc-number">2.4.</span> <span class="toc-text">4. 提供显示样本数据分布的一个或两个可视化。用一两句话说明你从图中观察到的结果。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_现在，执行统计测试并报告你的结果。你的置信水平和关键统计值是多少？你是否成功拒绝零假设？对试验任务得出一个结论。结果是否与你的期望一致？"><span class="toc-number">2.5.</span> <span class="toc-text">5. 现在，执行统计测试并报告你的结果。你的置信水平和关键统计值是多少？你是否成功拒绝零假设？对试验任务得出一个结论。结果是否与你的期望一致？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-_可选：你觉得导致所观察到的效应的原因是什么？你是否能想到会取得类似效应的替代或类似任务？进行一些调查研究将有助于你思考这两个问题！"><span class="toc-number">2.6.</span> <span class="toc-text">6. 可选：你觉得导致所观察到的效应的原因是什么？你是否能想到会取得类似效应的替代或类似任务？进行一些调查研究将有助于你思考这两个问题！</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h1 id="背景">背景</h1><a id="more"></a>
-<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+		<h1 id="背景">背景</h1><p>在一个 Stroop （斯特鲁普）任务中，参与者得到了一列文字，每个文字都用一种油墨颜色展示。参与者的任务是将文字的打印颜色大声说出来。这项任务有两个条件：一致文字条件，和不一致文字条件。在一致文字条件中，显示的文字是与它们的打印颜色匹配的颜色词，如“<font color="red">红色</font>”、“<font color="blue">蓝色</font>”。在不一致文字条件中，显示的文字是与它们的打印颜色不匹配的颜色词，如“<font color="green">紫色</font>”、“<font color="purple">橙色</font>”。在每个情况中，我们将计量说出同等大小的列表中的墨色名称的时间。每位参与者必须全部完成并记录每种条件下使用的时间。</p>
+<a id="more"></a>
+<h1 id="任务清单">任务清单</h1><h2 id="1-_我们的自变量是什么？因变量是什么？">1. 我们的自变量是什么？因变量是什么？</h2><h3 id="概念">概念</h3><ul>
+<li>自变量(Independent variable): 由研究者主动操纵，而引起因变量发生变化的因素或条件.</li>
+<li>因变量(Dependent variable): 会随一个（或几个）变动的量的变动而变动的量.<h3 id="对号入座">对号入座</h3>在该背景下, 自变量是文字与其打印颜色的一致性. 因变量是说出同等大小的文字列表中的墨色名称的时间.</li>
+</ul>
+<h2 id="2-_此任务的适当假设集是什么？你想执行什么类型的统计测试？为你的选择提供正当理由-">2. 此任务的适当假设集是什么？你想执行什么类型的统计测试？为你的选择提供正当理由.</h2><p>现在轮到你自行尝试 Stroop 任务了。前往<a href="https://faculty.washington.edu/chudler/java/ready.html" target="_blank" rel="external">此链接</a>，其中包含一个基于 Java 的小程序，专门用于执行 Stroop 任务。记录你收到的任务时间（你无需将时间提交到网站）。现在<a href="https://s3.cn-north-1.amazonaws.com.cn/static-documents/nd002/stroopdata.csv" target="_blank" rel="external">下载此数据集</a>，其中包含一些任务参与者的结果。数据集的每行包含一名参与者的表现，第一个数字代表他们的一致任务结果，第二个数字代表不一致任务结果。</p>
+<h2 id="3-_报告关于此数据集的一些描述性统计。包含至少一个集中趋势测量和至少一个变异测量。">3. 报告关于此数据集的一些描述性统计。包含至少一个集中趋势测量和至少一个变异测量。</h2><h2 id="4-_提供显示样本数据分布的一个或两个可视化。用一两句话说明你从图中观察到的结果。">4. 提供显示样本数据分布的一个或两个可视化。用一两句话说明你从图中观察到的结果。</h2><h2 id="5-_现在，执行统计测试并报告你的结果。你的置信水平和关键统计值是多少？你是否成功拒绝零假设？对试验任务得出一个结论。结果是否与你的期望一致？">5. 现在，执行统计测试并报告你的结果。你的置信水平和关键统计值是多少？你是否成功拒绝零假设？对试验任务得出一个结论。结果是否与你的期望一致？</h2><h2 id="6-_可选：你觉得导致所观察到的效应的原因是什么？你是否能想到会取得类似效应的替代或类似任务？进行一些调查研究将有助于你思考这两个问题！">6. 可选：你觉得导致所观察到的效应的原因是什么？你是否能想到会取得类似效应的替代或类似任务？进行一些调查研究将有助于你思考这两个问题！</h2><div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
 
   
 	</div>
@@ -140,7 +146,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://siye1982.github.io/2017/06/27/udacity-stroop/" data-title="第一次数据分析作业-Stroop | Panda" data-tsina="null" class="share clearfix">
+	  <div data-url="http://siye1982.github.io/2017/06/27/udacity-stroop/" data-title="统计学作业-Stroop | Panda" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -166,7 +172,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/06/27/udacity-stroop/" data-title="第一次数据分析作业-Stroop" data-url="http://siye1982.github.io/2017/06/27/udacity-stroop/"></div>
+	<div class="ds-thread" data-thread-key="2017/06/27/udacity-stroop/" data-title="统计学作业-Stroop" data-url="http://siye1982.github.io/2017/06/27/udacity-stroop/"></div>
 </section>
 
 
@@ -176,7 +182,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#任务清单"><span class="toc-number">2.</span> <span class="toc-text">任务清单</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_我们的自变量是什么？因变量是什么？"><span class="toc-number">2.1.</span> <span class="toc-text">1. 我们的自变量是什么？因变量是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-number">2.1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对号入座"><span class="toc-number">2.1.2.</span> <span class="toc-text">对号入座</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_此任务的适当假设集是什么？你想执行什么类型的统计测试？为你的选择提供正当理由-"><span class="toc-number">2.2.</span> <span class="toc-text">2. 此任务的适当假设集是什么？你想执行什么类型的统计测试？为你的选择提供正当理由.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_报告关于此数据集的一些描述性统计。包含至少一个集中趋势测量和至少一个变异测量。"><span class="toc-number">2.3.</span> <span class="toc-text">3. 报告关于此数据集的一些描述性统计。包含至少一个集中趋势测量和至少一个变异测量。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_提供显示样本数据分布的一个或两个可视化。用一两句话说明你从图中观察到的结果。"><span class="toc-number">2.4.</span> <span class="toc-text">4. 提供显示样本数据分布的一个或两个可视化。用一两句话说明你从图中观察到的结果。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_现在，执行统计测试并报告你的结果。你的置信水平和关键统计值是多少？你是否成功拒绝零假设？对试验任务得出一个结论。结果是否与你的期望一致？"><span class="toc-number">2.5.</span> <span class="toc-text">5. 现在，执行统计测试并报告你的结果。你的置信水平和关键统计值是多少？你是否成功拒绝零假设？对试验任务得出一个结论。结果是否与你的期望一致？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-_可选：你觉得导致所观察到的效应的原因是什么？你是否能想到会取得类似效应的替代或类似任务？进行一些调查研究将有助于你思考这两个问题！"><span class="toc-number">2.6.</span> <span class="toc-text">6. 可选：你觉得导致所观察到的效应的原因是什么？你是否能想到会取得类似效应的替代或类似任务？进行一些调查研究将有助于你思考这两个问题！</span></a></li></ol></li></ol>
  
   </div>
 
@@ -283,23 +289,19 @@
 			
 		
 			
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/个人总结/" title="个人总结">个人总结<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+				<li><a href="/tags/分布式事务/" title="分布式事务">分布式事务<sup>1</sup></a></li>
 			
 		
 			
@@ -315,15 +317,19 @@
 			
 		
 			
-				<li><a href="/tags/分布式事务/" title="分布式事务">分布式事务<sup>1</sup></a></li>
+				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+				<li><a href="/tags/消息队列/" title="消息队列">消息队列<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
 			
 		
 		</ul>
