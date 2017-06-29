@@ -290,10 +290,6 @@ weight.7=1</span>
 			
 		
 			
-				<li><a href="/tags/消息队列/" title="消息队列">消息队列<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
@@ -306,11 +302,7 @@ weight.7=1</span>
 			
 		
 			
-				<li><a href="/tags/Github-blog/" title="Github blog">Github blog<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
 			
 		
 			
@@ -322,7 +314,7 @@ weight.7=1</span>
 			
 		
 			
-				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
 			
 		
 			
@@ -330,7 +322,15 @@ weight.7=1</span>
 			
 		
 			
-				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+				<li><a href="/tags/监控预警/" title="监控预警">监控预警<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -607,6 +607,35 @@ $(document).ready(function(){
 
 <!-- MathJax Begin -->
 <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
 <!-- MathJax End -->
