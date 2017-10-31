@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://siye1982.github.io/img/blog/digger_share/15084799266956.jpg">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/digger_share/15084799722389.jpg">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/digger_share/15084800058293.jpg">
-<meta property="og:updated_time" content="2017-10-21T09:47:29.000Z">
+<meta property="og:updated_time" content="2017-10-31T04:18:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="美团外卖自动化业务运维系统建设">
 <meta name="twitter:description" content="写在前面美团外卖作为O2O领域领先的电商平台, 到现在具有业务流程复杂, 业务增长迅猛等特点。在对业务系统稳定性与时效性都有较高要求的前提下，单纯靠人工排查解决问题，存在较多的局限性。下面给大家主要介绍一下从外卖业务自身特点出发，围绕业务展开问题发现，根因分析，问题解决等自动化运维体系建设历程与相关设计原则。">
@@ -63,7 +63,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -79,7 +79,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -101,16 +101,16 @@
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2017-10-21T09:21:45.000Z" itemprop="datePublished"> 发表于 2017-10-21</time>
+    <time datetime="2017-10-21T09:21:45.000Z" itemprop="datePublished"> Published 2017-10-21</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#外卖业务特点"><span class="toc-number">2.</span> <span class="toc-text">外卖业务特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要解决的问题"><span class="toc-number">3.</span> <span class="toc-text">需要解决的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心目标"><span class="toc-number">4.</span> <span class="toc-text">核心目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重点系统体系建设"><span class="toc-number">5.</span> <span class="toc-text">重点系统体系建设</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#体系架构"><span class="toc-number">5.1.</span> <span class="toc-text">体系架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">5.2.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心链路"><span class="toc-number">5.3.</span> <span class="toc-text">核心链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务保护&故障演练"><span class="toc-number">5.4.</span> <span class="toc-text">服务保护&故障演练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整合全链路压测"><span class="toc-number">5.5.</span> <span class="toc-text">整合全链路压测</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自动化路程"><span class="toc-number">6.</span> <span class="toc-text">自动化路程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异常点自动检测"><span class="toc-number">6.1.</span> <span class="toc-text">异常点自动检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动触发服务保护"><span class="toc-number">6.2.</span> <span class="toc-text">自动触发服务保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#压测计划自动化"><span class="toc-number">6.3.</span> <span class="toc-text">压测计划自动化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#写在后面"><span class="toc-number">7.</span> <span class="toc-text">写在后面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#作者简介"><span class="toc-number">8.</span> <span class="toc-text">作者简介</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#外卖业务特点"><span class="toc-number">2.</span> <span class="toc-text">外卖业务特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要解决的问题"><span class="toc-number">3.</span> <span class="toc-text">需要解决的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心目标"><span class="toc-number">4.</span> <span class="toc-text">核心目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重点系统体系建设"><span class="toc-number">5.</span> <span class="toc-text">重点系统体系建设</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#体系架构"><span class="toc-number">5.1.</span> <span class="toc-text">体系架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">5.2.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心链路"><span class="toc-number">5.3.</span> <span class="toc-text">核心链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务保护&故障演练"><span class="toc-number">5.4.</span> <span class="toc-text">服务保护&故障演练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整合全链路压测"><span class="toc-number">5.5.</span> <span class="toc-text">整合全链路压测</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自动化路程"><span class="toc-number">6.</span> <span class="toc-text">自动化路程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异常点自动检测"><span class="toc-number">6.1.</span> <span class="toc-text">异常点自动检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动触发服务保护"><span class="toc-number">6.2.</span> <span class="toc-text">自动触发服务保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#压测计划自动化"><span class="toc-number">6.3.</span> <span class="toc-text">压测计划自动化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#写在后面"><span class="toc-number">7.</span> <span class="toc-text">写在后面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#作者简介"><span class="toc-number">8.</span> <span class="toc-text">作者简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#名词解释"><span class="toc-number">9.</span> <span class="toc-text">名词解释</span></a></li></ol>
 		
 		</div>
 		
@@ -227,6 +227,12 @@
 <p>在整个业务运维系统建设中，只有更加准确定位问题根节点，诊断问题根因才能逐步自动化去做一些运维动作(比如：触发降级开关，扩容集群等)。我们也会在这些环节的精细化建设上进行持续投入。希望检测到任意维度的异常点，向上推测出可能会影响哪些业务指标，影响哪些用户体验；向下依托于全链路压测可以非常准确的进行容量规划，节省资源。</p>
 <h1 id="作者简介">作者简介</h1><p>刘宏伟，2016年加入美团点评，主要负责外卖业务架构相关工作，现正在围绕业务建设监控运维体系。</p>
 <p><strong>美团外卖C端业务架构组：基于业务、服务、数据，进行深度整合、统一架构、规范，为外卖提供统一基础服务, 收集各业务线监控数据, 进行实时分析统计。我们正在努力将开发人员从日常运维工作中彻底解放出来，打造高效的业务运维平台。我们非常欢迎有业务运维经验，熟悉异常检测算法，对业务监控运维产品有深刻理解的同仁加入我们，共同提升美团外卖服务稳定性。<br>联系邮箱： liuhongwei04@meituan.com</strong></p>
+<h1 id="名词解释">名词解释</h1><ul>
+<li>MCC ：美团内部配置管理系统，可以进行项目中的配置管理，开关管理等。</li>
+<li>CAT ：大众点评实时监控系统，<a href="https://tech.meituan.com/CAT_in_Depth_Java_Application_Monitoring.html" target="_blank" rel="external">具体参考深度剖析开源分布式监控CAT</a>。</li>
+<li>DIGGER ：美团外卖实时业务监控系统。</li>
+<li>FALCON ：小米开源的监控系统，在美团主要偏向于系统指标监控。</li>
+</ul>
 <div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
 
   
@@ -282,22 +288,22 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#外卖业务特点"><span class="toc-number">2.</span> <span class="toc-text">外卖业务特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要解决的问题"><span class="toc-number">3.</span> <span class="toc-text">需要解决的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心目标"><span class="toc-number">4.</span> <span class="toc-text">核心目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重点系统体系建设"><span class="toc-number">5.</span> <span class="toc-text">重点系统体系建设</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#体系架构"><span class="toc-number">5.1.</span> <span class="toc-text">体系架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">5.2.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心链路"><span class="toc-number">5.3.</span> <span class="toc-text">核心链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务保护&故障演练"><span class="toc-number">5.4.</span> <span class="toc-text">服务保护&故障演练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整合全链路压测"><span class="toc-number">5.5.</span> <span class="toc-text">整合全链路压测</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自动化路程"><span class="toc-number">6.</span> <span class="toc-text">自动化路程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异常点自动检测"><span class="toc-number">6.1.</span> <span class="toc-text">异常点自动检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动触发服务保护"><span class="toc-number">6.2.</span> <span class="toc-text">自动触发服务保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#压测计划自动化"><span class="toc-number">6.3.</span> <span class="toc-text">压测计划自动化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#写在后面"><span class="toc-number">7.</span> <span class="toc-text">写在后面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#作者简介"><span class="toc-number">8.</span> <span class="toc-text">作者简介</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#外卖业务特点"><span class="toc-number">2.</span> <span class="toc-text">外卖业务特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要解决的问题"><span class="toc-number">3.</span> <span class="toc-text">需要解决的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#核心目标"><span class="toc-number">4.</span> <span class="toc-text">核心目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重点系统体系建设"><span class="toc-number">5.</span> <span class="toc-text">重点系统体系建设</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#体系架构"><span class="toc-number">5.1.</span> <span class="toc-text">体系架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#业务大盘"><span class="toc-number">5.2.</span> <span class="toc-text">业务大盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心链路"><span class="toc-number">5.3.</span> <span class="toc-text">核心链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务保护&故障演练"><span class="toc-number">5.4.</span> <span class="toc-text">服务保护&故障演练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整合全链路压测"><span class="toc-number">5.5.</span> <span class="toc-text">整合全链路压测</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自动化路程"><span class="toc-number">6.</span> <span class="toc-text">自动化路程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异常点自动检测"><span class="toc-number">6.1.</span> <span class="toc-text">异常点自动检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动触发服务保护"><span class="toc-number">6.2.</span> <span class="toc-text">自动触发服务保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#压测计划自动化"><span class="toc-number">6.3.</span> <span class="toc-text">压测计划自动化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#写在后面"><span class="toc-number">7.</span> <span class="toc-text">写在后面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#作者简介"><span class="toc-number">8.</span> <span class="toc-text">作者简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#名词解释"><span class="toc-number">9.</span> <span class="toc-text">名词解释</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -358,7 +364,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -398,27 +404,23 @@
 			
 		
 			
-				<li><a href="/tags/UDACITY/" title="UDACITY">UDACITY<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/分布式事务/" title="分布式事务">分布式事务<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/消息队列/" title="消息队列">消息队列<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+				<li><a href="/tags/业务监控/" title="业务监控">业务监控<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+				<li><a href="/tags/运维/" title="运维">运维<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
 			
 		
 			
@@ -430,11 +432,15 @@
 			
 		
 			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/业务监控/" title="业务监控">业务监控<sup>1</sup></a></li>
+				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
 			
 		
 			
@@ -446,7 +452,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -501,7 +507,7 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -707,7 +713,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
