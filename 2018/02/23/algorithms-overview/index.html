@@ -1,0 +1,753 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>常用算法学习笔记 | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="写在前面上学时的数学课会介绍很多定理、公式，但是少有介绍在日常生活中运用的案例。任何一个设计模式、算法都应该是从生活中来，又可以回到生活中去。最近一直在做异常检测与故障诊断相关的事情，越来越觉得算法的重要性，这里记录一下，最近学习的一些常用算法与应用场景。尽量描述的短小、通俗。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用算法学习笔记">
+<meta property="og:url" content="http://siye1982.github.io/2018/02/23/algorithms-overview/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="写在前面上学时的数学课会介绍很多定理、公式，但是少有介绍在日常生活中运用的案例。任何一个设计模式、算法都应该是从生活中来，又可以回到生活中去。最近一直在做异常检测与故障诊断相关的事情，越来越觉得算法的重要性，这里记录一下，最近学习的一些常用算法与应用场景。尽量描述的短小、通俗。">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194392376416.jpg">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194399924747.jpg">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194421063873.jpg">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194531216166.jpg">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194590553731.jpg">
+<meta property="og:updated_time" content="2018-02-24T08:17:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常用算法学习笔记">
+<meta name="twitter:description" content="写在前面上学时的数学课会介绍很多定理、公式，但是少有介绍在日常生活中运用的案例。任何一个设计模式、算法都应该是从生活中来，又可以回到生活中去。最近一直在做异常检测与故障诊断相关的事情，越来越觉得算法的重要性，这里记录一下，最近学习的一些常用算法与应用场景。尽量描述的短小、通俗。">
+<meta name="twitter:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194392376416.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Panda" title="Panda"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto">人生需要一次All in</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/02/23/algorithms-overview/" title="常用算法学习笔记" itemprop="url">常用算法学习笔记</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2018-02-23T08:54:54.000Z" itemprop="datePublished"> 发表于 2018-02-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大O表示法的理解"><span class="toc-number">2.</span> <span class="toc-text">大O表示法的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#查找的前提-排序"><span class="toc-number">3.</span> <span class="toc-text">查找的前提-排序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">3.1.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快排的前提-递归"><span class="toc-number">3.2.</span> <span class="toc-text">快排的前提-递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">3.3.</span> <span class="toc-text">快速排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单查找、二分查找"><span class="toc-number">4.</span> <span class="toc-text">简单查找、二分查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#散列表可以帮我们提升算法运行效率"><span class="toc-number">5.</span> <span class="toc-text">散列表可以帮我们提升算法运行效率</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA算法"><span class="toc-number">5.1.</span> <span class="toc-text">SHA算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部敏感散列算法"><span class="toc-number">5.2.</span> <span class="toc-text">局部敏感散列算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广度优先搜索算法"><span class="toc-number">6.</span> <span class="toc-text">广度优先搜索算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#狄克斯特拉算法"><span class="toc-number">7.</span> <span class="toc-text">狄克斯特拉算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态规划"><span class="toc-number">8.</span> <span class="toc-text">动态规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#K最近邻算法"><span class="toc-number">9.</span> <span class="toc-text">K最近邻算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布隆过滤器"><span class="toc-number">10.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="写在前面">写在前面</h1><p>上学时的数学课会介绍很多定理、公式，但是少有介绍在日常生活中运用的案例。任何一个设计模式、算法都应该是从生活中来，又可以回到生活中去。最近一直在做异常检测与故障诊断相关的事情，越来越觉得算法的重要性，这里记录一下，最近学习的一些常用算法与应用场景。尽量描述的短小、通俗。</p>
+<a id="more"></a>
+<h1 id="大O表示法的理解">大O表示法的理解</h1><p>大O表示法指出了算法在最坏情况下的运行时间。<br>几种常见的算法运行时间如下：</p>
+<ul>
+<li>O(logn)，也叫对数时间，这样的算法包括二分查找。   </li>
+<li>O(n)，也叫线性时间，这样的算法包括简单查找。   </li>
+<li>O(n*logn)，这样的算法包括第4章将介绍的快速排序——一种速度较快的排序算法。   </li>
+<li>O(n^2 )，这样的算法包括第2章将介绍的选择排序——一种速度较慢的排序算法。   </li>
+<li>O(n!)，这样的算法包括接下来将介绍的旅行商问题的解决方案——一种非常慢的算法。</li>
+</ul>
+<p><img src="http://siye1982.github.io/img/blog/algorithms_overview/15194392376416.jpg" alt=""></p>
+<p>主要启示：</p>
+<ul>
+<li>算法的速度指的并非时间，而是操作数的增速。   </li>
+<li>谈论算法的速度时，我们说的是随着输入的增加，其运行时间将以什么样的速度增加。   </li>
+<li>算法的运行时间用大O表示法表示。   </li>
+<li>O(logn)比O(n)快，当需要搜索的元素越多时，前者比后者快得越多。</li>
+</ul>
+<h1 id="查找的前提-排序">查找的前提-排序</h1><p>日常生活中，我们会有大量的场景去查找东西，比如：查字典，查电话簿，查商品。如果查询的数据集可以以某种形式进行排序，在有序的数据集中进行查找，将大大提高我们的查询速度，人是这样，计算机同样是这样。<br>排序相关的数据结构-数组与链表的特点：</p>
+<ul>
+<li>链表的元素是分开的，其中每个元素都存储了下一个元素的地址。   </li>
+<li>数组的读取速度很快。</li>
+<li>链表的插入和删除速度很快。<h2 id="选择排序">选择排序</h2>场景：老师给班级学生的英语成绩进行排序。最直观的排序方式是，每次在原始集合中找出最大的，然后放到新集合中，依次将原始集合中的数据都遍历一遍。它的算法运行时间为O(n^2).<br><a href="https://github.com/egonSchiele/grokking_algorithms/blob/master/02_selection_sort/java/src/SelectionSort2.java" target="_blank" rel="external">事例代码在这里</a></li>
+</ul>
+<h2 id="快排的前提-递归">快排的前提-递归</h2><p>递归指的是调用自己的函数，递归操作被广泛的使用在很多算法中，它是我们高中数学中归纳证明在计算机中的应用。递归很可能性能没有多写几个循环来的高，但是它使我们的程序通俗易懂，我们需要在两者之间取得一个平衡。在使用递归时，需要特别注意基线条件：退出递归的条件。计算机在调用函数时都会使用栈这个数据结构，每当你调用函数时，计算机都像这样将函数调用涉及的所有变量的值存储到内存中。如果基线条件没有控制好，很容易造成栈溢出。</p>
+<p>在使用递归时，你可能看不到循环操作，其实对栈的后进先出(LIFO)操作隐藏了一个循环操作。存储详尽的信息可能占用大量的内存。每个函数调用都要占用一定的内存，如果栈很高，就意味着计算机存储了大量函数调用的信息。在这种情况下，你有两种选择:</p>
+<ul>
+<li>重新编写代码，转而使用循环。   </li>
+<li>使用尾递归。而并非所有的语言都支持尾递归。</li>
+</ul>
+<h2 id="快速排序">快速排序</h2><p>快速排序是远快于选择排序的排序方式，它使用到了递归，基线条件是数组为空或只包含一个元素。在这种情况下，只需原样返回数组，不用排序。快速排序需要经历下面的步骤：</p>
+<ul>
+<li>选择基准值。</li>
+<li>将数组分成两个子数组：小于基准值的元素和大于基准值的元素。</li>
+<li>对这两个子数组进行排序。</li>
+</ul>
+<p>Java8代码事例如下：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> static <span class="built_in">List</span>&lt;<span class="built_in">Integer</span>&gt; quicksort(<span class="built_in">List</span>&lt;<span class="built_in">Integer</span>&gt; <span class="built_in">list</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">list</span>.size() &lt; <span class="number">2</span>) &#123;</div><div class="line">        <span class="comment">//基线条件：为空或只包含一个元素的数组是“有序”的</span></div><div class="line">        <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">//递归条件</span></div><div class="line">        <span class="built_in">Integer</span> pivot = <span class="built_in">list</span>.get(<span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="comment">//由所有小于基准值的元素组成的子数组</span></div><div class="line">        <span class="built_in">List</span>&lt;<span class="built_in">Integer</span>&gt; less = <span class="built_in">list</span>.stream().<span class="keyword">skip</span>(<span class="number">1</span>).filter(el -&gt; el &lt;= pivot)</div><div class="line">                .collect(Collectors.toList());</div><div class="line"></div><div class="line">        <span class="comment">//由所有大于基准值的元素组成的子数组</span></div><div class="line">        <span class="built_in">List</span>&lt;<span class="built_in">Integer</span>&gt; greater = <span class="built_in">list</span>.stream().<span class="keyword">skip</span>(<span class="number">1</span>).filter(el -&gt; el &gt; pivot)</div><div class="line">                .collect(Collectors.toList());</div><div class="line"></div><div class="line">			<span class="comment">// 合并三个分区形成新的排序后的数组</span></div><div class="line">        <span class="keyword">return</span> Stream.of(</div><div class="line">                quicksort(less).stream(),</div><div class="line">                Stream.of(pivot),</div><div class="line">                quicksort(greater).stream())</div><div class="line">                .flatMap(Function.identity()).collect(Collectors.toList());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>面试的时候， 还经常会让手写快速排序算法。</p>
+<h1 id="简单查找、二分查找">简单查找、二分查找</h1><p>简单查找与之前说的选择排序，都是最容易想到的处理方式，但是算法运行时间很高为O(n)，傻傻的查找。二分查找，在进行排序的前提下，每次取集合中的中值与目标值进行比较，很快就可以定位目标，其算法运行时间为O(logn).</p>
+<p>Java8代码事例如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 二分查找前提是被查找集合是排序过的</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Integer <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] <span class="built_in">list</span>, <span class="keyword">int</span> item)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> low = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> high = <span class="built_in">list</span>.length - <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (low &lt;= high) &#123;<span class="comment">//只要范围没有缩小到只包含一个元素</span></div><div class="line">        <span class="keyword">int</span> mid = (low + high) / <span class="number">2</span>; <span class="comment">//检查中间元素</span></div><div class="line">        <span class="keyword">int</span> guess = <span class="built_in">list</span>[mid];</div><div class="line">        <span class="keyword">if</span> (guess == item) &#123; <span class="comment">// 找到了元素</span></div><div class="line">            <span class="keyword">return</span> mid;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (guess &gt; item) &#123; <span class="comment">// 猜的大了</span></div><div class="line">            high = mid - <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 猜的小了</span></div><div class="line">            low = mid + <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">	 <span class="comment">// 没有指定元素</span></div><div class="line">    <span class="keyword">return</span> null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="散列表可以帮我们提升算法运行效率">散列表可以帮我们提升算法运行效率</h1><p>散列表中最重要的是散列函数，散列函数将所有的键都映射到一个位置，而最理想的情况是，散列函数将键均匀地映射到散列表的不同位置，如果散列表存储的链表很长，散列表的速度将急剧下降。散列表是数组与链表两种数据结构的结合体，链表用来解决哈希冲突时的数据存储。然而，如果使用的散列函数很好，这些链表就不会很长！</p>
+<p>散列表的查找速度与数组一样快，而插入和删除速度与链表一样快，因此它兼具两者的优点！但在最糟情况下，散列表的各种操作的速度都很慢。因此，在使用散列表时，避开最糟情况至关重要。为此，需要避免冲突。而要避免冲突，需要有：</p>
+<ul>
+<li>较低的填装因子；</li>
+<li>良好的散列函数。<br>填装因子越低，发生冲突的可能性越小，散列表的性能越高。一个不错的经验规则是：一旦填装因子大于0.7，就调整散列表的长度。</li>
+</ul>
+<p>散列表适合用于模拟映射关系。散列表可用于缓存数据（例如，在Web服务器上）。散列表非常适合用于防止重复。这些都将大大提高使用散列表的算法的速度。</p>
+<h2 id="SHA算法">SHA算法</h2><h2 id="局部敏感散列算法">局部敏感散列算法</h2><h1 id="广度优先搜索算法">广度优先搜索算法</h1><p>使用广度优先搜索帮助你完成下面的一些事情：</p>
+<ul>
+<li>编写国际跳棋AI，计算最少走多少步就可获胜；   </li>
+<li>编写拼写检查器，计算最少编辑多少个地方就可将错拼的单词改成正确的单词，如将READED改为READER需要编辑一个地方；</li>
+<li>根据你的人际关系网络找到关系最近的医生。</li>
+</ul>
+<p>它是对复杂关系网的计算分析，而需要注意的是这些关系网中每一个关系没有权重，如果关系有权重可能需要使用其他算法。关系网在数学上对应着图。<br><img src="http://siye1982.github.io/img/blog/algorithms_overview/15194399924747.jpg" alt=""></p>
+<p>广度优先搜索可回答两类问题：</p>
+<ul>
+<li>第一类问题：从节点A出发，有前往节点E的路径吗？（在你的人际关系网中，有芒果销售商吗？）   </li>
+<li>第二类问题：从节点A出发，前往节点E的哪条路径最短？（哪个芒果销售商与你的关系最近？）</li>
+</ul>
+<p>实现该算法的关键点是使用散列表记录关系图，使用队列(先进先出FIFO)记录需要遍历的节点，使用数组记录哪些节点是否被遍历过，避免进入死循环。</p>
+<p>Java8代码事例：<br>查找和你关系最近的名字以m结尾的人。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.*;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> BreadthFirstSearch &#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;<span class="keyword">String</span>, List&lt;<span class="keyword">String</span>&gt;&gt; graph = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> search(<span class="keyword">String</span> name) &#123;</div><div class="line">        Queue&lt;<span class="keyword">String</span>&gt; searchQueue = <span class="keyword">new</span> ArrayDeque&lt;&gt;(graph.<span class="built_in">get</span>(name));</div><div class="line">        <span class="comment">// 该队列记录已经被存储的</span></div><div class="line">        List&lt;<span class="keyword">String</span>&gt; searched = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">        <span class="built_in">while</span> (!searchQueue.isEmpty()) &#123;</div><div class="line">            <span class="keyword">String</span> person = searchQueue.poll();</div><div class="line">            <span class="comment">// Only search this person if you haven't already searched them</span></div><div class="line">            <span class="built_in">if</span> (!searched.contains(person)) &#123;</div><div class="line">                <span class="built_in">if</span> (person_is_seller(person)) &#123;</div><div class="line">                    System.out.<span class="built_in">println</span>(person + <span class="string">" is right!"</span>);</div><div class="line">                &#125; <span class="built_in">else</span> &#123;</div><div class="line">                    searchQueue.addAll(graph.<span class="built_in">get</span>(person));</div><div class="line">                    <span class="comment">// 标记已经检索过</span></div><div class="line">                    searched.add(person);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="built_in">return</span> false;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> person_is_seller(<span class="keyword">String</span> name) &#123;</div><div class="line">        <span class="built_in">return</span> name.endsWith(<span class="string">"m"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"you"</span>, Arrays.asList(<span class="string">"alice"</span>, <span class="string">"bob"</span>, <span class="string">"claire"</span>));</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"bob"</span>, Arrays.asList(<span class="string">"anuj"</span>, <span class="string">"peggy"</span>));</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"alice"</span>, Arrays.asList(<span class="string">"peggy"</span>));</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"claire"</span>, Arrays.asList(<span class="string">"thom"</span>, <span class="string">"jonny"</span>));</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"anuj"</span>, Collections.emptyList());</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"peggy"</span>, Collections.emptyList());</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"thom"</span>, Collections.emptyList());</div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"jonny"</span>, Collections.emptyList());</div><div class="line"></div><div class="line">        search(<span class="string">"you"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="狄克斯特拉算法">狄克斯特拉算法</h1><p>使用狄克斯特拉算法可以帮助我们完成下面的一些事情：</p>
+<ul>
+<li>给外卖小哥规划时间最短的取餐、送餐路径。</li>
+</ul>
+<p>它与广度优先搜索算法不同的是，计算的关系网中， 每一个关系都有权重。图中的环可能导致该算法失效。<br>狄克斯特拉算法只适用于有向无环图（directed acyclic graph，DAG）。<br><img src="http://siye1982.github.io/img/blog/algorithms_overview/15194421063873.jpg" alt=""></p>
+<p>算法需要三个散列表分别记录：</p>
+<ul>
+<li>散列表graph，记录整个有向无环图的关系与权重。</li>
+<li>散列表costs，记录从起点到各个节点的权重开销，这个散列表需要实时更新。</li>
+<li>散列表parent，记录与起点关联的节点的父结点，这个散列表需要实时更新。</li>
+</ul>
+<p><img src="http://siye1982.github.io/img/blog/algorithms_overview/15194531216166.jpg" alt=""></p>
+<p>根据上图下面是一个Java8的代码事例：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> DijkstrasAlgorithm &#123;</div><div class="line">    <span class="comment">//整个存储有向无环图数据</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;<span class="keyword">String</span>, Map&lt;<span class="keyword">String</span>, Double&gt;&gt; graph = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    <span class="comment">//存储已经处理过的节点</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;<span class="keyword">String</span>&gt; processed = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="comment">// 找出开销最小的节点，节点的开销指的是从起点出发前往该节点需要多长时间</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">String</span> findLowestCostNode(Map&lt;<span class="keyword">String</span>, Double&gt; costs) &#123;</div><div class="line">        Double lowestCost = Double.POSITIVE_INFINITY; <span class="comment">//初始值设置为无穷大</span></div><div class="line">        <span class="keyword">String</span> lowestCostNode = null;</div><div class="line"></div><div class="line">        <span class="comment">// 遍历所有节点</span></div><div class="line">        <span class="built_in">for</span> (Map.Entry&lt;<span class="keyword">String</span>, Double&gt; node : costs.entrySet()) &#123;</div><div class="line">            Double cost = node.getValue();</div><div class="line">            <span class="comment">// 如果当前节点开销更低，并且没有被处理过，将其设为开销最低。</span></div><div class="line">            <span class="built_in">if</span> (cost &lt; lowestCost &amp;&amp; !processed.contains(node.<span class="built_in">getKey</span>())) &#123;</div><div class="line">                <span class="comment">// ... set it as the new lowest-cost node.</span></div><div class="line">                lowestCost = cost; </div><div class="line">                lowestCostNode = node.<span class="built_in">getKey</span>();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">return</span> lowestCostNode;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</div><div class="line">        <span class="comment">//根据上图构建整个数据集</span></div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"start"</span>, <span class="keyword">new</span> HashMap&lt;&gt;());</div><div class="line">        graph.<span class="built_in">get</span>(<span class="string">"start"</span>).<span class="built_in">put</span>(<span class="string">"a"</span>, <span class="number">6.0</span>);</div><div class="line">        graph.<span class="built_in">get</span>(<span class="string">"start"</span>).<span class="built_in">put</span>(<span class="string">"b"</span>, <span class="number">2.0</span>);</div><div class="line"></div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"a"</span>, <span class="keyword">new</span> HashMap&lt;&gt;());</div><div class="line">        graph.<span class="built_in">get</span>(<span class="string">"a"</span>).<span class="built_in">put</span>(<span class="string">"fin"</span>, <span class="number">1.0</span>);</div><div class="line"></div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"b"</span>, <span class="keyword">new</span> HashMap&lt;&gt;());</div><div class="line">        graph.<span class="built_in">get</span>(<span class="string">"b"</span>).<span class="built_in">put</span>(<span class="string">"a"</span>, <span class="number">3.0</span>);</div><div class="line">        graph.<span class="built_in">get</span>(<span class="string">"b"</span>).<span class="built_in">put</span>(<span class="string">"fin"</span>, <span class="number">5.0</span>);</div><div class="line"></div><div class="line">        graph.<span class="built_in">put</span>(<span class="string">"fin"</span>, <span class="keyword">new</span> HashMap&lt;&gt;());</div><div class="line"></div><div class="line">        <span class="comment">// 初始用来存储从起点开始的相邻节点的所有开销</span></div><div class="line">        Map&lt;<span class="keyword">String</span>, Double&gt; costs = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">        costs.<span class="built_in">put</span>(<span class="string">"a"</span>, <span class="number">6.0</span>);</div><div class="line">        costs.<span class="built_in">put</span>(<span class="string">"b"</span>, <span class="number">2.0</span>);</div><div class="line">        <span class="comment">//不是相邻的暂时设为无穷大</span></div><div class="line">        costs.<span class="built_in">put</span>(<span class="string">"fin"</span>, Double.POSITIVE_INFINITY);</div><div class="line"></div><div class="line">        <span class="comment">// 初始用来存储从起点开始的相邻节点的所有父结点</span></div><div class="line">        Map&lt;<span class="keyword">String</span>, <span class="keyword">String</span>&gt; parents = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">        parents.<span class="built_in">put</span>(<span class="string">"a"</span>, <span class="string">"start"</span>);</div><div class="line">        parents.<span class="built_in">put</span>(<span class="string">"b"</span>, <span class="string">"start"</span>);</div><div class="line">        <span class="comment">//不是相邻的暂时设为null</span></div><div class="line">        parents.<span class="built_in">put</span>(<span class="string">"fin"</span>, null);</div><div class="line"></div><div class="line">        <span class="comment">// 在未处理的节点中找出开销最小的节点</span></div><div class="line">        <span class="keyword">String</span> node = findLowestCostNode(costs);</div><div class="line">        <span class="comment">//这个循环在所有节点都被处理过后结束</span></div><div class="line">        <span class="built_in">while</span> (node != null) &#123;</div><div class="line">            Double cost = costs.<span class="built_in">get</span>(node);</div><div class="line">            Map&lt;<span class="keyword">String</span>, Double&gt; neighbors = graph.<span class="built_in">get</span>(node);</div><div class="line">            <span class="comment">//遍历当前节点的所有邻居</span></div><div class="line">            <span class="built_in">for</span> (<span class="keyword">String</span> n : neighbors.keySet()) &#123;</div><div class="line">                <span class="keyword">double</span> newCost = cost + neighbors.<span class="built_in">get</span>(n);</div><div class="line">                <span class="comment">// 如果经当前节点前往该邻居开销更低</span></div><div class="line">                <span class="built_in">if</span> (costs.<span class="built_in">get</span>(n) &gt; newCost) &#123;</div><div class="line">                    <span class="comment">// 更新该邻居的开销</span></div><div class="line">                    costs.<span class="built_in">put</span>(n, newCost);</div><div class="line">                    <span class="comment">// 同时将该邻居的父结点设为当前节点</span></div><div class="line">                    parents.<span class="built_in">put</span>(n, node);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 将当前节点标记处理过</span></div><div class="line">            processed.add(node);</div><div class="line"></div><div class="line">            <span class="comment">// 去找下一个需要处理的节点，并循环</span></div><div class="line">            node = findLowestCostNode(costs);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        System.out.<span class="built_in">println</span>(<span class="string">"Cost from the start to each node:"</span>);</div><div class="line">        System.out.<span class="built_in">println</span>(costs); <span class="comment">// &#123; b: 2,a: 5, fin: 6 &#125;</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="动态规划">动态规划</h1><p>什么场景下使用动态规划：</p>
+<ul>
+<li>需要在给定约束条件下优化某种指标时，动态规划很有用。</li>
+<li>问题可分解为离散子问题时，可使用动态规划来解决。   </li>
+<li>每种动态规划解决方案都涉及网格。</li>
+<li>单元格中的值通常就是你要优化的值。</li>
+<li>每个单元格都是一个子问题，因此你需要考虑如何将问题分解为子问题。</li>
+</ul>
+<p>待补充。</p>
+<h1 id="K最近邻算法">K最近邻算法</h1><p>使用K最近邻算法可以帮助我们在现实生活中完成下面的事情：</p>
+<ul>
+<li>在外卖平台给你推荐你可能喜欢的餐食。</li>
+<li>在电影网站给你推荐你可能喜欢的电影。</li>
+<li>在购物平台给你推荐你可能喜欢的商品。</li>
+<li>预测明天的销量。</li>
+<li>创建垃圾邮件过滤器。</li>
+<li>预测股票市场(中国股市，还是算了吧)。</li>
+</ul>
+<p>该算法体现了，人以类聚物以群分。找出我们最近的一些朋友，通过提取一些通用特征，来预测出我们可能喜欢的一些东西。没错，推荐系统就是用它，它可能是你进入机器学习领域的领路人。</p>
+<p>该算法主要会经历两个重要步骤：</p>
+<ul>
+<li>通用特征提取，通过对两个事物的公共特征的计算，获取他们对应的矢量距离(每个特征可以当做一个维度的值)，通过这些计算将事物进行分类。挑选合适的特征很重要，所谓合适的特征，就是：与要推荐的事物紧密相关的特征；不偏不倚的特征（例如，如果只让用户给喜剧片打分，就无法判断他们是否喜欢动作片）。</li>
+<li>通过分类后的数据集，进行回归，也就是预测结果。</li>
+</ul>
+<p>注：在实际工作中，经常使用余弦相似度（cosinesimilarity），而非简单的计算矢量距离。假设有两位品味类似的用户，但其中一位打分时更保守。他们都很喜欢Manmohan Desai的电影Amar AkbarAnthony，但Paul给了5星，而Rowan只给4星。如果你使用距离公式，这两位用户可能不是邻居，虽然他们的品味非常接近。</p>
+<h1 id="布隆过滤器">布隆过滤器</h1><p>当需要对大量数据进行去重时，如果使用散列表进行操作，将耗费大量的存储空间，布隆过滤器是引入了k(k&gt;1)个相互独立的哈希函数，保证在给定的空间、误判率下，完成元素判重的过程。下图中是k=3时的布隆过滤器。<br><img src="http://siye1982.github.io/img/blog/algorithms_overview/15194590553731.jpg" alt=""><br>x,y,z经由哈希函数映射将各自在Bitmap中的3个位置置为1，当w出现时，仅当3个标志位都为1时，才表示w在集合中。图中所示的情况，布隆过滤器将判定w不在集合中。</p>
+<p>布隆过滤器的优点在于占用的存储空间很少。使用散列表时，答案绝对可靠，而使用布隆过滤器时，答案却是很可能是正确的。可能出现错报的情况：</p>
+<ul>
+<li>这个数据已存在，但实际上并没不存在。</li>
+<li>不可能出现漏报的情况，即如果布隆过滤器说“这个数据不存在”，就肯定不存在。</li>
+</ul>
+<h1 id="参考">参考</h1><ol>
+<li>《算法图解》作者：【美】Aditya Bhargava 译者：袁国忠</li>
+<li><a href="http://blog.csdn.net/zdxiq000/article/details/57626464" target="_blank" rel="external">Bitmap和布隆过滤器(Bloom Filter)</a></li>
+</ol>
+<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+
+
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a><a href="/tags/原创/">原创</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2018/02/23/algorithms-overview/" data-title="常用算法学习笔记 | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2017/11/27/sweet20171126/"  title="2017-11-26 给糖果的一封信">
+ <strong>下一篇：</strong><br/> 
+ <span>2017-11-26 给糖果的一封信
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2018/02/23/algorithms-overview/" data-title="常用算法学习笔记" data-url="http://siye1982.github.io/2018/02/23/algorithms-overview/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大O表示法的理解"><span class="toc-number">2.</span> <span class="toc-text">大O表示法的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#查找的前提-排序"><span class="toc-number">3.</span> <span class="toc-text">查找的前提-排序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">3.1.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快排的前提-递归"><span class="toc-number">3.2.</span> <span class="toc-text">快排的前提-递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">3.3.</span> <span class="toc-text">快速排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单查找、二分查找"><span class="toc-number">4.</span> <span class="toc-text">简单查找、二分查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#散列表可以帮我们提升算法运行效率"><span class="toc-number">5.</span> <span class="toc-text">散列表可以帮我们提升算法运行效率</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA算法"><span class="toc-number">5.1.</span> <span class="toc-text">SHA算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部敏感散列算法"><span class="toc-number">5.2.</span> <span class="toc-text">局部敏感散列算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广度优先搜索算法"><span class="toc-number">6.</span> <span class="toc-text">广度优先搜索算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#狄克斯特拉算法"><span class="toc-number">7.</span> <span class="toc-text">狄克斯特拉算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态规划"><span class="toc-number">8.</span> <span class="toc-text">动态规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#K最近邻算法"><span class="toc-number">9.</span> <span class="toc-text">K最近邻算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布隆过滤器"><span class="toc-number">10.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/RPC跟踪/" title="RPC跟踪">RPC跟踪<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Zookeeper/" title="Zookeeper">Zookeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/业务监控/" title="业务监控">业务监控<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/全链路监控/" title="全链路监控">全链路监控<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据分析/" title="数据分析">数据分析<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/服务治理/" title="服务治理">服务治理<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/监控预警/" title="监控预警">监控预警<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>5</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/原创/" title="原创">原创<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SOA/" title="SOA">SOA<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/业务监控/" title="业务监控">业务监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/运维/" title="运维">运维<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"siye1982"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255443286'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255443286' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
