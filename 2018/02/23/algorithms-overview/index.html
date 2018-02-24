@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194421063873.jpg">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194531216166.jpg">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/algorithms_overview/15194590553731.jpg">
-<meta property="og:updated_time" content="2018-02-24T08:17:30.000Z">
+<meta property="og:updated_time" content="2018-02-24T08:26:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用算法学习笔记">
 <meta name="twitter:description" content="写在前面上学时的数学课会介绍很多定理、公式，但是少有介绍在日常生活中运用的案例。任何一个设计模式、算法都应该是从生活中来，又可以回到生活中去。最近一直在做异常检测与故障诊断相关的事情，越来越觉得算法的重要性，这里记录一下，最近学习的一些常用算法与应用场景。尽量描述的短小、通俗。">
@@ -54,7 +54,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -70,7 +70,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -92,16 +92,16 @@
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-23T08:54:54.000Z" itemprop="datePublished"> 发表于 2018-02-23</time>
+    <time datetime="2018-02-23T08:54:54.000Z" itemprop="datePublished"> Published 2018-02-23</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大O表示法的理解"><span class="toc-number">2.</span> <span class="toc-text">大O表示法的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#查找的前提-排序"><span class="toc-number">3.</span> <span class="toc-text">查找的前提-排序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">3.1.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快排的前提-递归"><span class="toc-number">3.2.</span> <span class="toc-text">快排的前提-递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">3.3.</span> <span class="toc-text">快速排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单查找、二分查找"><span class="toc-number">4.</span> <span class="toc-text">简单查找、二分查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#散列表可以帮我们提升算法运行效率"><span class="toc-number">5.</span> <span class="toc-text">散列表可以帮我们提升算法运行效率</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA算法"><span class="toc-number">5.1.</span> <span class="toc-text">SHA算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部敏感散列算法"><span class="toc-number">5.2.</span> <span class="toc-text">局部敏感散列算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广度优先搜索算法"><span class="toc-number">6.</span> <span class="toc-text">广度优先搜索算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#狄克斯特拉算法"><span class="toc-number">7.</span> <span class="toc-text">狄克斯特拉算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态规划"><span class="toc-number">8.</span> <span class="toc-text">动态规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#K最近邻算法"><span class="toc-number">9.</span> <span class="toc-text">K最近邻算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布隆过滤器"><span class="toc-number">10.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大O表示法的理解"><span class="toc-number">2.</span> <span class="toc-text">大O表示法的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#查找的前提-排序"><span class="toc-number">3.</span> <span class="toc-text">查找的前提-排序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">3.1.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快排的前提-递归"><span class="toc-number">3.2.</span> <span class="toc-text">快排的前提-递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">3.3.</span> <span class="toc-text">快速排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单查找、二分查找"><span class="toc-number">4.</span> <span class="toc-text">简单查找、二分查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#散列表可以帮我们提升算法运行效率"><span class="toc-number">5.</span> <span class="toc-text">散列表可以帮我们提升算法运行效率</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA算法"><span class="toc-number">5.1.</span> <span class="toc-text">SHA算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部敏感散列算法SimHash"><span class="toc-number">5.2.</span> <span class="toc-text">局部敏感散列算法SimHash</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广度优先搜索算法"><span class="toc-number">6.</span> <span class="toc-text">广度优先搜索算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#狄克斯特拉算法"><span class="toc-number">7.</span> <span class="toc-text">狄克斯特拉算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态规划"><span class="toc-number">8.</span> <span class="toc-text">动态规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#K最近邻算法"><span class="toc-number">9.</span> <span class="toc-text">K最近邻算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布隆过滤器"><span class="toc-number">10.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol>
 		
 		</div>
 		
@@ -154,7 +154,19 @@
 <li>良好的散列函数。<br>填装因子越低，发生冲突的可能性越小，散列表的性能越高。一个不错的经验规则是：一旦填装因子大于0.7，就调整散列表的长度。</li>
 </ul>
 <p>散列表适合用于模拟映射关系。散列表可用于缓存数据（例如，在Web服务器上）。散列表非常适合用于防止重复。这些都将大大提高使用散列表的算法的速度。</p>
-<h2 id="SHA算法">SHA算法</h2><h2 id="局部敏感散列算法">局部敏感散列算法</h2><h1 id="广度优先搜索算法">广度优先搜索算法</h1><p>使用广度优先搜索帮助你完成下面的一些事情：</p>
+<h2 id="SHA算法">SHA算法</h2><p>SHA算法可以帮助我们做类似下面的事情：</p>
+<ul>
+<li>可以快速帮你比较两个文件是否相同。</li>
+<li>文件是否有被修改过。</li>
+<li>在不记录用户真实密码的前提下完成登录身份验证。</li>
+</ul>
+<h2 id="局部敏感散列算法SimHash">局部敏感散列算法SimHash</h2><p>如果你对字符串做细微的修改，Simhash生成的散列值也只存在细微的差别。这让你能够通过比较散列值来判断两个字符串的相似程度，可以做下面的应用：</p>
+<ul>
+<li>使用Simhash来判断网页是否已搜集。   </li>
+<li>老师可以使用Simhash来判断学生的论文是否是从网上抄的。   </li>
+<li>允许用户上传文档或图书，以便与人分享，但不希望用户上传有版权的内容！可使用SimHash来检查上传的内容是否有类似的，如果类似，自动拒绝。</li>
+</ul>
+<h1 id="广度优先搜索算法">广度优先搜索算法</h1><p>使用广度优先搜索帮助你完成下面的一些事情：</p>
 <ul>
 <li>编写国际跳棋AI，计算最少走多少步就可获胜；   </li>
 <li>编写拼写检查器，计算最少编辑多少个地方就可将错拼的单词改成正确的单词，如将READED改为READER需要编辑一个地方；</li>
@@ -235,7 +247,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/算法/">算法</a><a href="/tags/原创/">原创</a>
+  <span></span> <a href="/tags/原创/">原创</a><a href="/tags/算法/">算法</a>
   </div>
 
 </div>
@@ -275,22 +287,22 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大O表示法的理解"><span class="toc-number">2.</span> <span class="toc-text">大O表示法的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#查找的前提-排序"><span class="toc-number">3.</span> <span class="toc-text">查找的前提-排序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">3.1.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快排的前提-递归"><span class="toc-number">3.2.</span> <span class="toc-text">快排的前提-递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">3.3.</span> <span class="toc-text">快速排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单查找、二分查找"><span class="toc-number">4.</span> <span class="toc-text">简单查找、二分查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#散列表可以帮我们提升算法运行效率"><span class="toc-number">5.</span> <span class="toc-text">散列表可以帮我们提升算法运行效率</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA算法"><span class="toc-number">5.1.</span> <span class="toc-text">SHA算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部敏感散列算法"><span class="toc-number">5.2.</span> <span class="toc-text">局部敏感散列算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广度优先搜索算法"><span class="toc-number">6.</span> <span class="toc-text">广度优先搜索算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#狄克斯特拉算法"><span class="toc-number">7.</span> <span class="toc-text">狄克斯特拉算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态规划"><span class="toc-number">8.</span> <span class="toc-text">动态规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#K最近邻算法"><span class="toc-number">9.</span> <span class="toc-text">K最近邻算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布隆过滤器"><span class="toc-number">10.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#大O表示法的理解"><span class="toc-number">2.</span> <span class="toc-text">大O表示法的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#查找的前提-排序"><span class="toc-number">3.</span> <span class="toc-text">查找的前提-排序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">3.1.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快排的前提-递归"><span class="toc-number">3.2.</span> <span class="toc-text">快排的前提-递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">3.3.</span> <span class="toc-text">快速排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单查找、二分查找"><span class="toc-number">4.</span> <span class="toc-text">简单查找、二分查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#散列表可以帮我们提升算法运行效率"><span class="toc-number">5.</span> <span class="toc-text">散列表可以帮我们提升算法运行效率</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA算法"><span class="toc-number">5.1.</span> <span class="toc-text">SHA算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部敏感散列算法SimHash"><span class="toc-number">5.2.</span> <span class="toc-text">局部敏感散列算法SimHash</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广度优先搜索算法"><span class="toc-number">6.</span> <span class="toc-text">广度优先搜索算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#狄克斯特拉算法"><span class="toc-number">7.</span> <span class="toc-text">狄克斯特拉算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态规划"><span class="toc-number">8.</span> <span class="toc-text">动态规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#K最近邻算法"><span class="toc-number">9.</span> <span class="toc-text">K最近邻算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布隆过滤器"><span class="toc-number">10.</span> <span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -355,7 +367,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -395,11 +407,11 @@
 			
 		
 			
-				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
+				<li><a href="/tags/UDACITY/" title="UDACITY">UDACITY<sup>1</sup></a></li>
 			
 		
 			
@@ -419,23 +431,23 @@
 			
 		
 			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -443,7 +455,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -498,7 +510,7 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -704,7 +716,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
