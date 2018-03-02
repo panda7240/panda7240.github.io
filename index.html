@@ -77,6 +77,70 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2018/03/02/anomaly-detection1/" title="异常检测学习笔记-STL（一）" itemprop="url">异常检测学习笔记-STL（一）</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2018-03-02T04:18:20.000Z" itemprop="datePublished"> Published 2018-03-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="写在前面">写在前面</h1><p>最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Holt-winter算法对业务监控指标进行预测，基于预测值与真实值的比较，识别异常数据点，但是我们呈现出季节性的时间序列数据中还存在季节成分，有时也会因为天气等外力因素使时间序列数据存在比较明显的随机与误差成分，需要根据实际情况实时调整异常识别参数。STL方法给我们提供了一个思路，本文主要针对STL进行简单的总结，希望内容通俗易懂。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2018/03/02/anomaly-detection1/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/异常检测/">异常检测</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a><a href="/tags/异常检测/">异常检测</a><a href="/tags/机器学习/">机器学习</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2018/03/02/anomaly-detection1/#comments" class="ds-thread-count comments-count-link" data-thread-key="2018/03/02/anomaly-detection1/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand photo" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2018/02/23/algorithms-overview/" title="常用算法学习笔记" itemprop="url">常用算法学习笔记</a>
   </h1>
   <p class="article-author">By
@@ -652,70 +716,6 @@
 
 
 
-   
-    
-    <article class="post-expand photo" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/12/30/summary-2015/" title="2015个人总结" itemprop="url">2015个人总结</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
-		
-  <p class="article-time">
-    <time datetime="2015-12-30T09:23:20.000Z" itemprop="datePublished"> Published 2015-12-30</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="写在前面">写在前面</h1><p>2015年对自己来说, 是收获的一年, 快速成长的一年. 年关将至, 需要将这一年里面做的事情整理一下, 整理的过程也是自我反思的过程. 当然也不能免俗的展望一下2016年. 写这篇总结的时候正好看到了一篇 robbin 的一篇文章《怎样以创业者的心态打工》, 其中的观点非常好, 在此谨记: 你的”职业生涯”就是以你名字命名的公司. 即使你在打工, 其实你也是在创业. 只不过你创业的主体不是一家公司或者项目,而是’你自己’,以你名字命名的职业生涯. 你应该像呵护一个创业公司那样呵护自己的职业生涯, 不断的提高自身的知识,经验,视野,能力, 以及在行业当中的影响力和人脉.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/12/30/summary-2015/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/随笔/">随笔</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/随笔/">随笔</a><a href="/tags/个人总结/">个人总结</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/12/30/summary-2015/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/30/summary-2015/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -759,6 +759,10 @@
 		
 		  
 			<li><a href="/categories/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/异常检测/" title="异常检测">异常检测<sup>1</sup></a></li>
 		  
 		
 		  
@@ -835,11 +839,19 @@
 			
 		
 			
-				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/UDACITY/" title="UDACITY">UDACITY<sup>1</sup></a></li>
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式事务/" title="分布式事务">分布式事务<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
 			
 		
 			
@@ -855,19 +867,7 @@
 			
 		
 			
-				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/HAProxy/" title="HAProxy">HAProxy<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Nginx/" title="Nginx">Nginx<sup>1</sup></a></li>
+				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
 			
 		
 			
@@ -875,7 +875,11 @@
 			
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>1</sup></a></li>
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
 			
 		
 		</ul>

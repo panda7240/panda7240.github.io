@@ -1,0 +1,694 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>异常检测学习笔记-STL（一） | Panda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Panda">
+    
+
+    
+    <meta name="description" content="写在前面最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Hol">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异常检测学习笔记-STL（一）">
+<meta property="og:url" content="http://siye1982.github.io/2018/03/02/anomaly-detection1/index.html">
+<meta property="og:site_name" content="Panda">
+<meta property="og:description" content="写在前面最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Hol">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15199771099907.jpg">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197145108904.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197145704141.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197147315706.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197147408011.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197148100829.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197149447107.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197149928826.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197150939552.png">
+<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15199807782233.jpg">
+<meta property="og:updated_time" content="2018-03-02T09:35:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="异常检测学习笔记-STL（一）">
+<meta name="twitter:description" content="写在前面最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Hol">
+<meta name="twitter:image" content="http://siye1982.github.io/anomaly_detection1/15199771099907.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/logo.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/logo.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Panda" title="Panda"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
+				<h2 class="blog-motto">人生需要一次All in</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="photo" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/03/02/anomaly-detection1/" title="异常检测学习笔记-STL（一）" itemprop="url">异常检测学习笔记-STL（一）</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
+		
+  <p class="article-time">
+    <time datetime="2018-03-02T04:18:20.000Z" itemprop="datePublished"> Published 2018-03-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#STL（Seasonal_+_Trend_+_Loess）的理解"><span class="toc-number">2.</span> <span class="toc-text">STL（Seasonal + Trend + Loess）的理解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在做这个数据拆分之前，需要明确两个点："><span class="toc-number">2.1.</span> <span class="toc-text">在做这个数据拆分之前，需要明确两个点：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么计算趋势数据"><span class="toc-number">2.2.</span> <span class="toc-text">怎么计算趋势数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么计算平均季节数据"><span class="toc-number">2.3.</span> <span class="toc-text">怎么计算平均季节数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取残差数据"><span class="toc-number">2.4.</span> <span class="toc-text">获取残差数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#我们用分解的这些数据可以做什么？"><span class="toc-number">2.5.</span> <span class="toc-text">我们用分解的这些数据可以做什么？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#问题思考"><span class="toc-number">3.</span> <span class="toc-text">问题思考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="写在前面">写在前面</h1><p>最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Holt-winter算法对业务监控指标进行预测，基于预测值与真实值的比较，识别异常数据点，但是我们呈现出季节性的时间序列数据中还存在季节成分，有时也会因为天气等外力因素使时间序列数据存在比较明显的随机与误差成分，需要根据实际情况实时调整异常识别参数。STL方法给我们提供了一个思路，本文主要针对STL进行简单的总结，希望内容通俗易懂。</p>
+<a id="more"></a>
+<h1 id="STL（Seasonal_+_Trend_+_Loess）的理解">STL（Seasonal + Trend + Loess）的理解</h1><p>外卖业务数据具有比较强的季节性与趋势性，STL可以帮助我们做如下图步骤的拆解：</p>
+<p><img src="anomaly_detection1/15199771099907.jpg" alt=""></p>
+<h2 id="在做这个数据拆分之前，需要明确两个点：">在做这个数据拆分之前，需要明确两个点：</h2><ol>
+<li>确定数据周期，外卖业务的一个常规周期为7天，在周一至周五又可以将数据周期缩短为1天，如果对数据周期性不确定的，可以通过傅里叶变换计算数据周期。</li>
+<li><p>拆分规则，是选择<strong>加法</strong>方式还是<strong>乘法</strong>方式。</p>
+<ul>
+<li><p>加法方式：原始数据 = 平均季节数据 + 趋势数据 + 残差<br><img src="anomaly_detection1/15197145108904.png" alt=""><br>这种方式，随着时间的推移季节数据不会有太大的变化，在以七天为一大周期的业务数据更适合这样的拆分方式。</p>
+</li>
+<li><p>乘法方式：原始数据 = 季节数据 <em> 趋势数据 </em> 残差<br><img src="anomaly_detection1/15197145704141.png" alt=""></p>
+<p>这种方式，直观感受是随着时间的推移季节数据波动会非常明显。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="怎么计算趋势数据">怎么计算趋势数据</h2><p>我们看过股票分析软件中会有30日均线、60日均线这样的通过移动平均统计法得到的统计数据，它的作用就是可以帮助用户判断出时序数据的总体变化趋势，这里也是使用这样的方式直接计算。<br><img src="anomaly_detection1/15197147315706.png" alt=""><br>上图是分解后形成了：趋势数据 +　其他数据。<br>下图是去到其他数据最终的趋势数据。<br><img src="anomaly_detection1/15197147408011.png" alt=""></p>
+<h2 id="怎么计算平均季节数据">怎么计算平均季节数据</h2><p>现在知道趋势数据了，然后进行下面的操作：</p>
+<ul>
+<li><p>原始数据 - 趋势数据 = 季节数据 + 残差数据 = S<br><img src="anomaly_detection1/15197148100829.png" alt=""></p>
+</li>
+<li><p>数据集S中对不同时期的相同时间点数据进行相加得到数据集SP，然后除以原始数据的周期数c，得到一个平均季节数据集H，然后复制c次数据集H，将得到平均季节数据，如下图：<br><img src="anomaly_detection1/15197149447107.png" alt=""></p>
+</li>
+</ul>
+<h2 id="获取残差数据">获取残差数据</h2><p>原始数据 - 趋势数据 - 平均季节数据 = 残差<br>如下图：<br><img src="anomaly_detection1/15197149928826.png" alt=""></p>
+<p>最终每一步分解的数据合成一个图，如下：<br><img src="anomaly_detection1/15197150939552.png" alt=""></p>
+<h2 id="我们用分解的这些数据可以做什么？">我们用分解的这些数据可以做什么？</h2><p>数据如果有异常，都会体现在残差数据集中。我们怎么从残差数据中早出有问题的数据时间点呢？我理解的会有下面几种方式：</p>
+<ul>
+<li><p>确认残差数据满足正太分布，或者近似正太分布，可以计算出残差数据集的标准差，常规方式是数据点与均值的差值绝对值在3倍标准差外，则认为是异常点，也就是3sigma方案。也有例外，下图的残差数据集可能不能被上述方法将异常检测出来，这段数据连续几分钟都是在3倍标准差内，但是出现这种的可能性（1-99.7%）^n，这种情况出现的概率相当低，如果出现也应该被识别为异常点。<br><img src="anomaly_detection1/15199807782233.jpg" alt=""></p>
+</li>
+<li><p>使用历史数据分段平均的方式，对我们的原始数据进行未来数据点补全，对得到的新数据集使用STL方法去除残差数据，得到业务数据的基线，通过基线与真实值的比对判断是否是异常点。</p>
+</li>
+</ul>
+<h1 id="问题思考">问题思考</h1><ul>
+<li>业务运行过程中会经历很多突发事件，比如红包促销，服务器宕机，这些事件大部分没有规律性，怎样可以降低它们对基线拟合的影响。</li>
+<li>在不同业务时段，判断异常点的n倍sigma指标也可能不一样，需要分段执行不同的判断标准（在流量高峰可能需要有更多的容忍区间）。</li>
+<li>人为对异常检测结果进行标记，如何将这些标记及时反馈到算法中，让其自动化调整判断标准。</li>
+</ul>
+<p>这些问题将在后续的总结中给出。</p>
+<h1 id="参考">参考</h1><ul>
+<li><a href="https://anomaly.io/seasonal-trend-decomposition-in-r/" target="_blank" rel="external">Extract Seasonal &amp; Trend: using decomposition in R</a></li>
+<li><a href="https://github.com/ServiceNow/stl-decomp-4j" target="_blank" rel="external">Seasonal Decomposition of Time Series by Loess in Java</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/26700427" target="_blank" rel="external">统计学习之时间序列分析</a> </li>
+<li><a href="http://www.cnblogs.com/rongyux/p/5967470.html" target="_blank" rel="external">机器学习：异常检测算法Seasonal Hybrid ESD及R语言实现</a></li>
+<li><a href="http://blog.sina.com.cn/s/blog_5ffd41cf01012i5e.html" target="_blank" rel="external">谈R软件中的STL分解</a></li>
+</ul>
+<p>注：本文中所有图片均来自 <a href="https://anomaly.io" target="_blank" rel="external">Anomaly</a></p>
+<div style="margin-top: 15px; font-size: 11px;color: #cc0000;"><p align="center"><strong>（转载本站文章请注明作者和出处 <a href="http://siye1982.github.io">Panda</a>）</strong></p></div>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/异常检测/">异常检测</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a><a href="/tags/异常检测/">异常检测</a><a href="/tags/机器学习/">机器学习</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://siye1982.github.io/2018/03/02/anomaly-detection1/" data-title="异常检测学习笔记-STL（一） | Panda" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2018/02/23/algorithms-overview/"  title="常用算法学习笔记">
+ <strong>下一篇：</strong><br/> 
+ <span>常用算法学习笔记
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2018/03/02/anomaly-detection1/" data-title="异常检测学习笔记-STL（一）" data-url="http://siye1982.github.io/2018/03/02/anomaly-detection1/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#STL（Seasonal_+_Trend_+_Loess）的理解"><span class="toc-number">2.</span> <span class="toc-text">STL（Seasonal + Trend + Loess）的理解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在做这个数据拆分之前，需要明确两个点："><span class="toc-number">2.1.</span> <span class="toc-text">在做这个数据拆分之前，需要明确两个点：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么计算趋势数据"><span class="toc-number">2.2.</span> <span class="toc-text">怎么计算趋势数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么计算平均季节数据"><span class="toc-number">2.3.</span> <span class="toc-text">怎么计算平均季节数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取残差数据"><span class="toc-number">2.4.</span> <span class="toc-text">获取残差数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#我们用分解的这些数据可以做什么？"><span class="toc-number">2.5.</span> <span class="toc-text">我们用分解的这些数据可以做什么？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#问题思考"><span class="toc-number">3.</span> <span class="toc-text">问题思考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/RPC跟踪/" title="RPC跟踪">RPC跟踪<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Zookeeper/" title="Zookeeper">Zookeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/业务监控/" title="业务监控">业务监控<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/全链路监控/" title="全链路监控">全链路监控<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/异常检测/" title="异常检测">异常检测<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据分析/" title="数据分析">数据分析<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/最终一致性/" title="最终一致性">最终一致性<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/服务治理/" title="服务治理">服务治理<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/监控预警/" title="监控预警">监控预警<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>5</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/原创/" title="原创">原创<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Elasticsearch/" title="Elasticsearch">Elasticsearch<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/随笔/" title="随笔">随笔<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zookeeper/" title="Zookeeper">Zookeeper<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/SOA/" title="SOA">SOA<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Finagle/" title="Finagle">Finagle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式事务/" title="分布式事务">分布式事务<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/业务监控/" title="业务监控">业务监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/运维/" title="运维">运维<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://ifeve.com" target="_blank" title="高质量并发文章">并发编程网</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://songshuhui.net" target="_blank" title="看科普文章这里就够了">科学松鼠会</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="就是这么酷">Coolshell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://36kr.com" target="_blank" title="关注互联网创业">36Kr</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.infoq.com/cn" target="_blank" title="高逼格技术社区">InfoQ</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://club.alibabatech.org/index.htm" target="_blank" title="不错的技术沙龙">阿里技术沙龙</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://tech.meituan.com/archives" target="_blank" title="美团技术博客">美团技术博客</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Panda. <br/>
+			This is my blog on Github</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="Panda">Panda</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"siye1982"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255443286'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255443286' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
