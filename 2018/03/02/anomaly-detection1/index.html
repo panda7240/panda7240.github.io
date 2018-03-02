@@ -17,21 +17,21 @@
 <meta property="og:url" content="http://siye1982.github.io/2018/03/02/anomaly-detection1/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Hol">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15199771099907.jpg">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197145108904.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197145704141.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197147315706.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197147408011.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197148100829.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197149447107.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197149928826.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15197150939552.png">
-<meta property="og:image" content="http://siye1982.github.io/anomaly_detection1/15199807782233.jpg">
-<meta property="og:updated_time" content="2018-03-02T09:35:45.000Z">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15199771099907.jpg">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197145108904.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197145704141.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197147315706.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197147408011.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197148100829.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197149447107.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197149928826.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15197150939552.png">
+<meta property="og:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15199807782233.jpg">
+<meta property="og:updated_time" content="2018-03-02T09:39:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="异常检测学习笔记-STL（一）">
 <meta name="twitter:description" content="写在前面最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Hol">
-<meta name="twitter:image" content="http://siye1982.github.io/anomaly_detection1/15199771099907.jpg">
+<meta name="twitter:image" content="http://siye1982.github.io/img/blog/anomaly_detection1/15199771099907.jpg">
 
     
     <link rel="alternative" href="/atom.xml" title="Panda" type="application/atom+xml">
@@ -113,32 +113,32 @@
 		<h1 id="写在前面">写在前面</h1><p>最近在做业务指标异常检测与服务故障诊断，参考了腾讯、阿里等互联网大厂的解决方案，觉得有必要整理一下。我们生长于外卖业务，并不是专门做系统运维的团队，也是希望先从外卖业务特点进行分析。外卖业务并不会出现像双十一购物网站那样的流量暴增，它呈现出很强的季节性（一段时间内的周期性变化，外卖业务正常是7天一个周期）、趋势性（时间序列数据总体变化情况，是一直下降还是一直上升）。之前只是简单的使用Holt-winter算法对业务监控指标进行预测，基于预测值与真实值的比较，识别异常数据点，但是我们呈现出季节性的时间序列数据中还存在季节成分，有时也会因为天气等外力因素使时间序列数据存在比较明显的随机与误差成分，需要根据实际情况实时调整异常识别参数。STL方法给我们提供了一个思路，本文主要针对STL进行简单的总结，希望内容通俗易懂。</p>
 <a id="more"></a>
 <h1 id="STL（Seasonal_+_Trend_+_Loess）的理解">STL（Seasonal + Trend + Loess）的理解</h1><p>外卖业务数据具有比较强的季节性与趋势性，STL可以帮助我们做如下图步骤的拆解：</p>
-<p><img src="anomaly_detection1/15199771099907.jpg" alt=""></p>
+<p><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15199771099907.jpg" alt=""></p>
 <h2 id="在做这个数据拆分之前，需要明确两个点：">在做这个数据拆分之前，需要明确两个点：</h2><ol>
 <li>确定数据周期，外卖业务的一个常规周期为7天，在周一至周五又可以将数据周期缩短为1天，如果对数据周期性不确定的，可以通过傅里叶变换计算数据周期。</li>
 <li><p>拆分规则，是选择<strong>加法</strong>方式还是<strong>乘法</strong>方式。</p>
 <ul>
-<li><p>加法方式：原始数据 = 平均季节数据 + 趋势数据 + 残差<br><img src="anomaly_detection1/15197145108904.png" alt=""><br>这种方式，随着时间的推移季节数据不会有太大的变化，在以七天为一大周期的业务数据更适合这样的拆分方式。</p>
+<li><p>加法方式：原始数据 = 平均季节数据 + 趋势数据 + 残差<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197145108904.png" alt=""><br>这种方式，随着时间的推移季节数据不会有太大的变化，在以七天为一大周期的业务数据更适合这样的拆分方式。</p>
 </li>
-<li><p>乘法方式：原始数据 = 季节数据 <em> 趋势数据 </em> 残差<br><img src="anomaly_detection1/15197145704141.png" alt=""></p>
+<li><p>乘法方式：原始数据 = 季节数据 <em> 趋势数据 </em> 残差<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197145704141.png" alt=""></p>
 <p>这种方式，直观感受是随着时间的推移季节数据波动会非常明显。</p>
 </li>
 </ul>
 </li>
 </ol>
-<h2 id="怎么计算趋势数据">怎么计算趋势数据</h2><p>我们看过股票分析软件中会有30日均线、60日均线这样的通过移动平均统计法得到的统计数据，它的作用就是可以帮助用户判断出时序数据的总体变化趋势，这里也是使用这样的方式直接计算。<br><img src="anomaly_detection1/15197147315706.png" alt=""><br>上图是分解后形成了：趋势数据 +　其他数据。<br>下图是去到其他数据最终的趋势数据。<br><img src="anomaly_detection1/15197147408011.png" alt=""></p>
+<h2 id="怎么计算趋势数据">怎么计算趋势数据</h2><p>我们看过股票分析软件中会有30日均线、60日均线这样的通过移动平均统计法得到的统计数据，它的作用就是可以帮助用户判断出时序数据的总体变化趋势，这里也是使用这样的方式直接计算。<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197147315706.png" alt=""><br>上图是分解后形成了：趋势数据 +　其他数据。<br>下图是去到其他数据最终的趋势数据。<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197147408011.png" alt=""></p>
 <h2 id="怎么计算平均季节数据">怎么计算平均季节数据</h2><p>现在知道趋势数据了，然后进行下面的操作：</p>
 <ul>
-<li><p>原始数据 - 趋势数据 = 季节数据 + 残差数据 = S<br><img src="anomaly_detection1/15197148100829.png" alt=""></p>
+<li><p>原始数据 - 趋势数据 = 季节数据 + 残差数据 = S<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197148100829.png" alt=""></p>
 </li>
-<li><p>数据集S中对不同时期的相同时间点数据进行相加得到数据集SP，然后除以原始数据的周期数c，得到一个平均季节数据集H，然后复制c次数据集H，将得到平均季节数据，如下图：<br><img src="anomaly_detection1/15197149447107.png" alt=""></p>
+<li><p>数据集S中对不同时期的相同时间点数据进行相加得到数据集SP，然后除以原始数据的周期数c，得到一个平均季节数据集H，然后复制c次数据集H，将得到平均季节数据，如下图：<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197149447107.png" alt=""></p>
 </li>
 </ul>
-<h2 id="获取残差数据">获取残差数据</h2><p>原始数据 - 趋势数据 - 平均季节数据 = 残差<br>如下图：<br><img src="anomaly_detection1/15197149928826.png" alt=""></p>
-<p>最终每一步分解的数据合成一个图，如下：<br><img src="anomaly_detection1/15197150939552.png" alt=""></p>
+<h2 id="获取残差数据">获取残差数据</h2><p>原始数据 - 趋势数据 - 平均季节数据 = 残差<br>如下图：<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197149928826.png" alt=""></p>
+<p>最终每一步分解的数据合成一个图，如下：<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15197150939552.png" alt=""></p>
 <h2 id="我们用分解的这些数据可以做什么？">我们用分解的这些数据可以做什么？</h2><p>数据如果有异常，都会体现在残差数据集中。我们怎么从残差数据中早出有问题的数据时间点呢？我理解的会有下面几种方式：</p>
 <ul>
-<li><p>确认残差数据满足正太分布，或者近似正太分布，可以计算出残差数据集的标准差，常规方式是数据点与均值的差值绝对值在3倍标准差外，则认为是异常点，也就是3sigma方案。也有例外，下图的残差数据集可能不能被上述方法将异常检测出来，这段数据连续几分钟都是在3倍标准差内，但是出现这种的可能性（1-99.7%）^n，这种情况出现的概率相当低，如果出现也应该被识别为异常点。<br><img src="anomaly_detection1/15199807782233.jpg" alt=""></p>
+<li><p>确认残差数据满足正太分布，或者近似正太分布，可以计算出残差数据集的标准差，常规方式是数据点与均值的差值绝对值在3倍标准差外，则认为是异常点，也就是3sigma方案。也有例外，下图的残差数据集可能不能被上述方法将异常检测出来，这段数据连续几分钟都是在3倍标准差内，但是出现这种的可能性（1-99.7%）^n，这种情况出现的概率相当低，如果出现也应该被识别为异常点。<br><img src="http://siye1982.github.io/img/blog/anomaly_detection1/15199807782233.jpg" alt=""></p>
 </li>
 <li><p>使用历史数据分段平均的方式，对我们的原始数据进行未来数据点补全，对得到的新数据集使用STL方法去除残差数据，得到业务数据的基线，通过基线与真实值的比对判断是否是异常点。</p>
 </li>
@@ -324,6 +324,10 @@
 			
 		
 			
+				<li><a href="/tags/算法/" title="算法">算法<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/SOA/" title="SOA">SOA<sup>2</sup></a></li>
 			
 		
@@ -336,19 +340,15 @@
 			
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/分布式事务/" title="分布式事务">分布式事务<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/一致性/" title="一致性">一致性<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/配置管理/" title="配置管理">配置管理<sup>1</sup></a></li>
 			
 		
 			
@@ -364,19 +364,19 @@
 			
 		
 			
-				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
+				<li><a href="/tags/UDACITY/" title="UDACITY">UDACITY<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/调度系统/" title="调度系统">调度系统<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/海淀妇幼/" title="海淀妇幼">海淀妇幼<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/刨腹产/" title="刨腹产">刨腹产<sup>1</sup></a></li>
 			
 		
 		</ul>
