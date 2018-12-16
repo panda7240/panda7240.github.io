@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>基于形变分析的异常检测系统建设与实践 | Panda</title>
+    <title>基于形变分析模型的异常检测系统建设与实践 | Panda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Panda">
@@ -13,7 +13,7 @@
     
     <meta name="description" content="写在前面外卖业务持续高速成长，业务迭代快，逻辑复杂，关联服务多。如何快速准确识别系统各项指标的异常，发现问题根因，并快速解决显得尤为重要。在常规业务指标监控工作中需要手动维护上万业务指标报警阈值，不仅成本高，效果也不佳。我们尝试使用“形变分析模型”对业务指标自动进行异常检测，无需人工设置阈值。在实践过程中与外卖全链路压测，服务保护等稳定性保障系统进行内联，目前已覆盖绝大部分美团外卖C端核心业务指标">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基于形变分析的异常检测系统建设与实践">
+<meta property="og:title" content="基于形变分析模型的异常检测系统建设与实践">
 <meta property="og:url" content="http://siye1982.github.io/2018/12/16/shape_change/index.html">
 <meta property="og:site_name" content="Panda">
 <meta property="og:description" content="写在前面外卖业务持续高速成长，业务迭代快，逻辑复杂，关联服务多。如何快速准确识别系统各项指标的异常，发现问题根因，并快速解决显得尤为重要。在常规业务指标监控工作中需要手动维护上万业务指标报警阈值，不仅成本高，效果也不佳。我们尝试使用“形变分析模型”对业务指标自动进行异常检测，无需人工设置阈值。在实践过程中与外卖全链路压测，服务保护等稳定性保障系统进行内联，目前已覆盖绝大部分美团外卖C端核心业务指标">
@@ -33,9 +33,9 @@
 <meta property="og:image" content="http://siye1982.github.io/img/blog/shape_change/15448907752841.jpg">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/shape_change/15448908657133.jpg">
 <meta property="og:image" content="http://siye1982.github.io/img/blog/shape_change/15448909567653.jpg">
-<meta property="og:updated_time" content="2018-12-16T13:26:02.000Z">
+<meta property="og:updated_time" content="2018-12-16T14:03:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="基于形变分析的异常检测系统建设与实践">
+<meta name="twitter:title" content="基于形变分析模型的异常检测系统建设与实践">
 <meta name="twitter:description" content="写在前面外卖业务持续高速成长，业务迭代快，逻辑复杂，关联服务多。如何快速准确识别系统各项指标的异常，发现问题根因，并快速解决显得尤为重要。在常规业务指标监控工作中需要手动维护上万业务指标报警阈值，不仅成本高，效果也不佳。我们尝试使用“形变分析模型”对业务指标自动进行异常检测，无需人工设置阈值。在实践过程中与外卖全链路压测，服务保护等稳定性保障系统进行内联，目前已覆盖绝大部分美团外卖C端核心业务指标">
 <meta name="twitter:image" content="http://siye1982.github.io/img/blog/shape_change/15448874082268.jpg">
 
@@ -65,7 +65,7 @@
 				<h1 class="site-name"><a href="/" title="Panda">Panda</a></h1>
 				<h2 class="blog-motto">人生需要一次All in</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -81,7 +81,7 @@
  					
 					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="Search" />
 					</form>
 					
 					</li>
@@ -96,21 +96,21 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/12/16/shape_change/" title="基于形变分析的异常检测系统建设与实践" itemprop="url">基于形变分析的异常检测系统建设与实践</a>
+      <a href="/2018/12/16/shape_change/" title="基于形变分析模型的异常检测系统建设与实践" itemprop="url">基于形变分析模型的异常检测系统建设与实践</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Panda" target="_blank" itemprop="author">Panda</a>
 		
   <p class="article-time">
-    <time datetime="2018-12-16T13:21:45.000Z" itemprop="datePublished"> 发表于 2018-12-16</time>
+    <time datetime="2018-12-16T13:21:45.000Z" itemprop="datePublished"> Published 2018-12-16</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#美团外卖业务异常检测现状"><span class="toc-number">2.</span> <span class="toc-text">美团外卖业务异常检测现状</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#外卖业务特点"><span class="toc-number">2.1.</span> <span class="toc-text">外卖业务特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要痛点"><span class="toc-number">2.2.</span> <span class="toc-text">主要痛点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#形变分析模型介绍"><span class="toc-number">3.</span> <span class="toc-text">形变分析模型介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概览"><span class="toc-number">3.1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模型分析过程"><span class="toc-number">3.2.</span> <span class="toc-text">模型分析过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#两次处理"><span class="toc-number">3.3.</span> <span class="toc-text">两次处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#告警收敛策略"><span class="toc-number">3.4.</span> <span class="toc-text">告警收敛策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决了哪些问题"><span class="toc-number">3.5.</span> <span class="toc-text">解决了哪些问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#异常检测系统的主要关注点"><span class="toc-number">4.</span> <span class="toc-text">异常检测系统的主要关注点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#异常检测与其他稳定性保障系统的内联"><span class="toc-number">5.</span> <span class="toc-text">异常检测与其他稳定性保障系统的内联</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基于形变分析的异常检测落地情况及实践效果"><span class="toc-number">6.</span> <span class="toc-text">基于形变分析的异常检测落地情况及实践效果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#整体回顾"><span class="toc-number">7.</span> <span class="toc-text">整体回顾</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#写在最后"><span class="toc-number">8.</span> <span class="toc-text">写在最后</span></a></li></ol>
 		
@@ -271,7 +271,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://siye1982.github.io/2018/12/16/shape_change/" data-title="基于形变分析的异常检测系统建设与实践 | Panda" data-tsina="null" class="share clearfix">
+	  <div data-url="http://siye1982.github.io/2018/12/16/shape_change/" data-title="基于形变分析模型的异常检测系统建设与实践 | Panda" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -297,27 +297,27 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2018/12/16/shape_change/" data-title="基于形变分析的异常检测系统建设与实践" data-url="http://siye1982.github.io/2018/12/16/shape_change/"></div>
+	<div class="ds-thread" data-thread-key="2018/12/16/shape_change/" data-title="基于形变分析模型的异常检测系统建设与实践" data-url="http://siye1982.github.io/2018/12/16/shape_change/"></div>
 </section>
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#写在前面"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#美团外卖业务异常检测现状"><span class="toc-number">2.</span> <span class="toc-text">美团外卖业务异常检测现状</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#外卖业务特点"><span class="toc-number">2.1.</span> <span class="toc-text">外卖业务特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要痛点"><span class="toc-number">2.2.</span> <span class="toc-text">主要痛点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#形变分析模型介绍"><span class="toc-number">3.</span> <span class="toc-text">形变分析模型介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概览"><span class="toc-number">3.1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模型分析过程"><span class="toc-number">3.2.</span> <span class="toc-text">模型分析过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#两次处理"><span class="toc-number">3.3.</span> <span class="toc-text">两次处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#告警收敛策略"><span class="toc-number">3.4.</span> <span class="toc-text">告警收敛策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决了哪些问题"><span class="toc-number">3.5.</span> <span class="toc-text">解决了哪些问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#异常检测系统的主要关注点"><span class="toc-number">4.</span> <span class="toc-text">异常检测系统的主要关注点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#异常检测与其他稳定性保障系统的内联"><span class="toc-number">5.</span> <span class="toc-text">异常检测与其他稳定性保障系统的内联</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基于形变分析的异常检测落地情况及实践效果"><span class="toc-number">6.</span> <span class="toc-text">基于形变分析的异常检测落地情况及实践效果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#整体回顾"><span class="toc-number">7.</span> <span class="toc-text">整体回顾</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#写在最后"><span class="toc-number">8.</span> <span class="toc-text">写在最后</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -386,7 +386,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -414,15 +414,11 @@
 			
 		
 			
+				<li><a href="/tags/业务监控/" title="业务监控">业务监控<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/算法/" title="算法">算法<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/运维/" title="运维">运维<sup>2</sup></a></li>
 			
 		
 			
@@ -434,6 +430,10 @@
 			
 		
 			
+				<li><a href="/tags/Zipkin/" title="Zipkin">Zipkin<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/SOA/" title="SOA">SOA<sup>2</sup></a></li>
 			
 		
@@ -442,15 +442,7 @@
 			
 		
 			
-				<li><a href="/tags/业务监控/" title="业务监控">业务监控<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
+				<li><a href="/tags/运维/" title="运维">运维<sup>2</sup></a></li>
 			
 		
 			
@@ -462,7 +454,15 @@
 			
 		
 			
-				<li><a href="/tags/监控监控/" title="监控监控">监控监控<sup>1</sup></a></li>
+				<li><a href="/tags/UDACITY/" title="UDACITY">UDACITY<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/监控/" title="监控">监控<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Logstash/" title="Logstash">Logstash<sup>1</sup></a></li>
 			
 		
 			
@@ -474,7 +474,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -529,7 +529,7 @@
 </div>
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -735,7 +735,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
